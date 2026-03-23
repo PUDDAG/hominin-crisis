@@ -1,5 +1,5 @@
 # HOMININ CRISIS 
-
+https://puddag.github.io/hominin-crisis/
 > *On January 2, 2026, satellite imagery confirmed what NGO field teams and border patrols had been reporting for 48 hours. They're back. Across multiple regions, fifteen species of extinct humans have reappeared. Disoriented, territorial, and very much alive.*
 
 ---
