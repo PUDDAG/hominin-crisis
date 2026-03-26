@@ -3166,6 +3166,7 @@ function resetGameState() {
   const raw = localStorage.getItem('hominin_save');
   if (raw) { try { const old = JSON.parse(raw); savedUnlocks = old.unlockedModes||['sapiens']; savedAchievements = old.achievements||[]; savedPlayCount = (old.playthrough_count||0); } catch(e){} }
   eventQueue = []; _lastResult = null; newsItems = [];
+  animState.dotDrift = {}; animState.migrationTrails = []; animState.flashRegions = {}; lastDotPos = {};
   localStorage.removeItem('hominin_save');
   const diff = (document.getElementById('difficulty-select')?.value) || 'normal';
   GS = createInitialState(diff);
