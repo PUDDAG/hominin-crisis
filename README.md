@@ -32,7 +32,7 @@ Every decision you make changes the trajectory of human history. There are no ea
 | **Extremism** | "Sapiens First" political movements | 75%+ = institutional seizure |
 
 ### Resources
-- **Budget** : +200 each turn. Required for policies and emergency actions
+- **Budget** : Income each turn. Required for policies and emergency actions
 - **Knowledge** : Accumulates over time. Unlocks advanced policies
 - **Public Opinion** : High opinion suppresses extremism; low opinion feeds it
 - **Integration** : Tracks progress toward peaceful coexistence
