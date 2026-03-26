@@ -566,6 +566,7 @@ canvas { touch-action: none; }
       <div class="left-tabs" id="left-tabs">
         <button class="tab-btn active" data-tab="policies" onclick="switchTab('policies')">POLICIES</button>
         <button class="tab-btn" data-tab="intel" onclick="switchTab('intel')">INTEL</button>
+        <button class="tab-btn" onclick="document.getElementById('onboarding-modal').classList.add('open')" style="color:var(--accent-amber); font-size:10px;">HOW TO PLAY</button>
       </div>
       <div id="tab-policies" class="tab-content active"><div id="policies-container"></div></div>
       <div id="tab-intel" class="tab-content"><div id="intel-container"></div></div>
@@ -696,7 +697,7 @@ canvas { touch-action: none; }
       <strong>Disease Index:</strong> Cross-species pathogens will spread every turn. If Disease reaches <strong>100%, civilization ends</strong>. Prioritize <em>Pathogen Surveillance</em> or <em>WHO Emergency Declaration</em> early.
     </div>
     <div class="onboarding-tip row2">
-      <strong>3 Policies Per Turn:</strong> You can enact up to 3 policies each turn. Budget resets each turn at +200. Spend wisely the first 30 turns set the trajectory for the next 20 years.
+      <strong>3 Policies Per Turn:</strong> You can enact up to 3 policies each turn. You get income for your budget each turn. Spend wisely the first 30 turns set the trajectory for the next 20 years.
     </div>
     <div class="onboarding-tip row3">
       <strong>3 Ways to Win:</strong> Survive 240 turns with stability above 50%, achieve full Integration (100% integration + 75% rights), or let all non-sapiens species go extinct. <span class="row3-warn">If stability hits zero, your save is wiped and you start fresh.</span>
@@ -960,6 +961,158 @@ const EVENTS = [
       { text:'Continue operations with enhanced PPE protocols', effects:{disease:+5, knowledge:+25, stability:+25, budget:-180} },
       { text:'Cull floresiensis population in affected zone', effects:{disease:-15, rights_conflict:-20, public_opinion:-25, extremism:+15} }
     ]},
+  { id:'disease_generic_airborne', cat:'BIOLOGICAL CRISIS', title:'AIRBORNE PATHOGEN DETECTED CROSSING SPECIES BARRIER',
+    species:null, region:null, repeatable:true,
+    desc:'A novel airborne pathogen has been confirmed jumping between non-sapiens and H. sapiens populations in three separate regions. WHO field labs cannot yet determine the vector. Disease Index rising.',
+    choices:[
+      { text:'Deploy emergency WHO field response', effects:{disease:-12, budget:-250, stability:+5} },
+      { text:'Issue international travel restrictions', effects:{disease:-8, stability:-8, extremism:+5} },
+      { text:'Commission accelerated genome sequencing', effects:{knowledge:+20, disease:+8, budget:-200} }
+    ]},
+  { id:'disease_generic_waterborne', cat:'BIOLOGICAL CRISIS', title:'WATERBORNE OUTBREAK LINKED TO SHARED RIVER SYSTEMS',
+    species:null, region:null, repeatable:true,
+    desc:'A waterborne pathogen is spreading through river systems shared by multiple hominin species. Confirmed cases in sapiens communities downstream.',
+    choices:[
+      { text:'Emergency water infrastructure and treatment', effects:{budget:-300, disease:-15, ecological_stress:-5} },
+      { text:'Restrict shared water access', effects:{disease:-10, rights_conflict:-10, extremism:+8} },
+      { text:'Fund cross-species epidemiological study', effects:{knowledge:+25, disease:+5, budget:-150} }
+    ]},
+  { id:'disease_generic_zoonotic', cat:'BIOLOGICAL CRISIS', title:'ZOONOTIC SPILLOVER EVENT: ORIGIN UNKNOWN',
+    species:null, region:null, repeatable:true,
+    desc:'A zoonotic pathogen of unknown origin has been confirmed in both non-sapiens and sapiens populations. Epidemiologists cannot determine whether sapiens or non-sapiens was the source: a distinction that is becoming politically explosive.',
+    choices:[
+      { text:'Neutral joint investigation protocol', effects:{knowledge:+15, stability:+5, budget:-200} },
+      { text:'Publicly attribute to non-sapiens source', effects:{integration_score:-10, extremism:-10, stability:+8} },
+      { text:'Mandatory quarantine for all non-sapiens contacts', effects:{disease:-15, rights_conflict:-20, stability:+5, budget:-250} }
+    ]},
+  { id:'disease_generic_immunity', cat:'BIOLOGICAL CRISIS', title:'NON-SAPIENS POPULATION SHOWS UNEXPECTED IMMUNITY TO GLOBAL PATHOGEN',
+    species:null, region:null, repeatable:true,
+    desc:'Several non-sapiens populations have shown near-complete immunity to a pathogen currently killing H. sapiens. Scientists want access. Extremist groups want answers. Rights groups want consent frameworks first.',
+    choices:[
+      { text:'Establish voluntary research partnership', effects:{knowledge:+30, disease:-10, integration_score:+8, budget:-150} },
+      { text:'Authorize emergency involuntary sampling', effects:{knowledge:+40, disease:-15, rights_conflict:-25, extremism:+10} },
+      { text:'Block all research until consent frameworks exist', effects:{rights_conflict:+10, disease:+10, stability:-5} }
+    ]},
+  { id:'disease_neanderthal', cat:'BIOLOGICAL CRISIS', title:'NEANDERTHAL COLD-ADAPTATION MASKS EARLY DISEASE SYMPTOMS',
+    species:'neanderthal', region:'europe', repeatable:false, turn_range:[8,240],
+    desc:'Neanderthal cold-weather adaptations are masking early pathogen symptoms: infected individuals appear healthy for longer, creating an invisible disease reservoir in European populations. By the time symptoms appear, transmission has already occurred.',
+    choices:[
+      { text:'Deploy specialized diagnostic teams into Neanderthal territories', effects:{disease:-15, budget:-220, knowledge:+20, rights_conflict:+5} },
+      { text:'Issue a containment order and suspend all contact protocols', effects:{disease:-10, rights_conflict:-12, integration_score:-8, stability:+4} },
+      { text:'Publish findings: the cold-adaptation effect changes global surveillance protocols', effects:{knowledge:+30, disease:+6, stability:+5, budget:-100} }
+    ]},
+  { id:'disease_denisovan', cat:'BIOLOGICAL CRISIS', title:'DENISOVAN ALTITUDE ADAPTATION CREATES ISOLATED DISEASE VECTOR',
+    species:'denisovan', region:'siberia', repeatable:false, turn_range:[8,240],
+    desc:'A pathogen thriving in high-altitude Denisovan habitat has mutated and is now appearing in lowland sapiens populations. The altitude adaptation that protected Denisovans for 50,000 years is now incubating a disease modern immune systems cannot handle.',
+    choices:[
+      { text:'Establish a high-altitude quarantine cordon with medical teams', effects:{disease:-18, budget:-280, rights_conflict:+8, stability:+3} },
+      { text:'Accelerate vaccine development using Denisovan immunity data', effects:{knowledge:+35, disease:-10, budget:-200, integration_score:+5} },
+      { text:'Deny the connection publicly to prevent panic', effects:{disease:+10, stability:+6, extremism:+8, public_opinion:-10} }
+    ]},
+  { id:'disease_heidelbergensis', cat:'BIOLOGICAL CRISIS', title:'PROTO-LANGUAGE COOPERATION SPREADS DISEASE ACROSS HEIDELBERGENSIS CAMPS',
+    species:'heidelbergensis', region:'europe', repeatable:false, turn_range:[8,240],
+    desc:'H. heidelbergensis bands are using proto-language to coordinate: but also inadvertently spreading a respiratory pathogen across an unusually wide network of camps faster than any Tier 2 species should.',
+    choices:[
+      { text:'Deploy field isolation teams to break transmission chains', effects:{disease:-14, budget:-200, knowledge:+15, rights_conflict:+4} },
+      { text:'Establish medical supply depots at each confirmed camp', effects:{budget:-250, disease:-12, stability:+5, integration_score:+5} },
+      { text:'Study the transmission network: proto-language epidemiology is unprecedented', effects:{knowledge:+40, disease:+8, budget:-100} }
+    ]},
+  { id:'disease_erectus', cat:'BIOLOGICAL CRISIS', title:'H. ERECTUS FIRE USE LINKED TO NOVEL SMOKE-VECTOR PATHOGEN',
+    species:'erectus', region:'east_asia', repeatable:false, turn_range:[8,240],
+    desc:'Fire use by H. erectus populations is creating localized smoke environments that appear to harbor and transmit a novel respiratory pathogen. The same fire use that helped them survive 1.7 million years is now a disease vector.',
+    choices:[
+      { text:'Introduce sapiens-designed ventilation structures to their camps', effects:{budget:-180, disease:-12, rights_conflict:+5, integration_score:+8} },
+      { text:'Relocate affected populations away from fire-use zones temporarily', effects:{budget:-150, disease:-10, ecological_stress:+5, stability:+3} },
+      { text:'Restrict fire use via field intervention: document the response', effects:{disease:-8, knowledge:+20, rights_conflict:-15, extremism:+6} }
+    ]},
+  { id:'disease_floresiensis', cat:'BIOLOGICAL CRISIS', title:'FLORESIENSIS SANCTUARY CONTAMINATED BY RESEARCHER EQUIPMENT',
+    species:'floresiensis', region:'indonesia', repeatable:false, turn_range:[8,240],
+    desc:'Pathogen traces found on research equipment used inside the Floresiensis sanctuary have led to confirmed cases among individuals with no prior sapiens contact. The sanctuary has become a vector.',
+    choices:[
+      { text:'Full sanctuary lockdown: no researchers, no contact for 90 days', effects:{disease:-20, budget:-200, knowledge:-10, integration_score:-5} },
+      { text:'Emergency decontamination protocols and full PPE for all staff', effects:{disease:-12, budget:-250, stability:+5, knowledge:+10} },
+      { text:'Disclose the contamination publicly and open an independent inquiry', effects:{knowledge:+20, rights_conflict:+10, public_opinion:+12, disease:+5} }
+    ]},
+  { id:'disease_luzonensis', cat:'BIOLOGICAL CRISIS', title:'TOURIST BOAT WASTE CONTAMINATES LUZONENSIS COASTAL HABITAT',
+    species:'luzonensis', region:'philippines', repeatable:false, turn_range:[8,240],
+    desc:'Untreated waste from tourist vessels has contaminated the sole confirmed Luzonensis coastal habitat. With 800 individuals remaining, any disease event is potentially existential.',
+    choices:[
+      { text:'Emergency habitat decontamination and tourist vessel ban', effects:{disease:-18, budget:-300, ecological_stress:-8, extremism:+5} },
+      { text:'Establish a protected marine corridor with enforcement', effects:{budget:-200, disease:-10, ecological_stress:-10, integration_score:+8} },
+      { text:'Pursue legal action against tourism operators: slow but precedent-setting', effects:{knowledge:+15, disease:+5, stability:+3, budget:-100} }
+    ]},
+  { id:'disease_antecessor', cat:'BIOLOGICAL CRISIS', title:'ANTECESSOR BAND FOUND WITH UNKNOWN HEMORRHAGIC SYMPTOMS ATAPUERCA',
+    species:'antecessor', region:'europe', repeatable:false, turn_range:[8,240],
+    desc:'A H. antecessor band in the Atapuerca region has been found exhibiting hemorrhagic fever symptoms. No known treatment exists. Their isolated population means even a small outbreak could be catastrophic.',
+    choices:[
+      { text:'Immediate field quarantine and emergency medical team deployment', effects:{disease:-20, budget:-350, rights_conflict:+8, stability:+5} },
+      { text:'Collect samples for hemorrhagic fever research: no treatment intervention', effects:{knowledge:+40, disease:+10, rights_conflict:-10, extremism:+5} },
+      { text:'Relocate surviving individuals to a secure medical facility', effects:{budget:-250, disease:-15, rights_conflict:-8, integration_score:+5} }
+    ]},
+  { id:'disease_habilis', cat:'BIOLOGICAL CRISIS', title:'HABILIS CARCASS SCAVENGING CREATING SAPIENS-ADJACENT PATHOGEN RISK',
+    species:'habilis', region:'east_africa', repeatable:false, turn_range:[8,240],
+    desc:'H. habilis scavenging behavior: feeding on leftover trash from H. sapiens communities is creating a confirmed cross-species pathogen transmission pathway in the Rift Valley.',
+    choices:[
+      { text:'Establish controlled waste disposal zones away from Habilis territories', effects:{disease:-15, budget:-200, ecological_stress:-8, stability:+5} },
+      { text:'Fund supplemental food provision to reduce scavenging pressure', effects:{budget:-180, disease:-10, integration_score:+8, ecological_stress:-5} },
+      { text:'Issue a public health alert and restrict sapiens waste disposal near contact zones', effects:{disease:-8, stability:-5, rights_conflict:+5, budget:-100} }
+    ]},
+  { id:'disease_ergaster', cat:'BIOLOGICAL CRISIS', title:'ERGASTER PERSISTENCE HUNTING RANGE OVERLAPS SAPIENS FARMLAND DISEASE CORRIDOR',
+    species:'ergaster', region:'africa', repeatable:false, turn_range:[8,240],
+    desc:'H. ergaster hunting routes now overlap directly with H. sapiens agricultural zones. A livestock pathogen has jumped to Ergaster populations and is showing early signs of further transmission to sapiens communities.',
+    choices:[
+      { text:'Establish an agricultural exclusion buffer around all confirmed Ergaster routes', effects:{disease:-18, budget:-250, ecological_stress:-5, stability:+5} },
+      { text:'Vaccinate livestock in the overlap zone to break the transmission chain', effects:{budget:-300, disease:-20, ecological_stress:-8, integration_score:+5} },
+      { text:'Track and document: the livestock-to-hominin jump is scientifically significant', effects:{knowledge:+30, disease:+8, stability:-3, extremism:+4} }
+    ]},
+  { id:'disease_georgicus', cat:'BIOLOGICAL CRISIS', title:'GEORGICUS MOUNTAIN BANDS ARRIVE AT LOWLAND CAMPS WITH UNIDENTIFIED ILLNESS',
+    species:'georgicus', region:'caucasus', repeatable:false, turn_range:[8,240],
+    desc:'H. georgicus bands descending from the Caucasus highlands for winter have arrived at lowland contact sites carrying an unidentified respiratory illness. Their diverse diet and first-out-of-Africa adaptations may have exposed them to pathogens modern immune systems have never encountered.',
+    choices:[
+      { text:'Quarantine arriving bands with full medical support', effects:{disease:-15, budget:-220, rights_conflict:+6, stability:+4} },
+      { text:'Establish a highland research post to identify the pathogen at source', effects:{knowledge:+35, disease:-8, budget:-200, integration_score:+5} },
+      { text:'Allow natural contact: document cross-immunity outcomes', effects:{knowledge:+20, disease:+12, stability:-5, extremism:+5} }
+    ]},
+  { id:'disease_rudolfensis', cat:'BIOLOGICAL CRISIS', title:'RUDOLFENSIS POPULATION COLLAPSE -- PATHOGEN OR COMPETITION?',
+    species:'rudolfensis', region:'east_africa', repeatable:false, turn_range:[8,240],
+    desc:'A rapid H. rudolfensis population decline has been reported in three Rift Valley sectors simultaneously. Cause unclear: could be pathogen, could be resource competition with H. habilis. Researchers cannot agree. The political pressure to assign blame is mounting.',
+    choices:[
+      { text:'Deploy full medical and ecological investigation teams simultaneously', effects:{knowledge:+25, disease:-10, budget:-250, stability:+5} },
+      { text:'Prioritize emergency food and medical support regardless of cause', effects:{budget:-280, disease:-12, ecological_stress:-8, integration_score:+5} },
+      { text:'Attribute to competition publicly: removes disease panic, increases conflict blame', effects:{extremism:+8, rights_conflict:-10, stability:+5, knowledge:+10} }
+    ]},
+  { id:'disease_paranthropus', cat:'BIOLOGICAL CRISIS', title:'PARANTHROPUS JAW PATHOLOGY LINKED TO CROSS-SPECIES FOOD SOURCE',
+    species:'paranthropus', region:'africa', repeatable:false, turn_range:[8,240],
+    desc:'Paranthropus dietary specialization: their massive jaw processing tough plant material is creating localized gut pathogen exposure when sapiens agricultural runoff contaminates their foraging grounds.',
+    choices:[
+      { text:'Establish agricultural runoff barriers around all Paranthropus foraging zones', effects:{disease:-14, budget:-220, ecological_stress:-10, stability:+4} },
+      { text:'Develop a targeted gut pathogen treatment and deploy field teams', effects:{budget:-250, disease:-18, knowledge:+20, integration_score:+5} },
+      { text:'Restrict Paranthropus access to contaminated zones with supplemental food', effects:{disease:-10, rights_conflict:-8, ecological_stress:-5, budget:-150} }
+    ]},
+  { id:'disease_africanus', cat:'BIOLOGICAL CRISIS', title:'AU. AFRICANUS SANCTUARY DISEASE OUTBREAK JOHANNESBURG FACILITY',
+    species:'africanus', region:'south_africa', repeatable:false, turn_range:[8,240],
+    desc:'An outbreak of a respiratory illness in the Johannesburg Au. africanus facility has killed three individuals in 48 hours. The facility is adjacent to a sapiens residential zone. Disease Index rising.',
+    choices:[
+      { text:'Full facility lockdown with emergency medical response', effects:{disease:-20, budget:-300, stability:+5, rights_conflict:+5} },
+      { text:'Transfer surviving individuals to an isolated field sanctuary', effects:{budget:-200, disease:-15, ecological_stress:+5, integration_score:+5} },
+      { text:'Investigate facility conditions: this was a preventable failure', effects:{knowledge:+20, rights_conflict:+12, stability:-3, public_opinion:+10} }
+    ]},
+  { id:'disease_afarensis', cat:'BIOLOGICAL CRISIS', title:'AFARENSIS BIPEDAL MIGRATION PATHS CROSSING SAPIENS DISEASE ZONES',
+    species:'afarensis', region:'east_africa', repeatable:false, turn_range:[8,240],
+    desc:'Au. afarensis migration routes following ancient bipedal paths unchanged for 3.6 million years are now crossing through active sapiens disease zones. They have no immune memory of modern pathogens.',
+    choices:[
+      { text:'Establish protected migration corridors rerouted around all active disease zones', effects:{disease:-16, budget:-280, ecological_stress:-5, stability:+5} },
+      { text:'Deploy mobile medical units along all confirmed migration paths', effects:{budget:-250, disease:-12, knowledge:+15, integration_score:+5} },
+      { text:'Issue an emergency vaccination program for all Afarensis contact zones', effects:{budget:-350, disease:-22, stability:+8, rights_conflict:+5} }
+    ]},
+  { id:'disease_tchadensis', cat:'BIOLOGICAL CRISIS', title:'S. TCHADENSIS CONTACT EVENT TRIGGERS UNKNOWN IMMUNE RESPONSE IN SAPIENS RESEARCHERS',
+    species:'tchadensis', region:'central_africa', repeatable:false, turn_range:[8,240],
+    desc:'Three researchers who made brief physical contact with S. tchadensis individuals are presenting with symptoms no pathologist recognizes. Tchadensis is 7 million years removed from modern humans. Their microbiome may be completely alien to our immune systems.',
+    choices:[
+      { text:'Quarantine all researchers who had contact and establish a full no-contact protocol', effects:{disease:-15, budget:-220, knowledge:+20, rights_conflict:+5} },
+      { text:'Commission emergency microbiome research: this changes our understanding of immune distance', effects:{knowledge:+40, disease:+8, budget:-200, stability:+3} },
+      { text:'Deny the connection publicly to protect the Tchadensis contact program', effects:{disease:+10, stability:+5, extremism:+6, public_opinion:-8} }
+    ]},
   { id:'neanderthal_court', cat:'RIGHTS & LAW', title:'NEANDERTHAL FILES LEGAL CHALLENGE: EUROPEAN COURT',
     species:'neanderthal', region:'europe', turn_range:[10,100], repeatable:false,
     desc:'A Neanderthal band leader has filed a case arguing "human" status cannot be denied based on speciation, also reminding the court that "Homo" means "human" in Latin. Something everyone seems to have forgotten.',
@@ -1195,7 +1348,7 @@ const EVENTS = [
   
   { id:'conflict_neanderthal_heidelbergensis', cat:'INTER-SPECIES CONFLICT',
     title:'NEANDERTHAL BAND BURNS HEIDELBERGENSIS FOOD CACHE: CENTRAL EUROPE',
-    species:'neanderthal', region:'europe', turn_range:[2,180], repeatable:false,
+    species:'neanderthal', region:'europe', turn_range:[2,239], repeatable:false,
     desc:'A Neanderthal band torched a H. heidelbergensis winter food cache in the Moravian corridor. Both species are cognitively sophisticated. Neanderthal brain volume slightly edges out Heidelbergensis, but Heidelbergensis bands are larger and more mobile. The cache destruction is strategic, not impulsive. EU governments are calling it the first documented inter-hominin economic warfare.',
     choices:[
       { text:'Establish a monitored shared food depot to remove the scarcity trigger', effects:{budget:-280, stability:+5, integration_score:+10, ecological_stress:-5} },
@@ -1204,7 +1357,7 @@ const EVENTS = [
     ]},
   { id:'conflict_erectus_denisovan', cat:'INTER-SPECIES CONFLICT',
     title:'H. ERECTUS HUNTING PARTY KILLS FOUR DENISOVANS IN YUNNAN',
-    species:'denisovan', region:'east_asia', turn_range:[10,180], repeatable:false,
+    species:'denisovan', region:'east_asia', turn_range:[10,239], repeatable:false,
     desc:'A H. erectus hunting party killed four Denisovan individuals near Kunming and seized their highland campsite. Denisovans carry EPAS1 altitude adaptations that make them uniquely suited to these highlands. Erectus cannot survive above 3,000m for more than a season. The Chinese government is demanding UN guidance. Researchers say this is pure resource denial, not territory.',
     choices:[
       { text:'Issue an emergency sanctuary designation for the contested highland zone', effects:{budget:-200, ecological_stress:-10, rights_conflict:+10, integration_score:+10} },
@@ -1213,7 +1366,7 @@ const EVENTS = [
     ]},
   { id:'conflict_habilis_paranthropus', cat:'INTER-SPECIES CONFLICT',
     title:'HABILIS USING OLDOWAN TOOLS AS WEAPONS AGAINST PARANTHROPUS',
-    species:'habilis', region:'east_africa', turn_range:[6,160], repeatable:false,
+    species:'habilis', region:'east_africa', turn_range:[6,239], repeatable:false,
     desc:'Field researchers in the Rift Valley documented H. habilis individuals using Oldowan flaked stones not for butchering, but to drive Paranthropus from carcass sites. Three Paranthropus individuals have visible head injuries. The tool use against another hominin is deliberate and repeated. Paranthropus cannot retaliate with equivalent tools but its physical mass is considerable.',
     choices:[
       { text:'Create designated scavenging corridors for each species with ranger patrols', effects:{budget:-160, ecological_stress:-8, stability:+5, integration_score:+5} },
@@ -1222,7 +1375,7 @@ const EVENTS = [
     ]},
   { id:'conflict_floresiensis_erectus', cat:'INTER-SPECIES CONFLICT',
     title:'H. ERECTUS DISPLACING FLORESIENSIS FROM FOUR ISLAND SITES',
-    species:'floresiensis', region:'indonesia', turn_range:[5,150], repeatable:false,
+    species:'floresiensis', region:'indonesia', turn_range:[5,239], repeatable:false,
     desc:'H. erectus bands have occupied four traditional H. floresiensis foraging and shelter sites on the island chain between Flores and Java. Floresiensis individuals have been seen swimming between islands. The population cannot sustain displacement losses. A field researcher wrote: "They are being squeezed into the water."',
     choices:[
       { text:'Invoke emergency species protection: clear H. erectus from contested sites', effects:{ecological_stress:-12, rights_conflict:+5, integration_score:-10} },
@@ -1231,7 +1384,7 @@ const EVENTS = [
     ]},
   { id:'conflict_heidelbergensis_ergaster', cat:'INTER-SPECIES CONFLICT',
     title:'ERGASTER FIRE TACTICS HALT HEIDELBERGENSIS ADVANCE: CONGO',
-    species:'ergaster', region:'africa', turn_range:[10,160], repeatable:false,
+    species:'ergaster', region:'africa', turn_range:[10,239], repeatable:false,
     desc:'A H. heidelbergensis push into H. ergaster hunting corridors in the Congo Basin stalled when ergaster used coordinated fire to block ingress routes. Both species are capable proto-language users and cooperative hunters. The fire was not accidental. Researchers say this is the first documented counter-territorial strategy by a non-sapiens Tier 2 species against another. No deaths. Standoff holds.',
     choices:[
       { text:'Recognize the standoff as stable and formalize a territorial boundary', effects:{stability:+10, integration_score:-10, rights_conflict:+10, ecological_stress:+10} },
@@ -1240,7 +1393,7 @@ const EVENTS = [
     ]},
   { id:'conflict_antecessor_neanderthal', cat:'INTER-SPECIES CONFLICT',
     title:'ANTECESSOR CONSUMPTION OF NEANDERTHAL JUVENILE CONFIRMED',
-    species:'antecessor', region:'europe', turn_range:[1,230], repeatable:false,
+    species:'antecessor', region:'europe', turn_range:[1,239], repeatable:false,
     desc:'A Neanderthal juvenile remains were found at a H. antecessor site near Atapuerca bearing the same defleshing cut marks documented at Gran Dolina 800,000 years ago Rights advocates are silent. Governments are not.',
     choices:[
       { text:'Establish a hard exclusion zone separating the two populations immediately', effects:{budget:-100, integration_score:-10, stability:+10, rights_conflict:-8, extremism:+8} },
@@ -1249,7 +1402,7 @@ const EVENTS = [
     ]},
   { id:'conflict_georgicus_denisovan', cat:'INTER-SPECIES CONFLICT',
     title:'GEORGICUS BAND BLOCKS DENISOVAN WESTWARD MIGRATION: CAUCASUS PASS',
-    species:'georgicus', region:'caucasus', turn_range:[8,140], repeatable:false,
+    species:'georgicus', region:'caucasus', turn_range:[8,239], repeatable:false,
     desc:'H. georgicus individuals have occupied the Dariali Gorge, the only viable westward pass through the Caucasus, preventing Denisovan bands from accessing European lowlands. Both groups show community care behaviors. The blockade appears to be resource-guarding rather than aggression. But the result is displacement.',
     choices:[
       { text:'Negotiate a seasonal passage agreement with Georgicus community intermediaries', effects:{integration_score:+12, stability:+5, budget:-200, knowledge:+10} },
@@ -1258,7 +1411,7 @@ const EVENTS = [
     ]},
   { id:'conflict_rudolfensis_habilis', cat:'INTER-SPECIES CONFLICT',
     title:'DROUGHT FORCES RUDOLFENSIS AND HABILIS TO CONTEST THE SAME WATERHOLE',
-    species:'rudolfensis', region:'east_africa', turn_range:[6,140], repeatable:false,
+    species:'rudolfensis', region:'east_africa', turn_range:[6,239], repeatable:false,
     desc:'A year-long drought collapsed three alternative water sources in the East African Rift Valley, forcing H. rudolfensis and H. habilis into daily contest over the same waterhole. Rudolfensis holds the site by sheer presence. Habilis is using Oldowan tools to dig secondary access channels nearby. Neither group is dying yet, but the stress is compounding. This recreates the exact ecological pressure of 1.8 million years ago.',
     choices:[
       { text:'Fund emergency water infrastructure at two secondary sites to relieve pressure', effects:{budget:-300, ecological_stress:-12, stability:+5, integration_score:+5} },
@@ -1267,7 +1420,7 @@ const EVENTS = [
     ]},
   { id:'conflict_zoo_sanctuary_mixing', cat:'INTER-SPECIES CONFLICT',
     title:'THREE SPECIES IN SAME SANCTUARY: CONFRONTATIONS ESCALATING',
-    species:null, region:'east_africa', turn_range:[15,120], repeatable:false,
+    species:null, region:'east_africa', turn_range:[15,239], repeatable:false,
     desc:'A sanctuary complex in Kenya houses H. habilis, Au. afarensis, and Paranthropus in adjacent managed zones. Fence breaches caused by flooding allowed inter-zone movement for six weeks. Fourteen confrontations documented, two with injuries. The sanctuary director says the zones were never designed to share a perimeter.',
     choices:[
       { text:'Emergency infrastructure funding to restore full zone separation', effects:{budget:-250, ecological_stress:-10, stability:+5} },
@@ -1276,7 +1429,7 @@ const EVENTS = [
     ]},
   { id:'conflict_zoo_sapiens_protest', cat:'INTER-SPECIES CONFLICT',
     title:'ZOO STAFF ATTACKED AFTER SEPARATING BONDED HABILIS PAIR',
-    species:'habilis', region:'east_africa', turn_range:[10,240], repeatable:false,
+    species:'habilis', region:'east_africa', turn_range:[10,239], repeatable:false,
     desc:'Zoo staff at a Nairobi facility separated a bonded H. habilis pair for transport. One individual attacked three staff members, injuring two. The other has not eaten in six days. The institution classified it as a wildlife aggression incident. Rights advocates are calling it a grief response. Everyone is asking: is this grief?',
     choices:[
       { text:'Reunite the pair and investigate the transfer decision through a rights lens', effects:{knowledge: +20, integration_score:+10, rights_conflict:+10, public_opinion:+15} },
@@ -1877,7 +2030,7 @@ const EVENTS = [
   
   { id:'neanderthal_erectus_clash', cat:'INTER-SPECIES CONFLICT',
     title:'NEANDERTHAL vs H. ERECTUS: SIBERIA HUNTING GROUNDS',
-    species:'neanderthal', region:'siberia', turn_range:[5,170], repeatable:false,
+    species:'neanderthal', region:'siberia', turn_range:[5,239], repeatable:false,
     desc:'Neanderthal bands in the Siberia-East Asia borderlands have violently clashed with H. erectus groups over prime mammoth-hunting corridors. Three individuals from each group confirmed dead. Regional scouts say full-scale displacement is imminent.',
     choices:[
       { text:'Deploy mediation teams and establish a shared hunting corridor', effects:{budget:-250, stability:+6, integration_score:+10, extremism:+10} },
@@ -1886,7 +2039,7 @@ const EVENTS = [
     ]},
   { id:'heidelberg_habilis_africa', cat:'INTER-SPECIES CONFLICT',
     title:'H. HEIDELBERGENSIS DISRUPTS HABILIS SCAVENGING: EAST AFRICA',
-    species:'habilis', region:'east_africa', turn_range:[4,160], repeatable:false,
+    species:'habilis', region:'east_africa', turn_range:[4,239], repeatable:false,
     triggercondition:'ecologyhigh',
     desc:'H. heidelbergensis hunting parties in the Rift Valley have begun systematic persecution of H. habilis scavengers, driving them from established carcass sites. Habilis populations are collapsing in three sub-regions.',
     choices:[
@@ -1896,7 +2049,7 @@ const EVENTS = [
     ]},
   { id:'denisovan_antecessor_europe', cat:'INTER-SPECIES CONFLICT',
     title:'DENISOVAN MIGRATION TRIGGERS TERRITORIAL WAR: WESTERN EUROPE',
-    species:'denisovan', region:'europe', turn_range:[6,160], repeatable:false,
+    species:'denisovan', region:'europe', turn_range:[6,239], repeatable:false,
     desc:'Denisovan bands migrating westward through the Caucasus have entered H. antecessor territories in Iberia and the Pyrenees. Violent skirmishes have been documented at eleven sites. Both populations are small and neither can afford further losses.',
     choices:[
       { text:'Fund a buffer zone and monitored neutral territory', effects:{budget:-250, stability:+7, integration_score:+9, rights_conflict:+5} },
@@ -1905,7 +2058,7 @@ const EVENTS = [
     ]},
   { id:'floresiensis_luzonensis_islands', cat:'INTER-SPECIES CONFLICT',
     title:'ISLAND RESOURCE WAR: FLORES vs LUZON',
-    species:'floresiensis', region:'indonesia', turn_range:[5,75], repeatable:false,
+    species:'floresiensis', region:'indonesia', turn_range:[5,239], repeatable:false,
     desc:'Rare direct contact between H. floresiensis and H. luzonensis has escalated into territorial competition over inter-island food chains. The contact zone is small, a contested strait, but both species are critically vulnerable.',
     choices:[
       { text:'Establish an internationally monitored sanctuary for both', effects:{budget:-300, ecological_stress:-10, stability:+8, integration_score:+7} },
@@ -1914,7 +2067,7 @@ const EVENTS = [
     ]},
   { id:'paranthropus_afarensis_grazing', cat:'INTER-SPECIES CONFLICT',
     title:'PARANTHROPUS vs Au. AFARENSIS: EAST AFRICAN SAVANNA',
-    species:'afarensis', region:'east_africa', turn_range:[3,55], repeatable:false,
+    species:'afarensis', region:'east_africa', turn_range:[3,239], repeatable:false,
     triggercondition:'ecologyhigh',
     desc:'Paranthropus and Au. afarensis are competing over the same savanna food zones in East Africa as seasonal drought collapses the food web. Direct confrontations are increasing. Sanctuary rangers report injuries on both sides.',
     choices:[
@@ -1924,7 +2077,7 @@ const EVENTS = [
     ]},
   { id:'erectus_georgicus_caucasus', cat:'INTER-SPECIES CONFLICT',
     title:'H. ERECTUS EXPANSION CLASHES WITH H. GEORGICUS: CAUCASUS',
-    species:'georgicus', region:'siberia', turn_range:[7,70], repeatable:false,
+    species:'georgicus', region:'siberia', turn_range:[7,239], repeatable:false,
     desc:'H. erectus bands pushing northward into the Caucasus corridor have met violent resistance from H. georgicus, the original early dispersal group. Both are early-Homo level: their conflict is territorial, predictable, and escalating.',
     choices:[
       { text:'Deploy field mediators with food aid as a buffer incentive', effects:{budget:-190, stability:+6, integration_score:+7, ecological_stress:-6} },
@@ -1933,7 +2086,7 @@ const EVENTS = [
     ]},
   { id:'neanderthal_denisovan_siberia', cat:'INTER-SPECIES CONFLICT',
     title:'NEANDERTHAL vs DENISOVAN: SIBERIA TERRITORIAL DISPUTE',
-    species:'neanderthal', region:'siberia', turn_range:[10,80], repeatable:false,
+    species:'neanderthal', region:'siberia', turn_range:[10,239], repeatable:false,
     triggercondition:'extremismhigh',
     desc:'Neanderthal and Denisovan bands in the Altai Mountains have entered direct territorial conflict. Uniquely, genetic records confirm the two species can interbreed, and may have done so here before. Yet current contact is violent. Researchers say the tension may be resource-driven, not innate.',
     choices:[
@@ -1943,14 +2096,68 @@ const EVENTS = [
     ]},
   { id:'heidelberg_ergaster_africa', cat:'INTER-SPECIES CONFLICT',
     title:'H. HEIDELBERGENSIS vs H. ERGASTER: CENTRAL AFRICA',
-    species:'ergaster', region:'africa', turn_range:[8,75], repeatable:false,
+    species:'ergaster', region:'africa', turn_range:[8,239], repeatable:false,
     desc:'H. heidelbergensis and H. ergaster are in direct competition across Central Africa for the same territorial band, an evolutionary echo of the ancestral split that eventually produced both Neanderthals and H. sapiens. Researchers say this is a living example of cladogenesis under pressure.',
     choices:[
       { text:'Mediate with territorial demarcation and resources', effects:{budget:-140, stability:+7, integration_score:+7, ecological_stress:+7} },
       { text:'Prioritize H. heidelbergensis as direct sapiens ancestor', effects:{rights_conflict:-14, stability:-5, integration_score:-7, extremism:+8} },
       { text:'Observe and document without intervening', effects:{knowledge:+25, ecological_stress:-12, stability:-8, extremism:+6} }
     ]},
-  
+  { id:'conflict_neanderthal_ergaster', cat:'INTER-SPECIES CONFLICT',
+    title:'NEANDERTHAL BANDS ROUT ERGASTER FROM SHARED HUNTING CORRIDOR NEAR EAST',
+    species:'neanderthal', region:'near_east', turn_range:[8,239], repeatable:false,
+    desc:'H. neanderthalensis bands have systematically displaced H. ergaster from a shared hunting corridor in the Near East. Neanderthal advantages are significant: larger brain, cold-weather endurance, and birch tar hafted spears vs. Ergaster\'s hand axes. Three Ergaster bands have retreated from their territory. Researchers note this mirrors fossil evidence of Neanderthal expansion into territories where Ergaster had been dominant. The Ergaster population in the region has dropped according to a population count.',
+    choices:[
+      { text:'Establish a monitored territorial boundary and enforce separation with field teams', effects:{stability:+5, ecological_stress:-5, budget:-200, integration_score:-5} },
+      { text:'Support Ergaster relocation south with food and habitat corridors', effects:{budget:-150, ecological_stress:+8, integration_score:+5, stability:+3} },
+      { text:'Document the displacement: Neanderthal cognitive superiority in action', effects:{knowledge:+25, ecological_stress:+12, stability:-5, extremism:+5} }
+    ]},
+  { id:'conflict_denisovan_floresiensis', cat:'INTER-SPECIES CONFLICT',
+    title:'DENISOVAN MARITIME MIGRANTS DISPLACE FLORESIENSIS FROM ISLAND FORAGING SITES',
+    species:'denisovan', region:'southeast_asia', turn_range:[12,239], repeatable:false,
+    desc:'Denisovan individuals, following maritime routes into Southeast Asia, have displaced H. floresiensis from three foraging sites on the island chain between Sulawesi and Flores. The cognitive gap is stark: Denisovans carry jewelry-making and high-altitude adaptation traits. Floresiensis, though an efficient coordinated hunter, is outcompeted at every resource site. Field researchers describe the displacement as quiet and total. No violence. Just absence: the Floresiensis bands are simply gone from sites they occupied for 50,000 years.',
+    choices:[
+      { text:'Designate the Floresiensis sites as protected exclusion zones: Denisovans must reroute', effects:{ecological_stress:-10, rights_conflict:+5, integration_score:+8, budget:-180} },
+      { text:'Establish supplemental food depots for Floresiensis to reduce competition pressure', effects:{budget:-120, ecological_stress:-5, stability:+4} },
+      { text:'Allow natural dynamics: both species have equal claim to these islands', effects:{knowledge:+15, ecological_stress:+18, stability:-8, extremism:+5} }
+    ]},
+  { id:'conflict_luzonensis_habilis', cat:'INTER-SPECIES CONFLICT',
+    title:'H. LUZONENSIS HABITAT OVERRUN BY HABILIS TOOL-USERS PUSHING NORTH',
+    species:'luzonensis', region:'philippines', turn_range:[6,239], repeatable:false,
+    desc:'H. habilis individuals, migrating through Southeast Asia, have reached the Philippine island chain and are competing directly with H. luzonensis for the same cave shelter sites. Habilis has Oldowan tools: an advantage Luzonensis cannot match despite their curved-finger climbing adaptations. Three confirmed Luzonensis shelter sites now show Habilis tool scatter. There are not many confirmed Luzonensis individuals in the world. The math is unforgiving.',
+    choices:[
+      { text:'Emergency species protection order: Luzonensis habitat legally sealed from all encroachment', effects:{ecological_stress:-12, rights_conflict:+8, integration_score:+10, budget:-200} },
+      { text:'Relocate Habilis individuals to alternate sites on Luzon with food supplementation', effects:{budget:-150, ecological_stress:-6, stability:+4, integration_score:+5} },
+      { text:'Classify as natural interspecies competition: no intervention', effects:{knowledge:+18, ecological_stress:+20, stability:-5, extremism:+8, integration_score:-8} }
+    ]},
+  { id:'conflict_tchadensis_afarensis', cat:'INTER-SPECIES CONFLICT',
+    title:'S. TCHADENSIS AND AU. AFARENSIS CONTEST WATER SOURCE: OLDEST STANDOFF ON RECORD',
+    species:'tchadensis', region:'central_africa', turn_range:[3,239], repeatable:false,
+    desc:'S. tchadensis and Au. afarensis individuals have been documented in repeated confrontation over a permanent water source in the Central African Rift margin. Both species are among humanity\'s oldest ancestors. Neither shows tool use. Both show clear territorial signaling: posturing, vocalizations, and physical displacement. Researchers call it the oldest inter-hominin standoff ever documented in real time. 7 million years of evolutionary history, meeting at a waterhole in the modern day.',
+    choices:[
+      { text:'Fund emergency water infrastructure: create two secondary sources to relieve pressure', effects:{budget:-280, ecological_stress:-15, stability:+5, integration_score:+5} },
+      { text:'Designate the site as a joint protected observation zone with rangers on both sides', effects:{budget:-150, knowledge:+20, stability:+4, rights_conflict:+3} },
+      { text:'Observe without intervention: this is evolutionary biology, not politics', effects:{knowledge:+30, ecological_stress:+20, stability:-8, extremism:+5} }
+    ]},
+  { id:'conflict_afarensis_habilis', cat:'INTER-SPECIES CONFLICT',
+    title:'HABILIS DISPLACES AFARENSIS FROM BUTCHERY SITES USING OLDOWAN TOOLS',
+    species:'habilis', region:'east_africa', turn_range:[4,239], repeatable:false,
+    desc:'In the East African Rift Valley, H. habilis individuals are systematically excluding Au. afarensis from large carcass sites using Oldowan flaked stones as deterrents. Afarensis has no equivalent tool use. The displacement is documented at 11 confirmed sites across three months. Researchers describe this as the moment the tool-using lineage began to permanently out-compete the pre-tool lineage. It happened 2.6 million years ago too. It is happening again.',
+    choices:[
+      { text:'Create designated scavenging corridors for each species with ranger patrols', effects:{budget:-180, ecological_stress:-8, stability:+5, integration_score:+5} },
+      { text:'Increase Afarensis food supplementation to remove competition pressure', effects:{budget:-120, ecological_stress:-5, rights_conflict:+4} },
+      { text:'Publish findings: do not intervene in natural evolutionary re-enactment', effects:{knowledge:+25, ecological_stress:+15, stability:-8, extremism:+6} }
+    ]},
+  { id:'conflict_rudolfensis_ergaster', cat:'INTER-SPECIES CONFLICT',
+    title:'ERGASTER ENDURANCE HUNTERS EXHAUST RUDOLFENSIS FROM SHARED TERRITORY EAST AFRICA',
+    species:'ergaster', region:'east_africa', turn_range:[6,239], repeatable:false,
+    desc:'H. ergaster persistence hunters built for endurance running across open savanna are outcompeting H. rudolfensis at every shared resource site in East Africa. Ergaster\'s modern body plan gives it a critical advantage in sustained pursuit. Rudolfensis, with a larger face and contested taxonomic status, appears to be retreating to marginal terrain. Four Rudolfensis bands have not been seen at traditional sites in six weeks. One field researcher wrote: The body plan wins. It always does.',
+    choices:[
+      { text:'Formalize a territorial boundary and deploy ranger monitoring', effects:{stability:+8, ecological_stress:-5, budget:-160, integration_score:-5} },
+      { text:'Fund Rudolfensis supplemental feeding to reduce starvation pressure', effects:{budget:-120, ecological_stress:+5, integration_score:+5, stability:+3} },
+      { text:'Document and publish: this resolves a 2-million-year taxonomic debate in real time', effects:{knowledge:+30, ecological_stress:+12, stability:-5, extremism:+4} }
+    ]},
+
   { id:'ndl_council_split', cat:'BAND POLITICS', title:'BAND COUNCIL DIVIDED ON APPROACHING SAPIENS',
     sp_only:true, spmode:'neanderthal', turn_range:[2,60], repeatable:false,
     desc:'Your council is split. Half want to approach a nearby sapiens research settlement: they have seen the sapiens bring food and medicines. The other half see nothing but risk.',
@@ -2390,7 +2597,7 @@ const EVENTS = [
     ] },
   
   { id: 'maritime_neanderthal_sicily', cat: 'MIGRATION', special: false,
-    title: 'NEANDERTHAL COASTAL CROSSING — SICILY STRAIT',
+    title: 'NEANDERTHAL COASTAL CROSSING: SICILY STRAIT',
     desc: 'Neanderthal groups have constructed rudimentary watercraft and crossed the Strait of Sicily. This represents a cognitive and technological leap previously unattributed to this species.',
     species: 'neanderthal', region: 'europe', repeatable: false,
     choices: [
@@ -2501,7 +2708,7 @@ const EVENTS = [
       { text: 'Cede the valley and migrate south quietly', effects: { sp_tension: -10, sp_resources: -10, sp_territory: -0.5 } }
     ] },
   { id: 'sp_afarensis_migration_break', cat: 'SURVIVAL', sp_only: true, spmode: 'afarensis',
-    title: 'THE HERD CROSSES THE RIFT — FOLLOW OR HOLD?',
+    title: 'THE HERD CROSSES THE RIFT: FOLLOW OR HOLD?',
     desc: 'The great wildebeest migration has begun crossing the Rift Valley. Following it means abundant food for months, but the crossing terrain is contested and the route passes near two H. sapiens observation posts.',
     turn_range: [4, 100], repeatable: false,
     choices: [
@@ -2566,7 +2773,7 @@ const EVENTS = [
     ] },
 
   
-  { id: 'lategame_budget_crisis', cat: 'POLITICAL', title: 'UN FUNDING SHORTFALL — OPERATIONS AT RISK',
+  { id: 'lategame_budget_crisis', cat: 'POLITICAL', title: 'UN FUNDING SHORTFALL: OPERATIONS AT RISK',
     turn_range: [144, 240], repeatable: true,
     desc: 'Seventeen member states have suspended UN dues payments, citing "hominin fatigue" after 12+ years of crisis management. Operational budgets are at 40% capacity. Three field stations have gone dark.',
     choices: [
@@ -2574,7 +2781,7 @@ const EVENTS = [
       { text: 'Reallocate from low-priority programs and absorb the shortfall', effects: { budget: +150, knowledge: -50, stability: -20 } },
       { text: 'Issue a public transparency report and shame the delinquent states', effects: { budget: +200, public_opinion: +15, extremism: +15 } }
     ] },
-  { id: 'lategame_far_right_surge', cat: 'POLITICAL', title: 'FAR-RIGHT COALITION WINS PARLIAMENTARY MAJORITY — EASTERN EUROPE',
+  { id: 'lategame_far_right_surge', cat: 'POLITICAL', title: 'FAR-RIGHT COALITION WINS PARLIAMENTARY MAJORITY: EASTERN EUROPE',
     turn_range: [100, 240], repeatable: true,
     desc: 'A coalition running on "Sapiens First" platform has won parliamentary control in three Eastern European nations simultaneously. Their first legislative agenda: withdraw from all UN non-sapiens protection frameworks. The vote is in 48 hours.',
     choices: [
@@ -2630,7 +2837,7 @@ const EVENTS = [
       { text: 'Designate it as a UNESCO World Heritage site', effects: { integration_score: +8, stability: +5, knowledge: +15 } },
       { text: 'No official position as cultural institutions should be independent', effects: { public_opinion: +10 } }
     ] },
-  { id: 'lategame_disease_mutation', cat: 'CRISIS', title: 'CROSS-SPECIES PATHOGEN MUTATES — NEW STRAIN CONFIRMED',
+  { id: 'lategame_disease_mutation', cat: 'CRISIS', title: 'CROSS-SPECIES PATHOGEN MUTATES: NEW STRAIN CONFIRMED',
     turn_range: [150, 240], repeatable: true,
     trigger_condition: null,
     desc: 'A novel variant of the cross-species pathogen has been identified simultaneously in three species populations across four continents. Preliminary data suggests the mutation originated at a high-contact sapiens/non-sapiens interface zone. WHO has convened an emergency session.',
@@ -2655,7 +2862,7 @@ const EVENTS = [
       { text: 'Commission a new census and update all resource allocation models', effects: { knowledge: +25, stability: +25, integration_score: +25, budget: -250 } },
       { text: 'Issue a measured acknowledgement to avoid triggering political reaction', effects: { stability: +5, public_opinion: +5 } }
     ] },
-  { id: 'lategame_sapiens_defector', cat: 'INTEGRATION BREAKTHROUGH', title: 'FORMER SAPIENS FIRST LEADER DEFECTS — CALLS FOR RECONCILIATION',
+  { id: 'lategame_sapiens_defector', cat: 'INTEGRATION BREAKTHROUGH', title: 'FORMER SAPIENS FIRST LEADER DEFECTS - CALLS FOR RECONCILIATION',
     turn_range: [165, 240], repeatable: false,
     desc: 'The former chairman of the Sapiens First International movement, once the most visible face of anti-hominin extremism, has issued a 90-minute video confession and apology. He is requesting asylum in a safe harbor city and offering to testify at the ICC.',
     choices: [
@@ -2833,12 +3040,16 @@ function createInitialState(difficulty = 'normal') {
     unlockedModes: ['sapiens'],
     meters: {
       stability:         difficulty === 'extinction' ? 55 : 75,
-      disease:           difficulty === 'extinction' ? 25 : 10,
-      rights_conflict:   difficulty === 'extinction' ? 50 : 0,
+      disease:           difficulty === 'extinction' ? 40 : 10,
+      rights_conflict:   difficulty === 'extinction' ? 0 : 0,
       ecological_stress: difficulty === 'extinction' ? 30 : 15,
-      extremism:         difficulty === 'extinction' ? 35 : 20
+      extremism:         difficulty === 'extinction' ? 40 : 20
     },
-    resources: { budget:1000, knowledge:0, public_opinion:55 },
+    resources: { budget: difficulty === 'easy'       ? 700
+               : difficulty === 'hard'       ? 500
+               : difficulty === 'extinction' ? 400
+               : 600, // normal
+               knowledge:0, public_opinion:55 },
     species: {},
     policies_enacted: [], policy_uses: {},
     events_seen: [], special_events_seen: [], unlocked_policies: [],
@@ -3238,7 +3449,11 @@ function checkTerritorialOverlap() {
             conflictMod *= GS.tierLowBehavior[sd.id] === 'hostile' ? 1.6 : 0.5;
           }
         });
-        if (Math.random() > 0.20 * conflictMod) continue;
+        const conflictBase = GS.difficulty === 'easy' ? 0.08
+                           : GS.difficulty === 'hard' ? 0.32
+                           : GS.difficulty === 'extinction' ? 0.45
+                           : 0.20;
+        if (Math.random() > conflictBase * conflictMod) continue;
         const lossA = 0.05 + Math.random()*0.10;
         const lossB = 0.05 + Math.random()*0.10;
         const prePopA = spA.population, prePopB = spB.population;
@@ -3286,8 +3501,51 @@ function checkTerritorialOverlap() {
         GS.meters.extremism = Math.min(100, GS.meters.extremism + 2);
         flashRegion(region);
         if (Math.random() < 0.35) {
-          const conflictEvs = EVENTS.filter(e => e.cat === 'INTER-SPECIES CONFLICT' && !GS.events_seen.includes(e.id));
-          if (conflictEvs.length > 0) eventQueue.push(conflictEvs[Math.floor(Math.random()*conflictEvs.length)]);
+          // 1. Try to find an authored event matching EITHER of the two fighting species
+          const speciesIds = [sdA.id, sdB.id];
+          const matchedEvs = EVENTS.filter(e =>
+            e.cat === 'INTER-SPECIES CONFLICT' &&
+            !GS.events_seen.includes(e.id) &&
+            speciesIds.includes(e.species)
+          );
+          // 2. If a matched event exists, prefer it
+          // 3. If not, generate a dynamic inline event for these two specific species
+          if (matchedEvs.length > 0) {
+            eventQueue.push(matchedEvs[Math.floor(Math.random() * matchedEvs.length)]);
+          } else {
+            // Dynamic fallback -- always fires, never marked seen (repeatable conflict)
+            const nameA = sdA.name, nameB = sdB.name;
+            const dynamicConflict = {
+              id: `dyn_conflict_${sdA.id}_${sdB.id}_${GS.turn}_${Math.random().toString(36).slice(2,6)}`,
+              cat: 'INTER-SPECIES CONFLICT',
+              title: `${nameA.toUpperCase()} AND ${nameB.toUpperCase()} CLASH IN ${region.replace(/_/g,' ').toUpperCase()}`,
+              species: sdA.id,
+              region: region,
+              repeatable: true,
+              desc: `Field teams report a direct territorial confrontation between ${nameA} and ${nameB} in the ${region.replace(/_/g,' ')} zone. Population losses on both sides. Researchers are demanding UN guidance.`,
+              choices: [
+                {
+                  text: `Establish an emergency buffer zone between the two populations`,
+                  effects: { stability: +4, budget: -150, ecological_stress: -5 }
+                },
+                {
+                  text: `Prioritize the species with higher integration potential and support their territorial claim`,
+                  effects: { integration_score: +5, extremism: +8, stability: -3 }
+                },
+                {
+                  text: `Declare the region a joint observation zone with no military presence`,
+                  effects: { knowledge: +15, ecological_stress: +8, stability: -5 }
+                }
+              ]
+            };
+            // Add to EVENTS and dynamicEvents so it can be tracked
+            if (!GS.dynamicEvents) GS.dynamicEvents = [];
+            if (!GS.dynamicEvents.find(e => e.id === dynamicConflict.id)) {
+              GS.dynamicEvents.push(dynamicConflict);
+              EVENTS.push(dynamicConflict);
+            }
+            eventQueue.push(dynamicConflict);
+          }
         }
         [{ sp: spA, sd: sdA }, { sp: spB, sd: sdB }].forEach(({sp, sd}) => {
           if (sp.population <= 0 && !sp.extinct) {
@@ -3329,6 +3587,72 @@ function triggerPostTurnMigrations() {
         progress: -delay, speed, color: sd.color, postTurn: true
       });
     }
+  });
+}
+
+function voluntaryMigration() {
+  SPECIES_DATA.forEach(sd => {
+    if (sd.id === 'sapiens') return;
+    const sp = GS.species[sd.id];
+    if (!sp || sp.extinct || sp.population < 500) return;
+
+    const tier = sd.cognitiveLevel;
+    if (tier > 3) return; // Tier 4-5 only move via displacement
+
+    const migrateChance = tier === 1 ? 0.35
+                        : tier === 2 ? 0.20
+                        :              0.10;
+    if (Math.random() > migrateChance) return;
+
+    const currentRegions = getEffectiveRegions(sd);
+
+    const reachable = [];
+    currentRegions.forEach(reg => {
+      (REGION_ADJACENCY[reg] || []).forEach(adj => {
+        if (!currentRegions.includes(adj) && !reachable.includes(adj))
+          reachable.push(adj);
+      });
+    });
+    if (reachable.length === 0) return;
+
+    const dest = reachable[Math.floor(Math.random() * reachable.length)];
+
+    // Tier 1-2: true migration with region cap (moves, doesn't only expand)
+    if (tier <= 2) {
+      const maxRegions = tier === 1 ? 4 : 3;
+      if (currentRegions.length >= maxRegions) {
+        if (!sp.extraRegions) sp.extraRegions = [];
+        const removable = sp.extraRegions.filter(r => r !== sd.regions[0]);
+        if (removable.length > 0) {
+          const ridx = sp.extraRegions.indexOf(removable[0]);
+          sp.extraRegions.splice(ridx, 1);
+        }
+      }
+    }
+
+    if (!sp.extraRegions) sp.extraRegions = [];
+    sp.extraRegions.push(dest);
+
+    // Animate trail dot for the move
+    const fromReg = REGIONS[currentRegions[0]];
+    const toReg = REGIONS[dest];
+    if (fromReg && toReg) {
+      animState.migrationTrails.push({
+        speciesId: sd.id,
+        from: currentRegions[0],
+        to: dest,
+        startX: fromReg.cx,
+        startY: fromReg.cy,
+        endX: toReg.cx,
+        endY: toReg.cy,
+        progress: 0,
+        speed: 0.005 + Math.random() * 0.005,
+        color: sd.color,
+        voluntary: true
+      });
+    }
+
+    addNews(`MIGRATION: ${sd.name} expanding into ${dest.replace(/_/g, ' ')}.`, 'event');
   });
 }
 
@@ -3393,7 +3717,11 @@ function checkInterbreeding() {
     if (!sp || sp.extinct || !sp.encountered) return;
     if (GS.interbreedingPairs.includes(sd.id)) return;
     if (GS.integration_score < 20 && sd.id !== 'neanderthal') return;
-    if (Math.random() > 0.15) return;
+    const breedChance = GS.difficulty === 'easy' ? 0.05
+                      : GS.difficulty === 'hard' ? 0.25
+                      : GS.difficulty === 'extinction' ? 0.35
+                      : 0.15;
+    if (Math.random() > breedChance) return;
     GS.interbreedingPairs.push(sd.id);
     const specificId = `interbreeding_${sd.id}_sapiens`;
     const existing = EVENTS.find(e => e.id === specificId);
@@ -3428,7 +3756,11 @@ function checkRomanticEncounters() {
     const sp = GS.species[sd.id];
     if (!sp || sp.extinct || !sp.encountered) return;
     if (GS.romanticEncounters.includes(sd.id)) return;
-    if (Math.random() > 0.08) return;
+    const romanticChance = GS.difficulty === 'easy' ? 0.03
+                         : GS.difficulty === 'hard' ? 0.14
+                         : GS.difficulty === 'extinction' ? 0.20
+                         : 0.08;
+    if (Math.random() > romanticChance) return;
     if (GS.turn < 10) return;
     GS.romanticEncounters.push(sd.id);
     const isRomantic = Math.random() > 0.3;
@@ -3487,7 +3819,11 @@ function advanceTurn() {
     });
   }
   const mult = GS.diffMult || 1.0;
-  GS.resources.budget = Math.min(9999, GS.resources.budget + 200);
+  const budgetIncome = GS.difficulty === 'easy'       ? 250
+                     : GS.difficulty === 'hard'        ? 150
+                     : GS.difficulty === 'extinction'  ? 100
+                     : 200; // normal
+  GS.resources.budget = Math.min(700, GS.resources.budget + budgetIncome);
   if (GS.policies_enacted.includes('vaccination_program')) GS.resources.budget = Math.max(0, GS.resources.budget - 80);
   let kGain = 10;
   ['genome_mapping','cognitive_assessment','pathogen_surveillance'].forEach(p => { if (GS.policies_enacted.includes(p)) kGain += 15; });
@@ -3551,7 +3887,7 @@ function advanceTurn() {
   
   if (GS.integration_score >= 90 && m.rights_conflict < 60 && !GS._hintedRightsWall) {
     GS._hintedRightsWall = true;
-    addNews('⚑ INTEGRATION AT 90% — but the rights movement needs to reach 75% for Hominini Harmony. Choose rights-affirming responses to push it higher.', 'event');
+    addNews('⚑ INTEGRATION AT 90% but the rights movement needs to reach 75% for Hominini Harmony. Choose rights-affirming responses to push it higher.', 'event');
   }
   SPECIES_DATA.forEach(sd => {
     if (sd.id === 'sapiens') return;
@@ -3590,7 +3926,7 @@ function advanceTurn() {
   
   if (m.stability <= 10 && m.stability > 0 && !GS._warnedLowStability) {
     GS._warnedLowStability = true;
-    addNews('⚠ CRITICAL: STABILITY BELOW 10% — CIVILIZATIONAL COLLAPSE IMMINENT. YOUR SAVE WILL BE WIPED.', 'crisis');
+    addNews('⚠ CRITICAL: STABILITY BELOW 10%  CIVILIZATIONAL COLLAPSE IMMINENT. YOUR SAVE WILL BE WIPED.', 'crisis');
     showAchievement('⚠ FINAL WARNING', 'Stability has fallen below 10%. If it reaches zero, all progress is lost.');
   }
   if (m.stability > 10) GS._warnedLowStability = false;
@@ -3694,6 +4030,7 @@ function advanceTurn() {
   animPulse = true; setTimeout(() => { animPulse = false; }, 900);
   triggerPostTurnMigrations();
   checkMaritimeMigration();
+  voluntaryMigration();
   checkInterbreeding();
   checkRomanticEncounters();
   
@@ -3743,6 +4080,10 @@ function generateNewsFlavor() {
 function checkLegalFrameworkTriggers() {
   if (!GS) return;
   const policies = GS.policies_enacted || [];
+  const triggerChance = GS.difficulty === 'easy' ? 0.20
+                      : GS.difficulty === 'hard' ? 0.70
+                      : GS.difficulty === 'extinction' ? 0.90
+                      : 0.50; // normal
 
   function queueLFEvent(id) {
     const ev = EVENTS.find(e => e.id === id);
@@ -3770,7 +4111,7 @@ function checkLegalFrameworkTriggers() {
 
   
   if (policies.includes('wildlife_protection')) {
-    if (Math.random() < 0.50) {
+    if (Math.random() < triggerChance) {
       const wpoId = 'lf_wpo_ecosystem_disruption';
       const ev = EVENTS.find(e => e.id === wpoId);
       if (ev && !eventQueue.find(e => e.id === wpoId)
@@ -3783,7 +4124,7 @@ function checkLegalFrameworkTriggers() {
 
   
   if (policies.includes('species_containment_order')) {
-    if (Math.random() < 0.50) {
+    if (Math.random() < triggerChance) {
       const evId = Math.random() < 0.50 ? 'lf_sco_escape_attempt_low' : 'lf_sco_escape_high';
       const ev = EVENTS.find(e => e.id === evId);
       if (ev && !eventQueue.find(e => e.id === evId)
@@ -3980,7 +4321,23 @@ function renderEventModal(ev) {
       const arrow = v > 0 ? '▲ ' : '▼ ';
       return `<span class="choice-effect ${cls}">${arrow}${lk(k)} ${v>0?'+':''}${v}</span>`;
     }).join('');
-    return `<button class="choice-btn" onclick="resolveEvent(${i})"><div class="choice-text">${c.text}</div><div class="choice-effects-row">${effs}</div></button>`;
+    const choiceCost = (c.effects?.budget < 0) ? Math.abs(c.effects.budget) : 0;
+    const cantAfford = choiceCost > 0 && GS.resources.budget < choiceCost;
+    return `<button class="choice-btn" onclick="resolveEvent(${i})"><div class="choice-text">${c.text}</div>${cantAfford ? `
+    <div style="
+      margin-top: 8px;
+      padding: 8px 10px;
+      background: rgba(192,57,43,0.12);
+      border-left: 3px solid var(--text-crisis);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      line-height: 1.7;
+      color: var(--text-crisis);
+    ">
+      INSUFFICIENT FUNDS COST: ${choiceCost} (YOU HAVE: ${GS.resources.budget})<br>
+      IF YOU PROCEED: BUDGET GOES NEGATIVE · STABILITY −25% · EXTREMISM +50%
+    </div>
+  ` : ''}<div class="choice-effects-row">${effs}</div></button>`;
   }).join('');
   document.getElementById('event-card').className = `event-card${isExtinction?' extinction-card':''}`;
   document.getElementById('event-card').innerHTML = `
@@ -4003,6 +4360,14 @@ function resolveEvent(idx) {
   const choice = ev.choices[idx];
   
   if (!GS.events_seen.includes(ev.id)) GS.events_seen.push(ev.id);
+  // Apply budget overdraft penalty if player couldn't afford the choice
+  const choiceCost = (choice.effects?.budget < 0) ? Math.abs(choice.effects.budget) : 0;
+  if (choiceCost > 0 && GS.resources.budget < choiceCost) {
+    GS.meters.stability = Math.max(0, Math.floor(GS.meters.stability * 0.75));
+    GS.meters.extremism = Math.min(100, Math.floor(GS.meters.extremism * 1.50));
+    addNews(`BUDGET CRISIS: Deficit spending triggered civil unrest. Stability −25%, Extremism +50%.`, 'crisis');
+  }
+  // Apply the normal choice effects
   if (choice.effects) applyEffects(choice.effects);
   
   if (choice.reversePolicy) {
@@ -4224,7 +4589,7 @@ function showResultScreen(result) {
   const unl = result.unlocks?.length ? `<div class="result-unlocks"><div class="result-unlocks-title">🔓 SPECIES MODES UNLOCKED</div>${result.unlocks.map(id=>{const s=SPECIES_DATA.find(x=>x.id===id);return s?`<div class="unlock-item">${s.emoji} ${s.name} — ${s.nickname}</div>`:''}).join('')}</div>` : '';
   const elimStat = result.reason==='extinction' ? `<div class="result-stat"><div class="result-stat-val" style="color:var(--text-crisis)">${result.eliminatedCount||15}</div><div class="result-stat-label">ELIMINATED</div></div>` : '';
   document.getElementById('result-content').innerHTML = `
-    <div class="result-eyebrow" style="color:${col}">${result.type==='lose'?'// GAME OVER //':'// MISSION COMPLETE //'}</div>
+    <div class="result-eyebrow" style="color:${col}">${result.type==='lose'?'GAME OVER':'MISSION COMPLETE'}</div>
     <div class="result-title" style="color:${col}">${result.title}</div>
     <div class="result-subtitle">${result.subtitle}</div>
     <div class="result-stats">
