@@ -1023,7 +1023,7 @@ const EVENTS = [
     desc:'Fire use by H. erectus populations is creating localized smoke environments that appear to harbor and transmit a novel respiratory pathogen. The same fire use that helped them survive 1.7 million years is now a disease vector.',
     choices:[
       { text:'Introduce sapiens-designed ventilation structures to their camps', effects:{budget:-180, disease:-12, rights_conflict:+5, integration_score:+8} },
-      { text:'Relocate affected populations away from fire-use zones temporarily', effects:{budget:-150, disease:-10, ecological_stress:+5, stability:+3} },
+      { text:'Relocate affected populations away from fire-use zones temporarily', effects:{budget:-150, disease:-10, ecological_stress:-5, stability:+3} },
       { text:'Restrict fire use via field intervention: document the response', effects:{disease:-8, knowledge:+20, rights_conflict:-15, extremism:+6} }
     ]},
   { id:'disease_floresiensis', cat:'BIOLOGICAL CRISIS', title:'FLORESIENSIS SANCTUARY CONTAMINATED BY RESEARCHER EQUIPMENT',
@@ -1362,8 +1362,8 @@ const EVENTS = [
     desc:'A H. erectus hunting party killed four Denisovan individuals near Kunming and seized their highland campsite. Denisovans carry EPAS1 altitude adaptations that make them uniquely suited to these highlands. Erectus cannot survive above 3,000m for more than a season. The Chinese government is demanding UN guidance. Researchers say this is pure resource denial, not territory.',
     choices:[
       { text:'Issue an emergency sanctuary designation for the contested highland zone', effects:{budget:-200, ecological_stress:-10, rights_conflict:+10, integration_score:+10} },
-      { text:'Relocate the H. erectus band to lowland zones with food support', effects:{budget:-150, stability:+6, ecological_stress:+5} },
-      { text:'Classify as wildlife incident; no legal framework applies here yet', effects:{stability:+2, extremism:+12, integration_score:-12, ecological_stress: +20} }
+      { text:'Relocate the H. erectus band to lowland zones with food support', effects:{budget:-150, stability:+6, ecological_stress:-5} },
+      { text:'Classify as wildlife incident; no legal framework applies here yet', effects:{stability:+2, extremism:+12, integration_score:-12, ecological_stress: +10} }
     ]},
   { id:'conflict_habilis_paranthropus', cat:'INTER-SPECIES CONFLICT',
     title:'HABILIS USING OLDOWAN TOOLS AS WEAPONS AGAINST PARANTHROPUS',
@@ -1381,14 +1381,14 @@ const EVENTS = [
     choices:[
       { text:'Invoke emergency species protection: clear H. erectus from contested sites', effects:{ecological_stress:-12, rights_conflict:+5, integration_score:-10} },
       { text:'Establish a joint monitoring post and food supplementation to reduce contest', effects:{budget:-250, ecological_stress:-6, stability:+4, integration_score:+5} },
-      { text:'Accelerate H. floresiensis relocation to a secure mainland sanctuary', effects:{budget:-150, ecological_stress:+8, rights_conflict:+5, extremism:+5, integration_score: +5} }
+      { text:'Accelerate H. floresiensis relocation to a secure mainland sanctuary', effects:{budget:-150, ecological_stress:-8, rights_conflict:+5, extremism:+5, integration_score: +5} }
     ]},
   { id:'conflict_heidelbergensis_ergaster', cat:'INTER-SPECIES CONFLICT',
     title:'ERGASTER FIRE TACTICS HALT HEIDELBERGENSIS ADVANCE: CONGO',
     species:'ergaster', region:'africa', turn_range:[10,239], repeatable:false,
     desc:'A H. heidelbergensis push into H. ergaster hunting corridors in the Congo Basin stalled when ergaster used coordinated fire to block ingress routes. Both species are capable proto-language users and cooperative hunters. The fire was not accidental. Researchers say this is the first documented counter-territorial strategy by a non-sapiens Tier 2 species against another. No deaths. Standoff holds.',
     choices:[
-      { text:'Recognize the standoff as stable and formalize a territorial boundary', effects:{stability:+10, integration_score:-10, rights_conflict:+10, ecological_stress:+10} },
+      { text:'Recognize the standoff as stable and formalize a territorial boundary', effects:{stability:+10, integration_score:-10, rights_conflict:+10, ecological_stress:-10} },
       { text:'Mediate with food aid depots on both sides to reduce pressure to expand', effects:{budget:-200, ecological_stress:-8, stability:+5} },
       { text:'Relocate H. heidelbergensis east to reduce the corridor pressure', effects:{budget:-150, stability:+10, ecological_stress:+6, integration_score:-5, rights_conflict:+5} }
     ]},
@@ -1626,7 +1626,7 @@ const EVENTS = [
     choices:[
       { text:'Issue a UN statement connecting public empathy to conservation law now', effects:{integration_score:+15, extremism:+15, public_opinion:+20, rights_conflict:+10} },
       { text:'Let the cultural moment develop, no official statement yet', effects:{public_opinion:+10, integration_score:+8, extremism:+8} },
-      { text:'Issue a clarifying statement: tool use does not imply personhood', effects:{extremism:-10, integration_score:-15, public_opinion:-12, ecological_stress:+8} }
+      { text:'Issue a clarifying statement: tool use does not imply personhood', effects:{extremism:-10, integration_score:-15, public_opinion:-12, ecological_stress:-8} }
     ]},
 
   
@@ -1695,7 +1695,7 @@ const EVENTS = [
     species:'habilis', region:'east_africa', turn_range:[30,95], repeatable:false,
     desc:'Researchers near Olduvai Gorge discovered H. habilis individuals collecting and caching sapiens-manufactured objects: water bottles, a solar lantern, three dead phones, and a length of rope. The cache is arranged in a deliberate pattern near their core territory. The lead researcher noticed her missing water bottle in the collection. "They did not take it randomly," she said. "They kept it."',
     choices:[
-      { text:'Leave reciprocal items near the cache and observe the response', effects:{integration_score:+10, knowledge:+25, ecological_stress:+5}, queue_event:'hab_proto_trade', queue_delay:4 },
+      { text:'Leave reciprocal items near the cache and observe the response', effects:{integration_score:+10, knowledge:+25, ecological_stress:-5}, queue_event:'hab_proto_trade', queue_delay:4 },
       { text:'Document the cache only, no interaction', effects:{knowledge:+22} },
       { text:'Remove the cache and restrict research access to protect the population', effects:{knowledge:-10, ecological_stress:-8, integration_score:-5} }
     ]},
@@ -2045,8 +2045,8 @@ const EVENTS = [
     desc:'H. heidelbergensis hunting parties in the Rift Valley have begun systematic persecution of H. habilis scavengers, driving them from established carcass sites. Habilis populations are collapsing in three sub-regions.',
     choices:[
       { text:'Establish protected scavenging corridors for H. habilis', effects:{budget:-180, ecological_stress:-8, integration_score:+6, stability:+3} },
-      { text:'Prioritize H. heidelbergensis as a direct human ancestor', effects:{ecological_stress:+10, rights_conflict:-10, stability:-4, integration_score:+5} },
-      { text:'No intervention; ecological competition is natural', effects:{ecological_stress:+24, stability:-8, extremism:+16} }
+      { text:'Prioritize H. heidelbergensis as a direct human ancestor', effects:{ecological_stress:+10, rights_conflict:-10, stability:-4, budget:-121, integration_score:+5} },
+      { text:'No intervention; ecological competition is natural', effects:{ecological_stress:+25, stability:-8, extremism:+16} }
     ]},
   { id:'denisovan_antecessor_europe', cat:'INTER-SPECIES CONFLICT',
     title:'DENISOVAN MIGRATION TRIGGERS TERRITORIAL WAR: WESTERN EUROPE',
@@ -2100,7 +2100,7 @@ const EVENTS = [
     species:'ergaster', region:'africa', turn_range:[8,239], repeatable:false,
     desc:'H. heidelbergensis and H. ergaster are in direct competition across Central Africa for the same territorial band, an evolutionary echo of the ancestral split that eventually produced both Neanderthals and H. sapiens. Researchers say this is a living example of cladogenesis under pressure.',
     choices:[
-      { text:'Mediate with territorial demarcation and resources', effects:{budget:-140, stability:+7, integration_score:+7, ecological_stress:+7} },
+      { text:'Mediate with territorial demarcation and resources', effects:{budget:-140, stability:+7, integration_score:+7, ecological_stress:-7} },
       { text:'Prioritize H. heidelbergensis as direct sapiens ancestor', effects:{rights_conflict:-14, stability:-5, integration_score:-7, extremism:+8} },
       { text:'Observe and document without intervening', effects:{knowledge:+25, ecological_stress:-12, stability:-8, extremism:+6} }
     ]},
@@ -2110,7 +2110,7 @@ const EVENTS = [
     desc:'H. neanderthalensis bands have systematically displaced H. ergaster from a shared hunting corridor in the Near East. Neanderthal advantages are significant: larger brain, cold-weather endurance, and birch tar hafted spears vs. Ergaster\'s hand axes. Three Ergaster bands have retreated from their territory. Researchers note this mirrors fossil evidence of Neanderthal expansion into territories where Ergaster had been dominant. The Ergaster population in the region has dropped according to a population count.',
     choices:[
       { text:'Establish a monitored territorial boundary and enforce separation with field teams', effects:{stability:+5, ecological_stress:-5, budget:-200, integration_score:-5} },
-      { text:'Support Ergaster relocation south with food and habitat corridors', effects:{budget:-150, ecological_stress:+8, integration_score:+5, stability:+3} },
+      { text:'Support Ergaster relocation south with food and habitat corridors', effects:{budget:-150, ecological_stress:-8, integration_score:+5, stability:+3} },
       { text:'Document the displacement: Neanderthal cognitive superiority in action', effects:{knowledge:+25, ecological_stress:+12, stability:-5, extremism:+5} }
     ]},
   { id:'conflict_denisovan_floresiensis', cat:'INTER-SPECIES CONFLICT',
@@ -2527,8 +2527,8 @@ const EVENTS = [
     desc: 'A palm oil company has cleared 12,000 hectares that served as the primary migration corridor between H. floresiensis sanctuary zones on Flores. Three family groups are now isolated. Estimated inbreeding collapse: within 10 years.',
     species: 'floresiensis', region: 'indonesia', repeatable: false,
     choices: [
-      { text: 'Invoke emergency habitat protection and halt all clearing immediately', effects: { ecological_stress: +20, budget: -400, integration_score: +10 } },
-      { text: 'Pursue diplomatic pressure on Indonesian government', effects: { ecological_stress: +10, stability: -10, integration_score: +5 } },
+      { text: 'Invoke emergency habitat protection and halt all clearing immediately', effects: { ecological_stress: -20, budget: -400, integration_score: +10 } },
+      { text: 'Pursue diplomatic pressure on Indonesian government', effects: { ecological_stress: -10, stability: -10, integration_score: +5 } },
       { text: 'Offer a UN corridor buyout from the company', effects: { ecological_stress: -50, budget: -800, public_opinion: +15 } }
     ] },
   { id: 'ergaster_savanna_fire', cat: 'ECOLOGICAL',
@@ -2761,7 +2761,7 @@ const EVENTS = [
     choices: [
       { text: 'Authorize extended non-intrusive contact protocol', effects: { integration_score: +15, knowledge: +20, stability: +3 } },
       { text: 'Maintain distance and observe only, do not reciprocate', effects: { knowledge: +10 } },
-      { text: 'Approach with food and attempt bilateral exchange', effects: { integration_score: +20, knowledge: +25, ecological_stress: +20, budget: -250 } }
+      { text: 'Approach with food and attempt bilateral exchange', effects: { integration_score: +20, knowledge: +25, ecological_stress: -20, budget: -250 } }
     ] },
   { id: 'tier4_hostile_afarensis', cat: 'CONFLICT', 
     title: 'AU. AFARENSIS BAND DESTROYS DRONE SURVEY EQUIPMENT',
@@ -2811,7 +2811,7 @@ const EVENTS = [
     desc: 'Rapid desertification across the Sahel has collapsed a critical habitat corridor supporting three non-sapiens species. Population pressure is forcing migration into contested zones. Ecologists say this is the beginning of a cascade.',
     choices: [
       { text: 'Emergency habitat corridor restoration and international intervention', effects: { ecological_stress: -15, budget: -200, stability: +15 } },
-      { text: 'Managed relocation to pre-identified sanctuary zones', effects: { ecological_stress: +10, budget: -100, rights_conflict:-10 } },
+      { text: 'Managed relocation to pre-identified sanctuary zones', effects: { ecological_stress: -5, budget: -100, rights_conflict:-10 } },
       { text: 'Allow natural migration and the species have survived worse', effects: { ecological_stress: +10, stability: -5, extremism: +5 } }
     ] },
   { id: 'lategame_hybrid_generation', cat: 'RIGHTS & LAW', title: 'HYBRID GENERATION DEMANDS FULL CITIZENSHIP RIGHTS',
@@ -3477,6 +3477,7 @@ function checkTerritorialOverlap() {
           }
         });
         const conflictBase = GS.difficulty === 'easy' ? 0.04
+                           : GS.difficulty === 'normal' ? 0.08
                            : GS.difficulty === 'hard' ? 0.10
                            : GS.difficulty === 'extinction' ? 0.15
                            : 0.07;
@@ -3527,7 +3528,7 @@ function checkTerritorialOverlap() {
         GS.meters.stability = Math.max(0, GS.meters.stability - 3);
         GS.meters.extremism = Math.min(100, GS.meters.extremism + 2);
         flashRegion(region);
-        if (Math.random() < 0.18) {
+        if (Math.random() < 0.10 && eventQueue.length < 2) {
           // 1. Try to find an authored event matching EITHER of the two fighting species
           const speciesIds = [sdA.id, sdB.id];
           const matchedEvs = EVENTS.filter(e =>
@@ -3538,9 +3539,9 @@ function checkTerritorialOverlap() {
           // 2. If a matched event exists, prefer it
           // 3. If not, generate a dynamic inline event for these two specific species
           if (matchedEvs.length > 0) {
-            eventQueue.push(matchedEvs[Math.floor(Math.random() * matchedEvs.length)]);
+            eventQueue.push(matchedEvs[Math.floor(Math.random() * matchedEvs.length)]);a
           } else {
-            // Dynamic fallback -- always fires, never marked seen (repeatable conflict)
+            // Dynamic fallback  always fires, never marked seen (repeatable conflict)
             const nameA = sdA.name, nameB = sdB.name;
             const dynamicConflict = {
               id: `dyn_conflict_${sdA.id}_${sdB.id}_${GS.turn}_${Math.random().toString(36).slice(2,6)}`,
