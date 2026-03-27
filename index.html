@@ -770,7 +770,7 @@ const SPECIES_DATA = [
     unlockable:true, unlockCondition:'survival_win' },
   { id:'erectus', name:'Homo Erectus', nickname:'The Survivor', emoji:'🔥', color:'#d4ac0d',
     startPop:30000, maxPop:80000, cognitiveLevel:2, threat:6, integrationPotential:3, breedCompat:false,
-    regions:['east_asia','indonesia'],
+    regions:['east_asia','near_east'],
     traits:['fire_user','persistence_hunter','1.7my_survivor','habitat_specialist'],
     lore:'Survived 1.7 million years, longer than any other hominin. Asian populations persisted until ~110,000 years ago. Their extinction appears linked not to H. sapiens competition but to habitat collapse when their woodland was replaced by dense rainforest. Used tools for a million years with minimal innovation; consistency became catastrophic when the environment changed.',
     unlockable:true, unlockCondition:'survival_win' },
@@ -919,6 +919,7 @@ const animState = {
 };
 
 let lastDotPos = {};
+let lastExtraDotPos = {};
 
 const EVENTS = [
   { id:'disease_1', cat:'BIOLOGICAL CRISIS', title:'CROSS-SPECIES PATHOGEN OUTBREAK: EAST AFRICA',
@@ -3166,7 +3167,7 @@ function resetGameState() {
   const raw = localStorage.getItem('hominin_save');
   if (raw) { try { const old = JSON.parse(raw); savedUnlocks = old.unlockedModes||['sapiens']; savedAchievements = old.achievements||[]; savedPlayCount = (old.playthrough_count||0); } catch(e){} }
   eventQueue = []; _lastResult = null; newsItems = [];
-  animState.dotDrift = {}; animState.migrationTrails = []; animState.flashRegions = {}; lastDotPos = {};
+  animState.dotDrift = {}; animState.migrationTrails = []; animState.flashRegions = {}; lastDotPos = {}; lastExtraDotPos = {};
   localStorage.removeItem('hominin_save');
   const diff = (document.getElementById('difficulty-select')?.value) || 'normal';
   GS = createInitialState(diff);
@@ -3228,6 +3229,21 @@ function initGameScreen() {
         break;
       }
     }
+    for (const [key, edp] of Object.entries(lastExtraDotPos)) {
+      const sd = SPECIES_DATA.find(s => s.id === edp.speciesId);
+      const sp = GS.species[edp.speciesId];
+      if (!sd || !sp || sp.extinct) continue;
+      const dx = mx - edp.cx, dy = my - edp.cy;
+      const hitR = edp.r + 10;
+      if (dx*dx + dy*dy < hitR*hitR) {
+        if (!sp.encountered) {
+          sp.encountered = true;
+          addNews(`[DETECTED] ${sd.name} population confirmed via field contact.`, 'event');
+          renderAll(); updateLegend();
+        }
+        break;
+      }
+    }
   });
 
   
@@ -3248,6 +3264,15 @@ function initGameScreen() {
       const hitR = dp.r + 10;
       if (dx*dx + dy*dy < hitR*hitR) { found = { id, clientX: e.clientX, clientY: e.clientY }; }
     }
+    if (!found) {
+      for (const [key, edp] of Object.entries(lastExtraDotPos)) {
+        const sp = GS?.species[edp.speciesId];
+        if (!sp || sp.extinct || !sp.encountered) continue;
+        const dx = mx - edp.cx, dy = my - edp.cy;
+        const hitR = edp.r + 10;
+        if (dx*dx + dy*dy < hitR*hitR) { found = { id: edp.speciesId, regionName: edp.regionName, clientX: e.clientX, clientY: e.clientY }; break; }
+      }
+    }
     return found;
   }
 
@@ -3263,7 +3288,8 @@ function initGameScreen() {
       if (sd) {
         const sp = GS.species[sd.id];
         const pop = sp?.population?.toLocaleString() ?? '?';
-        tip.innerHTML = `<div class="tooltip-name">${sd.emoji} ${sd.name}</div><div style="font-size:10px;color:var(--accent-amber);margin-bottom:5px;letter-spacing:1px">${sd.nickname}</div><div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;line-height:1.6">${sd.lore.substring(0, 320)}${sd.lore.length>320?'…':''}</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim)">Pop: ${pop} | Cog Tier: ${sd.cognitiveLevel} | Threat: ${sd.threat}/10</div>`;
+        const regionLabel = hit.regionName ? `<div style="font-size:10px;color:var(--accent-amber);margin-bottom:4px;letter-spacing:1px">◈ ${hit.regionName.replace(/_/g,' ').toUpperCase()}</div>` : '';
+        tip.innerHTML = `${regionLabel}<div class="tooltip-name">${sd.emoji} ${sd.name}</div><div style="font-size:10px;color:var(--accent-amber);margin-bottom:5px;letter-spacing:1px">${sd.nickname}</div><div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;line-height:1.6">${sd.lore.substring(0, 320)}${sd.lore.length>320?'…':''}</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim)">Pop: ${pop} | Cog Tier: ${sd.cognitiveLevel} | Threat: ${sd.threat}/10</div>`;
         tip.style.display = 'block';
         tip.style.maxWidth = '300px';
         tip.style.left = Math.min(hit.clientX + 16, window.innerWidth - 316) + 'px';
@@ -3560,37 +3586,6 @@ function checkTerritorialOverlap() {
   });
 }
 
-function triggerPostTurnMigrations() {
-  if (!GS) return;
-  SPECIES_DATA.forEach(sd => {
-    if (sd.id === 'sapiens') return;
-    const sp = GS.species[sd.id];
-    if (!sp || sp.extinct || sp.population < 100) return;
-    const count = 1 + Math.floor(Math.random() * 2);
-    const validLinks = MIGRATION_LINKS.filter(([a, b]) =>
-      sd.regions.includes(a) || sd.regions.includes(b)
-    );
-    if (validLinks.length === 0) return;
-    for (let i = 0; i < count; i++) {
-      const existing = animState.migrationTrails.filter(tr => tr.speciesId === sd.id);
-      if (existing.length >= 3) break;
-      const link = validLinks[Math.floor(Math.random() * validLinks.length)];
-      const [from, to] = Math.random() < 0.5 ? [link[0], link[1]] : [link[1], link[0]];
-      const fromReg = REGIONS[from];
-      const toReg = REGIONS[to];
-      if (!fromReg || !toReg) continue;
-      const speed = 0.004 + Math.random() * 0.008;
-      const delay = i * 0.4;
-      animState.migrationTrails.push({
-        speciesId: sd.id, from, to,
-        startX: fromReg.cx, startY: fromReg.cy,
-        endX: toReg.cx, endY: toReg.cy,
-        progress: -delay, speed, color: sd.color, postTurn: true
-      });
-    }
-  });
-}
-
 function voluntaryMigration() {
   SPECIES_DATA.forEach(sd => {
     if (sd.id === 'sapiens') return;
@@ -3681,7 +3676,8 @@ function checkMaritimeMigration() {
     if (sd.cognitiveLevel > 2) return;
     const sp = GS.species[sd.id];
     if (!sp || sp.extinct || sp.population < 5000) return;
-    const currentRegion = sd.regions[0];
+    const allCurrentRegions = getEffectiveRegions(sd);
+    const currentRegion = allCurrentRegions[Math.floor(Math.random() * allCurrentRegions.length)];
     const reachable = (MARITIME_ROUTES[currentRegion] || []).filter(r => !getEffectiveRegions(sd).includes(r));
     if (reachable.length === 0) return;
     const dest = reachable[Math.floor(Math.random() * reachable.length)];
@@ -4029,7 +4025,6 @@ function advanceTurn() {
   }
   generateNewsFlavor();
   animPulse = true; setTimeout(() => { animPulse = false; }, 900);
-  triggerPostTurnMigrations();
   checkMaritimeMigration();
   voluntaryMigration();
   checkInterbreeding();
@@ -5470,13 +5465,18 @@ function drawMap() {
       }
 
       
-      if (sd.regions[1] && REGIONS[sd.regions[1]]) {
-        const r2 = REGIONS[sd.regions[1]];
-        const cx2=r2.cx*sx, cy2=r2.cy*sy;
-        ctx.beginPath(); ctx.arc(cx2, cy2, r*0.5, 0, Math.PI*2);
-        ctx.fillStyle = sd.color+'88'; ctx.fill();
+      if (sp.extraRegions && sp.extraRegions.length > 0) {
+        sp.extraRegions.forEach(erName => {
+          const er = REGIONS[erName]; if (!er) return;
+          const ecx = er.cx * sx, ecy = er.cy * sy;
+          const er2 = r * 0.7;
+          ctx.beginPath(); ctx.arc(ecx, ecy, er2, 0, Math.PI*2);
+          ctx.fillStyle = sd.color + 'b3'; ctx.fill();
+          ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+          lastExtraDotPos[sd.id + '_' + erName] = { cx: ecx, cy: ecy, r: er2, speciesId: sd.id, regionName: erName };
+        });
       }
-      
+
       if (GS.speciesHelped && (GS.speciesHelped[sd.id] || 0) >= 3) {
         const allyR = r + 7;
         ctx.beginPath();
