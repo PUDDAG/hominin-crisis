@@ -69,6 +69,9 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
 .btn-danger { color:var(--accent-red); border-color:var(--accent-red); }
 .btn-green { color:var(--accent-green); border-color:var(--accent-green); }
 .btn-small { padding:7px 14px; font-size:11px; }
+/* END TURN FIX */
+#advance-turn-btn.btn-blocked { background: var(--text-crisis) !important; color: #fff !important; }
+/* END TURN FIX */
 
 /* MAIN GAME SCREEN — 3-column layout */
 #game-screen { flex-direction:column; }
@@ -3029,6 +3032,7 @@ let canvas, ctx, dpr = 1;
 let mapRO = null;
 let eventQueue = [];
 let newsItems = [];
+let isEventModalOpen = false; /* END TURN FIX */
 let animPulse = false;
 
 let hoveredSpeciesId = null;
@@ -3451,7 +3455,8 @@ function initSpMapInteraction() {
   }, { passive: false });
 }
 
-function checkTerritorialOverlap() {
+function checkTerritorialOverlap(stagingArray) { /* END TURN FIX */
+  if (!stagingArray) stagingArray = eventQueue; /* END TURN FIX — safe fallback */
   if (!GS) return;
   const regionSpecies = {};
   SPECIES_DATA.forEach(sd => {
@@ -3530,7 +3535,8 @@ function checkTerritorialOverlap() {
         GS.meters.stability = Math.max(0, GS.meters.stability - 3);
         GS.meters.extremism = Math.min(100, GS.meters.extremism + 2);
         flashRegion(region);
-        if (Math.random() < 0.10 && eventQueue.length < 2) {
+        const stagedCount = stagingArray ? stagingArray.length : 0; /* END TURN FIX */
+        if (Math.random() < 0.10 && (eventQueue.length + stagedCount) < 2) { /* END TURN FIX */
           // 1. Try to find an authored event matching EITHER of the two fighting species
           const speciesIds = [sdA.id, sdB.id];
           const matchedEvs = EVENTS.filter(e =>
@@ -3541,7 +3547,7 @@ function checkTerritorialOverlap() {
           // 2. If a matched event exists, prefer it
           // 3. If not, generate a dynamic inline event for these two specific species
           if (matchedEvs.length > 0) {
-            eventQueue.push(matchedEvs[Math.floor(Math.random() * matchedEvs.length)]);a
+            stagingArray.push(matchedEvs[Math.floor(Math.random() * matchedEvs.length)]);a /* END TURN FIX */
           } else {
             // Dynamic fallback  always fires, never marked seen (repeatable conflict)
             const nameA = sdA.name, nameB = sdB.name;
@@ -3574,14 +3580,14 @@ function checkTerritorialOverlap() {
               GS.dynamicEvents.push(dynamicConflict);
               EVENTS.push(dynamicConflict);
             }
-            eventQueue.push(dynamicConflict);
+            stagingArray.push(dynamicConflict); /* END TURN FIX */
           }
         }
         [{ sp: spA, sd: sdA }, { sp: spB, sd: sdB }].forEach(({sp, sd}) => {
           if (sp.population <= 0 && !sp.extinct) {
             sp.extinct = true; sp.population = 0; sp.status = 'extinct';
             addNews(`⚰ EXTINCTION: The last ${sd.name} fell in territorial conflict.`, 'crisis');
-            queueExtinctionModal(sd);
+            queueExtinctionModal(sd, stagingArray); /* END TURN FIX */
           }
         });
       }
@@ -3708,7 +3714,8 @@ function checkMaritimeMigration() {
   });
 }
 
-function checkInterbreeding() {
+function checkInterbreeding(stagingArray) { /* END TURN FIX */
+  if (!stagingArray) stagingArray = eventQueue; /* END TURN FIX — safe fallback */
   if (!GS || GS.playMode !== 'sapiens') return;
   if (GS.turn < 10) return;
   const tier1Species = SPECIES_DATA.filter(sd => sd.cognitiveLevel === 1 && sd.id !== 'sapiens');
@@ -3726,7 +3733,7 @@ function checkInterbreeding() {
     const specificId = `interbreeding_${sd.id}_sapiens`;
     const existing = EVENTS.find(e => e.id === specificId);
     if (existing && !eventQueue.includes(existing)) {
-      eventQueue.push(existing);
+      stagingArray.push(existing); /* END TURN FIX */
     } else {
       const generic = EVENTS.find(e => e.id === 'generic_interbreeding');
       if (generic) {
@@ -3739,7 +3746,7 @@ function checkInterbreeding() {
           if (!GS.dynamicEvents) GS.dynamicEvents = [];
           if (!GS.dynamicEvents.find(e => e.id === clone.id)) GS.dynamicEvents.push(clone);
           if (!EVENTS.find(e => e.id === clone.id)) EVENTS.push(clone); 
-          eventQueue.push(clone);
+          stagingArray.push(clone); /* END TURN FIX */
         }
       }
     }
@@ -3749,7 +3756,8 @@ function checkInterbreeding() {
   });
 }
 
-function checkRomanticEncounters() {
+function checkRomanticEncounters(stagingArray) { /* END TURN FIX */
+  if (!stagingArray) stagingArray = eventQueue; /* END TURN FIX — safe fallback */
   if (!GS || GS.playMode !== 'sapiens') return;
   const eligibleSpecies = SPECIES_DATA.filter(sd => sd.cognitiveLevel <= 2 && sd.id !== 'sapiens');
   eligibleSpecies.forEach(sd => {
@@ -3791,14 +3799,33 @@ function checkRomanticEncounters() {
       if (!GS.dynamicEvents) GS.dynamicEvents = [];
       if (!GS.dynamicEvents.find(e => e.id === clone.id)) GS.dynamicEvents.push(clone);
       if (!EVENTS.find(e => e.id === clone.id)) EVENTS.push(clone); 
-      eventQueue.push(clone);
+      stagingArray.push(clone); /* END TURN FIX */
     }
   });
 }
 
 function advanceTurn() {
   captureBriefingSnapshot();
-  if (eventQueue.length > 0) { addNews('Resolve pending events before advancing.','crisis'); return; }
+  /* END TURN FIX — Fix 1: flash button and toast when modal is open */
+  if (eventQueue.length > 0) {
+    if (isEventModalOpen) {
+      const _btn = document.getElementById('advance-turn-btn');
+      _btn.classList.add('btn-blocked');
+      setTimeout(() => _btn.classList.remove('btn-blocked'), 600);
+      showAchievement("⚠ PENDING EVENT", "Resolve the current event to continue.");
+      return;
+    }
+    /* END TURN FIX — Fix 5: escape hatch for stuck queue */
+    if (!document.getElementById('event-modal').classList.contains('open')) {
+      console.warn('eventQueue stuck — forcing drain');
+      eventQueue.shift();
+      if (eventQueue.length > 0) showNextEvent();
+      addNews("⚠ EVENT SYNC RECOVERED — A queued event was skipped.", "crisis");
+      return;
+    }
+  }
+  /* END TURN FIX */
+  const stagedEvents = []; /* END TURN FIX — Fix 3: atomic staging array */
   GS.turn++;
   GS.turn_policies_used = 0;
   
@@ -3815,7 +3842,7 @@ function advanceTurn() {
     GS.pendingEvents = GS.pendingEvents.filter(pe => pe.fireOnTurn > GS.turn);
     toFire.forEach(pe => {
       const ev = EVENTS.find(e => e.id === pe.eventId);
-      if (ev && !eventQueue.includes(ev)) eventQueue.push(ev);
+      if (ev && !eventQueue.includes(ev)) stagedEvents.push(ev); /* END TURN FIX */
     });
   }
   const mult = GS.diffMult || 1.0;
@@ -3914,7 +3941,7 @@ function advanceTurn() {
     if (sp.population <= 0) {
       sp.extinct = true; sp.population = 0; sp.status = 'extinct';
       addNews(`⚰ EXTINCTION: The last ${sd.name} has died.`, 'crisis');
-      queueExtinctionModal(sd);
+      queueExtinctionModal(sd, stagedEvents); /* END TURN FIX */
     } else {
       const pct = sp.population / sd.startPop;
       if (pct < 0.08) sp.status = 'critical';
@@ -3930,7 +3957,7 @@ function advanceTurn() {
     showAchievement('⚠ FINAL WARNING', 'Stability has fallen below 10%. If it reaches zero, all progress is lost.');
   }
   if (m.stability > 10) GS._warnedLowStability = false;
-  checkTerritorialOverlap();
+  checkTerritorialOverlap(stagedEvents); /* END TURN FIX */
   newsItems = newsItems.slice(0, 3);
   
   Object.entries(SPECIAL_TRIGGERS).forEach(([sid, t]) => {
@@ -3944,7 +3971,7 @@ function advanceTurn() {
       }
       const ev = EVENTS.find(e => e.special_id === sid);
       if (ev) {
-        eventQueue.push(ev);
+        stagedEvents.push(ev); /* END TURN FIX */
         GS.special_events_seen.push(sid);
         if (sid === 'first_contact' && !GS.unlocked_policies.includes('integration_treaty')) {
           GS.unlocked_policies.push('integration_treaty');
@@ -4019,7 +4046,7 @@ function advanceTurn() {
     if (Math.random() < eventProb) {
       const idx = Math.floor(Math.random() * pool.length);
       const ev = pool.splice(idx, 1)[0];
-      eventQueue.push(ev);
+      stagedEvents.push(ev); /* END TURN FIX */
       if (ev.region) flashRegion(ev.region);
       if (ev.species && GS.species[ev.species] && !GS.species[ev.species]?.encountered) {
         GS.species[ev.species].encountered = true;
@@ -4030,8 +4057,8 @@ function advanceTurn() {
   animPulse = true; setTimeout(() => { animPulse = false; }, 900);
   checkMaritimeMigration();
   voluntaryMigration();
-  checkInterbreeding();
-  checkRomanticEncounters();
+  checkInterbreeding(stagedEvents); /* END TURN FIX */
+  checkRomanticEncounters(stagedEvents); /* END TURN FIX */
   
   checkLegalFrameworkTriggers();
   
@@ -4044,6 +4071,14 @@ function advanceTurn() {
   saveGame(true);
   const endResult = checkEndConditions();
   if (endResult) { showResultScreen(endResult); return; }
+  /* END TURN FIX — Fix 3: flush staged events into eventQueue atomically */
+  stagedEvents.forEach(ev => {
+    if (!eventQueue.find(e => e.id === ev.id)) {
+      if (ev.urgent) eventQueue.unshift(ev);
+      else eventQueue.push(ev);
+    }
+  });
+  /* END TURN FIX */
   showMonthlyBriefing(() => {
     if (eventQueue.length > 0) showNextEvent();
     renderAll();
@@ -4281,17 +4316,23 @@ function showMonthlyBriefing(callback) {
   document.getElementById('briefing-modal').classList.add('open');
 }
 
+/* END TURN FIX */
 function closeBriefing() {
   document.getElementById('briefing-modal').classList.remove('open');
   if (document._briefingCallback) {
     document._briefingCallback();
     document._briefingCallback = null;
   }
+  if (eventQueue.length > 0 && !isEventModalOpen) {
+    setTimeout(showNextEvent, 200);
+  }
 }
+/* END TURN FIX */
 
 function clamp(v, mn, mx) { return Math.max(mn, Math.min(mx, v)); }
 
 function showNextEvent() {
+  if (isEventModalOpen) return; /* END TURN FIX */
   while (eventQueue.length > 0) {
     const ev = eventQueue[0];
     if (!ev.repeatable && GS.events_seen.includes(ev.id) && !ev.id?.startsWith('extinction_')) { eventQueue.shift(); continue; }
@@ -4301,6 +4342,7 @@ function showNextEvent() {
   const ev = eventQueue[0];
   renderEventModal(ev);
   document.getElementById('event-modal').classList.add('open');
+  isEventModalOpen = true; /* END TURN FIX */
 }
 
 function renderEventModal(ev) {
@@ -4420,6 +4462,7 @@ function resolveEvent(idx) {
   }
   addNews(`[DECISION] ${ev.title.substring(0,65)}...`, 'event');
   document.getElementById('event-modal').classList.remove('open');
+  isEventModalOpen = false; /* END TURN FIX */
   
   if (ev._forceExtinction && GS?.sp_state && GS.playMode !== 'sapiens') {
     const _fsd = SPECIES_DATA.find(s => s.id === GS.playMode);
@@ -4428,11 +4471,16 @@ function resolveEvent(idx) {
     if (_fsd) showSpResult({win:false, title:'IDENTITY EXPOSED', desc:'Your identity was exposed during the election. The reaction was immediate and total. Your community scattered. The dream of integration died on election night.'}, _fsd);
     return;
   }
-  if (eventQueue.length > 0) setTimeout(showNextEvent, 380);
-  else if (GS?.sp_state && GS.playMode !== 'sapiens') {
+  /* END TURN FIX — Fix 2: single consolidated showNextEvent call; flag was reset above */
+  if (eventQueue.length > 0) {
+    setTimeout(showNextEvent, 380);
+  } else if (GS?.sp_state && GS.playMode !== 'sapiens') {
     const _spsd = SPECIES_DATA.find(s => s.id === GS.playMode);
     if (_spsd) renderSpGame(_spsd);
-  } else renderAll();
+  } else {
+    renderAll();
+  }
+  /* END TURN FIX */
 }
 
 function applyEffects(eff) {
@@ -4458,7 +4506,7 @@ function applyEffects(eff) {
   }
 }
 
-function queueExtinctionModal(sd) {
+function queueExtinctionModal(sd, stagingArray) { /* END TURN FIX */
   AudioEngine.sfxExtinction();
   const spEx = GS.species[sd.id];
   if (spEx) {
@@ -4470,7 +4518,7 @@ function queueExtinctionModal(sd) {
       ? `Territorial conflict in ${GS.lastConflict.region.replace(/_/g,' ')}`
       : `Population collapse`;
   }
-  eventQueue.unshift({
+  const extEv = { /* END TURN FIX */
     id: `extinction_${sd.id}`, cat:'⚰ EXTINCTION EVENT', species:sd.id,
     title:`THE LAST ${sd.name.toUpperCase()} — GONE FOREVER`,
     desc:`The final individual of ${sd.name} has died. A human lineage that walked this earth for hundreds of thousands of years is now permanently gone. ${sd.lore.split('.')[0]}.`,
@@ -4478,7 +4526,15 @@ function queueExtinctionModal(sd) {
       { text:'Declare a Global Day of Mourning', effects:{public_opinion:+10, integration_score:+5} },
       { text:'Commission a final genetic archive of the species', effects:{knowledge:+20, budget:-100} }
     ]
-  });
+  };
+  /* END TURN FIX — Fix 3: if a staging array was provided, stage with urgent flag; otherwise push directly */
+  if (stagingArray) {
+    extEv.urgent = true;
+    stagingArray.push(extEv);
+  } else {
+    eventQueue.unshift(extEv);
+  }
+  /* END TURN FIX */
 }
 
 function enactPolicy(id) {
@@ -6388,6 +6444,7 @@ window.addEventListener('load', () => {
   document.addEventListener('keydown', e=>{
     if(e.key==='Escape'){
       document.getElementById('event-modal').classList.remove('open');
+      isEventModalOpen = false; /* END TURN FIX */
       ['save-modal','import-modal'].forEach(id=>closeModal(id));
       document.getElementById('tooltip').style.display='none';
     }
