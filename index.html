@@ -3778,21 +3778,23 @@ function checkRomanticEncounters(stagingArray) { /* END TURN FIX */
       cat: isRomantic ? 'INTEGRATION BREAKTHROUGH' : 'RIGHTS & LAW',
       repeatable: false, species: sd.id, region: sd.regions[0],
       title: isRomantic
-        ? `${sd.name.toUpperCase()} — SAPIENS BOND DOCUMENTED`
-        : `${sd.name.toUpperCase()} — SAPIENS RELATIONSHIP CAUSES LEGAL CONTROVERSY`,
+        ? `${sd.name.toUpperCase()} and SAPIENS BOND DOCUMENTED`
+        : `${sd.name.toUpperCase()} and SAPIENS RELATIONSHIP CAUSES LEGAL CONTROVERSY`,
       desc: isRomantic
         ? `A documented emotional bond between a ${sd.name} individual and a H. sapiens citizen has been independently verified by field researchers in ${sd.regions[0].replace(/_/g,' ')}. Both parties show affiliative behaviors. This is the first confirmed cross-species voluntary companionship at Tier ${sd.cognitiveLevel}.`
         : `A relationship between a ${sd.name} individual and a H. sapiens citizen is being contested in court. Nationalist groups argue it is exploitation. Rights groups argue the ${sd.name} partner demonstrated informed consent. Three separate legal frameworks apply and contradict each other.`,
       choices: isRomantic
         ? [
             { text: 'Publicly recognize the bond as evidence of social integration', effects: { integration_score: +10, public_opinion: +10, extremism: +5 } },
-            { text: 'Fund academic study of cross-species emotional cognition', effects: { knowledge: 20, integration_score: 5, budget: -100 } },
-            { text: 'No official statement — private matter', effects: { public_opinion: +2 } }
+            { text: 'Fund academic study of cross-species emotional cognition', effects: { knowledge: +20, integration_score: +2, budget: -100 } },
+            { text: 'Condemn the bond as unethical', effects: { rights_conflict: -2, integration_score: -10, stability: +10 } },
+            { text: 'No official statement, private matter', effects: { public_opinion: +2, integration_score: -5 } }
           ]
         : [
             { text: 'Rule that cognitive consent standards apply and support the couple', effects: { integration_score: +10, rights_conflict: +4, extremism: +10, public_opinion: +10 } },
-            { text: 'Commission an independent cognitive assessment of the non-sapiens partner', effects: { rights_conflict: +5, knowledge: 15, stability: -2 } },
-            { text: 'Default to existing species protection law and no legal recognition', effects: { rights_conflict: -10, public_opinion: -10, integration_score: -2 } }
+            { text: 'Commission an independent cognitive assessment of the non-sapiens partner', effects: { rights_conflict: +5, knowledge: +15, stability: -5 } },
+            { text: 'Condemn the bond as unethical', effects: { rights_conflict: -2, integration_score: -10, stability: +10 } },
+            { text: 'Default to existing species protection law and no legal recognition', effects: { rights_conflict: -10, public_opinion: -10, integration_score: -5 } }
           ]
     };
     if (!GS.events_seen.includes(clone.id) && !eventQueue.find(e => e.id === clone.id)) {
