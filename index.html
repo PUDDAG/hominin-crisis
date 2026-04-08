@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=0.5">
-<title>HOMININ CRISIS — Made By Pudd </title>
+<title>HOMININ CRISIS: Made By Pudd </title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@400;600&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -785,7 +785,7 @@ canvas { touch-action: none; }
       <strong>Disease Index:</strong> Cross-species pathogens will spread every turn. If Disease reaches <strong>100%, civilization ends</strong>. Prioritize <em>Pathogen Surveillance</em> or <em>WHO Emergency Declaration</em> early.
     </div>
     <div class="onboarding-tip row2">
-      <strong>3 Policies Per Turn:</strong> You can enact up to 3 policies each turn. You get income for your budget each turn. Spend wisely the first 30 turns set the trajectory for the next 20 years.
+      <strong>3 Policies Per Turn:</strong> You can enact up to 3 policies each turn. You get income for your budget each turn. Spend wisely the first 3 turns set the trajectory for the next 20 years.
     </div>
     <div class="onboarding-tip row3">
       <strong>3 Ways to Win:</strong> Survive 240 turns with stability above 50%, achieve full Integration (100% integration + 75% rights), or let all non-sapiens species go extinct. <span class="row3-warn">If stability hits zero, your save is wiped and you start fresh.</span>
@@ -1039,8 +1039,77 @@ let lastDotPos = {};
 let lastExtraDotPos = {};
 
 const EVENTS = [
+{
+  id: 'tutorial_turn1_stability',
+  cat: 'POLITICAL',
+  title: 'THE WORLD TAKES SIDES: HOW WILL YOU RESPOND?',
+  species: null,
+  region: null,
+  turnrange: [0, 0],
+  repeatable: false,
+  tutorial: true,
+  desc: 'Within weeks of the reappearance, two global movements have emerged. The Pro-Sapiens Movement demands humanity prioritize its own kind, enforcing order and protecting sapiens interests above all. The Pro-Hominin Movement insists the returnees have rights and demands immediate protections. The UN is watching your first move.',
+  choices: [
+    {
+      text: 'Support the Pro-Sapiens Movement: enforce order, protect stability',
+      subtext: '+Stability  +Extremism  +Eco Stress',
+      effects: { stability: +8, extremism: +10, ecological_stress: +8 }
+    },
+    {
+      text: 'Support the Pro-Hominin Movement: protect the returnees, grant basic rights',
+      subtext: '-Stability  +Rights  +Disease',
+      effects: { stability: -8, rights_conflict: +10, disease: +8 }
+    }
+  ]
+},
+{
+  id: 'tutorial_turn2_knowledge',
+  cat: 'SCIENTIFIC DISCOVERY',
+  title: 'GLOBAL RESPONSE: RESEARCH OR RESOURCES?',
+  species: null,
+  region: null,
+  turnrange: [1, 1],
+  repeatable: false,
+  tutorial: true,
+  desc: 'Two international coalitions are now competing for UN funding or attention. The Pro-Science Movement argues that studying the returnees is humanity\'s greatest scientific opportunity and the key to managing the crisis safely. A Pro-Resource organization argues that controlling disease and saving funds is more urgent than academic pursuits.',
+  choices: [
+    {
+      text: 'Fund the Pro-Science Movement: research, observe, understand',
+      subtext: '+Knowledge  -Eco Stress  +Public Opinion  -Budget',
+      effects: { knowledge: +20, ecological_stress: -5, public_opinion: +10, budget: -150 }
+    },
+    {
+      text: 'Agree with the Pro-Resource Movement: control disease and stabilize the budget',
+      subtext: '+Budget  -Disease  +Stability',
+      effects: { budget: +150, disease: -10, stability: +5 , ecological_stress: +5,  }
+    }
+  ]
+},
+{
+  id: 'tutorial_turn3_disease',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'THE COEXISTENCE QUESTION: COMPANIONS OR SEPARATION?',
+  species: null,
+  region: null,
+  turnrange: [2, 2],
+  repeatable: false,
+  tutorial: true,
+  desc: 'A cultural divide has crystallized globally. The \"Pro-Pet\" movement advocates for sapiens households adopting lower-tier hominin species as companions, arguing proximity breeds empathy and accelerates integration. The \"Keep Us Separate\" faction insists that all species must remain in designated zones, citing disease risk and ecological protection.',
+  choices: [
+    {
+      text: '\"Pro-Pet\" : permit domestic coexistence, accelerate integration',
+      subtext: '+Disease  +Stability  +Integration  -Rights',
+      effects: { disease: +8, stability: +5, integration_score: +10, rights_conflict: -10 }
+    },
+    {
+      text: '\"Keep Us Separate\" : enforce separation zones',
+      subtext: '-Disease  +Extremism  -Eco Stress  -Integration',
+      effects: { disease: -8, extremism: +10, ecological_stress: -5, integration_score: -10 }
+    }
+  ]
+},
   { id:'disease_1', cat:'BIOLOGICAL CRISIS', title:'CROSS-SPECIES PATHOGEN OUTBREAK: EAST AFRICA',
-    species:'habilis', region:'east_africa', turn_range:[3,240], repeatable:false,
+    species:'habilis', region:'east_africa', turn_range:[5,240], repeatable:false,
     desc:'WHO field teams confirm transmission of a novel pathogen between H. habilis populations and neighboring H. sapiens in the Rift Valley. Confirmed multiple deaths. Quarantine demanded.',
     choices:[
       { text:'Deploy WHO emergency response units', effects:{disease:-5, stability:+5, budget:-100} },
@@ -1312,7 +1381,7 @@ const EVENTS = [
       { text:'Allow China limited military "containment" operations', effects:{stability:+5, rights_conflict:-10, extremism:+4, public_opinion:-5} }
     ]},
   { id:'poaching_ring', cat:'CONFLICT', title:'PARANTHROPUS TRAFFICKING RING EXPOSED: 12 INDIVIDUALS TRAFFICKED',
-    species:'paranthropus', region:'africa', turn_range:[3,195], repeatable:false,
+    species:'paranthropus', region:'africa', turn_range:[5,195], repeatable:false,
     desc:'Interpol uncovered a trafficking network selling Paranthropus individuals to private biotech labs and collectors across three continents.',
     choices:[
       { text:'Fast-track an international hominin trafficking convention', effects:{rights_conflict:+10, budget:-200, stability:+2, integration_score:+5} },
@@ -1328,7 +1397,7 @@ const EVENTS = [
       { text:'Downplay the finding. This changes nothing legally. We are not cavemen anymore.', effects:{rights_conflict:-10, integration_score:-10} }
     ]},
   { id:'denisovan_double', cat:'SCIENTIFIC DISCOVERY', title:'"DENISOVAN DOUBLE": INDIVIDUAL LIVING UNDETECTED IN CHINA FOR 4 MONTHS',
-    species:'denisovan', region:'east_asia', turn_range:[4,20], repeatable:false, special:true, special_id:'denisovan_pass',
+    species:'denisovan', region:'east_asia', turn_range:[5,20], repeatable:false, special:true, special_id:'denisovan_pass',
     desc:'A Denisovan has been discovered living in Lanzhou, China for 4 months, passing entirely as a modern human.',
     choices:[
       { text:'"Zhang San" is a person. Grant asylum, a new name, and full legal recognition.', effects:{integration_score:+10, rights_conflict:+10, extremism:-5, stability:+5, public_opinion:+10} },
@@ -1352,7 +1421,7 @@ const EVENTS = [
       { text:'Issue formal condemnation only', effects:{extremism:+5, public_opinion:+10, stability:-2} }
     ]},
   { id:'media_panic', cat:'POLITICAL', title:'NEANDERTHAL FOOTAGE GOES VIRAL: 2 BILLION VIEWS',
-    species:'neanderthal', region:'europe', turn_range:[3,22], repeatable:false,
+    species:'neanderthal', region:'europe', turn_range:[5,22], repeatable:false,
     desc:'A bystander video of a Neanderthal band in the Ardennes has been shared 2 billion times. Right-wing commentators call it "proof of the threat."',
     choices:[
       { text:'Fund a counter-narrative media campaign immediately', effects:{public_opinion:+10, budget:-200, extremism:-10} },
@@ -1986,7 +2055,7 @@ const EVENTS = [
 
   
   { id:'sp_burial_photo', cat:'RECOGNITION', title:'ANTHROPOLOGIST PHOTOGRAPHS YOUR BURIAL RITUAL',
-    sp_only:true, spmode:'neanderthal', turn_range:[3,60], repeatable:false,
+    sp_only:true, spmode:'neanderthal', turn_range:[5,60], repeatable:false,
     desc:'A H. sapiens anthropologist has photographed your band performing a burial ritual: flowers, red ochre, carved ornaments. She wants to publish in Nature. The images would shift global perception of Neanderthal cognition permanently.',
     choices:[
       { text:'Allow it: demonstrating intelligence serves the band', effects:{sp_integration:+15, sp_tension:+8, sp_unity:+5} },
@@ -2002,7 +2071,7 @@ const EVENTS = [
       { text:'Accept but require full band consensus on every decision', effects:{sp_integration:+6, sp_unity:+12} }
     ]},
   { id:'sp_tool_demonstration', cat:'RECOGNITION', title:'RESEARCHERS REQUEST TOOL DEMONSTRATION: ON CAMERA',
-    sp_only:true, spmode:'neanderthal', turn_range:[4,70], repeatable:false,
+    sp_only:true, spmode:'neanderthal', turn_range:[5,70], repeatable:false,
     desc:'A documentary crew wants to film your band making birch tar tools: 300°C fire control, multi-step planning. Footage would be the most compelling proof of non-sapiens technological intelligence ever recorded.',
     choices:[
       { text:'Demonstrate freely and let them record everything', effects:{sp_integration:+18, sp_tension:+10, sp_unity:+5} },
@@ -2018,7 +2087,7 @@ const EVENTS = [
       { text:'Trade it for resources and legal protections', effects:{sp_integration:+8, sp_resources:+15, sp_tension:+8} }
     ]},
   { id:'sp_neanderthal_territory', cat:'RECOGNITION', title:'A NEW VALLEY HAS BEEN SCOUTED, BUT SAPIENS USE IT FOR HIKING',
-    sp_only:true, spmode:'neanderthal', turn_range:[4,70], repeatable:false,
+    sp_only:true, spmode:'neanderthal', turn_range:[5,70], repeatable:false,
     desc:'Your scouts found an ideal valley: water, shelter, game. But sapiens hikers use it on weekends. Claiming it would mean conflict. Avoiding it means continued pressure on current territory.',
     choices:[
       { text:'Claim the valley; we have prior rights to these lands', effects:{sp_territory:+1, sp_tension:+15, sp_unity:+8} },
@@ -2034,7 +2103,7 @@ const EVENTS = [
       { text:'Accept full access; the sanctuaries are worth it', effects:{sp_integration:+20, sp_tension:+20, sp_resources:+30} }
     ]},
   { id:'sp_tourist_pressure', cat:'SANCTUARY', title:'TOURIST BOATS APPROACHING YOUR ISLAND',
-    sp_only:true, spmode:'floresiensis', turn_range:[3,80], repeatable:false,
+    sp_only:true, spmode:'floresiensis', turn_range:[5,80], repeatable:false,
     desc:'Luxury eco-tourism boats circle the protected zone at increasingly close range. Some tourists have landed. Your band is being watched constantly. Stress behaviors have increased significantly.',
     choices:[
       { text:'Retreat deeper into the forest and avoid all contact', effects:{sp_tension:-12, sp_territory:-0.3, sp_resources:-8} },
@@ -2042,7 +2111,7 @@ const EVENTS = [
       { text:'Establish a buffer zone and alert sanctuary managers', effects:{sp_tension:-8, sp_integration:+5} }
     ]},
   { id:'sp_flores_disease', cat:'SANCTUARY', title:'UNFAMILIAR ILLNESS REACHES SANCTUARY',
-    sp_only:true, spmode:'floresiensis', turn_range:[4,80], repeatable:false,
+    sp_only:true, spmode:'floresiensis', turn_range:[5,80], repeatable:false,
     desc:'Three band members developed fever and joint pain: symptoms your elders have never seen. A researcher believes it came from a tourist who violated the exclusion zone. Floresiensis has no immunity to many modern pathogens.',
     choices:[
       { text:'Accept sapiens medical intervention immediately', effects:{sp_tension:+10, sp_integration:+8} },
@@ -2050,7 +2119,7 @@ const EVENTS = [
       { text:'Move the entire band to the secondary refuge zone', effects:{sp_tension:+5, sp_resources:-15, sp_territory:-0.2} }
     ]},
   { id:'sp_dna_kit_threat', cat:'POLITICAL', title:'DNA TEST KIT COULD EXPOSE DENISOVAN IDENTITY',
-    sp_only:true, spmode:'denisovan', turn_range:[3,60], repeatable:false,
+    sp_only:true, spmode:'denisovan', turn_range:[5,60], repeatable:false,
     desc:'A DNA testing company markets a service screening specifically for Denisovan genome markers. Wide adoption could expose your community, including those with jobs, legal identities, families, within months.',
     choices:[
       { text:'Sabotage the database; hire cybersecurity specialists', effects:{sp_secrecy:+10, sp_tension:-5, sp_resources:-15} },
@@ -2090,7 +2159,7 @@ const EVENTS = [
       { text:'Work with researchers to establish a legal buffer zone', effects:{sp_integration:+10, sp_tension:+5, sp_resources:-10} }
     ]},
   { id:'sp_rival_band', cat:'TERRITORY', title:'RIVAL BAND OF YOUR OWN SPECIES APPROACHES',
-    sp_only:true, spmode:'territory', turn_range:[4,80], repeatable:false,
+    sp_only:true, spmode:'territory', turn_range:[5,80], repeatable:false,
     desc:'A rival band of your own species, larger and better-fed, has been sighted at your territory boundary. Relations with your own kind are not guaranteed to be friendly.',
     choices:[
       { text:'Welcome them: strength in numbers against sapiens', effects:{sp_unity:+15, sp_resources:-10, sp_territory:+0.5} },
@@ -2122,7 +2191,7 @@ const EVENTS = [
       { text:'Set a trap; attempt to eliminate the threat', effects:{sp_resources:+15, sp_unity:+5, sp_tension:+5} }
     ]},
   { id:'sp_drought_foraging', cat:'SURVIVAL', title:'DRY SEASON: WATER SOURCES FAILING',
-    sp_only:true, spmode:'survival', turn_range:[3,80], repeatable:true,
+    sp_only:true, spmode:'survival', turn_range:[5,80], repeatable:true,
     desc:'The rains failed this season. Your closest water source dried up. The next is 20km away, near a sapiens settlement. Two elderly band members cannot make that journey.',
     choices:[
       { text:'Travel to the distant water; bring everyone slowly', effects:{sp_resources:-10, sp_tension:+5, sp_unity:+5} },
@@ -2138,7 +2207,7 @@ const EVENTS = [
       { text:'Forage intensively this turn to compensate', effects:{sp_resources:+10, sp_tension:+5} }
     ]},
   { id:'sp_sapiens_observer', cat:'SURVIVAL', title:'SAPIENS RESEARCHER OBSERVING FROM A DISTANCE',
-    sp_only:true, spmode:'survival', turn_range:[3,80], repeatable:true,
+    sp_only:true, spmode:'survival', turn_range:[5,80], repeatable:true,
     desc:'For three days a H. sapiens individual has been sitting on a ridge above your territory, watching and taking notes. Not aggressive. Has left food near the boundary twice. The band is unsettled.',
     choices:[
       { text:'Ignore him; he is no immediate threat', effects:{sp_tension:+3} },
@@ -2157,7 +2226,7 @@ const EVENTS = [
     ]},
   { id:'heidelberg_habilis_africa', cat:'INTER-SPECIES CONFLICT',
     title:'H. HEIDELBERGENSIS DISRUPTS HABILIS SCAVENGING: EAST AFRICA',
-    species:'habilis', region:'east_africa', turn_range:[4,239], repeatable:false,
+    species:'habilis', region:'east_africa', turn_range:[5,239], repeatable:false,
     triggercondition:'ecologyhigh',
     desc:'H. heidelbergensis hunting parties in the Rift Valley have begun systematic persecution of H. habilis scavengers, driving them from established carcass sites. Habilis populations are collapsing in three sub-regions.',
     choices:[
@@ -2185,7 +2254,7 @@ const EVENTS = [
     ]},
   { id:'paranthropus_afarensis_grazing', cat:'INTER-SPECIES CONFLICT',
     title:'PARANTHROPUS vs Au. AFARENSIS: EAST AFRICAN SAVANNA',
-    species:'afarensis', region:'east_africa', turn_range:[3,239], repeatable:false,
+    species:'afarensis', region:'east_africa', turn_range:[5,239], repeatable:false,
     triggercondition:'ecologyhigh',
     desc:'Paranthropus and Au. afarensis are competing over the same savanna food zones in East Africa as seasonal drought collapses the food web. Direct confrontations are increasing. Sanctuary rangers report injuries on both sides.',
     choices:[
@@ -2250,7 +2319,7 @@ const EVENTS = [
     ]},
   { id:'conflict_tchadensis_afarensis', cat:'INTER-SPECIES CONFLICT',
     title:'S. TCHADENSIS AND AU. AFARENSIS CONTEST WATER SOURCE: OLDEST STANDOFF ON RECORD',
-    species:'tchadensis', region:'central_africa', turn_range:[3,239], repeatable:false,
+    species:'tchadensis', region:'central_africa', turn_range:[5,239], repeatable:false,
     desc:'S. tchadensis and Au. afarensis individuals have been documented in repeated confrontation over a permanent water source in the Central African Rift margin. Both species are among humanity\'s oldest ancestors. Neither shows tool use. Both show clear territorial signaling: posturing, vocalizations, and physical displacement. Researchers call it the oldest inter-hominin standoff ever documented in real time. 7 million years of evolutionary history, meeting at a waterhole in the modern day.',
     choices:[
       { text:'Fund emergency water infrastructure: create two secondary sources to relieve pressure', effects:{budget:-280, ecological_stress:-10, stability:+5, integration_score:+5} },
@@ -2259,7 +2328,7 @@ const EVENTS = [
     ]},
   { id:'conflict_afarensis_habilis', cat:'INTER-SPECIES CONFLICT',
     title:'HABILIS DISPLACES AFARENSIS FROM BUTCHERY SITES USING OLDOWAN TOOLS',
-    species:'habilis', region:'east_africa', turn_range:[4,239], repeatable:false,
+    species:'habilis', region:'east_africa', turn_range:[5,239], repeatable:false,
     desc:'In the East African Rift Valley, H. habilis individuals are systematically excluding Au. afarensis from large carcass sites using Oldowan flaked stones as deterrents. Afarensis has no equivalent tool use. The displacement is documented at 11 confirmed sites across three months. Researchers describe this as the moment the tool-using lineage began to permanently out-compete the pre-tool lineage. It happened 2.6 million years ago too. It is happening again.',
     choices:[
       { text:'Create designated scavenging corridors for each species with ranger patrols', effects:{budget:-180, ecological_stress:-5, stability:+5, integration_score:+5} },
@@ -2301,7 +2370,7 @@ const EVENTS = [
       { text:'Stay hidden; this is a sapiens spectacle, not your movement', effects:{sp_unity:+5} }
     ]},
   { id:'ndl_winter_crisis', cat:'CRISIS', title:'HARSH WINTER FRACTURES BAND UNITY',
-    sp_only:true, spmode:'neanderthal', turn_range:[3,70], repeatable:true,
+    sp_only:true, spmode:'neanderthal', turn_range:[5,70], repeatable:true,
     desc:'A severe winter has strained resources. Two elders cannot travel. Three younger members are pushing to separate and move faster. Band unity is cracking.',
     choices:[
       { text:'Redistribute all resources equally; no one left behind', effects:{sp_unity:+14, sp_resources:-18} },
@@ -2317,7 +2386,7 @@ const EVENTS = [
       { text:'Your band retreats from the area; avoid further exposure', effects:{sp_territory:-1, sp_tension:-8, sp_unity:-5} }
     ]},
   { id:'sp_neanderthal_disease', cat:'BIOLOGICAL CRISIS', title:'SAPIENS PATHOGEN DEVASTATES YOUR BAND',
-    sp_only:true, spmode:'neanderthal', turn_range:[3,80], repeatable:false,
+    sp_only:true, spmode:'neanderthal', turn_range:[5,80], repeatable:false,
     desc:'Three adults and one child have collapsed with symptoms your healers cannot treat: fever, respiratory failure, skin lesions. This illness came from a sapiens camp upstream. Your immune system has no answer for it. Cambridge researchers warned of this exact scenario: Neanderthals carry near-zero cross-immunity to modern pathogens, mirroring the 90%+ mortality seen in Indigenous populations during first contact. Without intervention, the mortality rate will be catastrophic.',
     choices:[
       { text:'Send runners to the sapiens medical station; accept their help', effects:{sp_integration:+15, sp_tension:+12, sp_unity:+5} },
@@ -2343,7 +2412,7 @@ const EVENTS = [
 
   
   { id:'dns_exposure_risk', cat:'IDENTITY CRISIS', title:'JOURNALIST SUSPECTS YOUR TRUE IDENTITY',
-    sp_only:true, spmode:'denisovan', turn_range:[3,60], repeatable:false,
+    sp_only:true, spmode:'denisovan', turn_range:[5,60], repeatable:false,
     desc:'An investigative journalist has published a speculative piece with your photograph. The headline: "Is This Man the First Known Denisovan Public Figure?" The story has 4 million views and your employer is asking questions.',
     choices:[
       { text:'Deny everything; issue a forceful rebuttal', effects:{sp_secrecy:+12, sp_tension:-5} },
@@ -2409,7 +2478,7 @@ const EVENTS = [
       { text:'File an urgent appeal through UNESCO sanctuary protocol', effects:{sp_integration:+14, sp_tension:+4} }
     ]},
   { id:'flo_biotech_capture', cat:'SANCTUARY THREAT', title:'BIOTECH FIRM ATTEMPTS TO CAPTURE INDIVIDUALS FOR STUDY',
-    sp_only:true, spmode:'floresiensis', turn_range:[4,80], repeatable:false,
+    sp_only:true, spmode:'floresiensis', turn_range:[5,80], repeatable:false,
     desc:'Three armed researchers from NovaBio Sciences breached the perimeter at night with tranquilizer equipment. They were repelled. The firm insists it was a rogue team. Your band is terrified.',
     choices:[
       { text:'Relocate the entire band to the secondary refuge immediately', effects:{sp_territory:-0.5, sp_tension:-10, sp_resources:-15} },
@@ -2425,7 +2494,7 @@ const EVENTS = [
       { text:'Refuse all access; the risk of disease and stress is too high', effects:{sp_unity:+5} }
     ]},
   { id:'flo_island_fire', cat:'CRISIS', title:'FOREST FIRE THREATENS SANCTUARY PERIMETER',
-    sp_only:true, spmode:'floresiensis', turn_range:[3,80], repeatable:true,
+    sp_only:true, spmode:'floresiensis', turn_range:[5,80], repeatable:true,
     desc:'A forest fire started by lightning is burning toward the sanctuary. Smoke is dense. The western refuge area will be gone within 48 hours. Your band has options but not much time.',
     choices:[
       { text:'Fight the fire with the whole band; protect the sanctuary', effects:{sp_unity:+12, sp_resources:-15, sp_tension:-5} },
@@ -2451,7 +2520,7 @@ const EVENTS = [
       { text:'Use the morale to push into new territory', effects:{sp_territory:+0.5, sp_tension:+12, sp_unity:-3} }
     ]},
   { id:'terr_sapiens_encroach', cat:'TERRITORY CRISIS', title:'SAPIENS SETTLERS BEGIN CLEARING FOREST AT YOUR BOUNDARY',
-    sp_only:true, spmode:'territory', turn_range:[3,80], repeatable:true,
+    sp_only:true, spmode:'territory', turn_range:[5,80], repeatable:true,
     desc:'Sapiens settlers have begun clearing the eastern edge of your range with machinery. Within weeks your foraging zone will be halved. They do not know you are here. Yet.',
     choices:[
       { text:'Confront them at the perimeter; make your presence known', effects:{sp_tension:+18, sp_territory:-0.2, sp_unity:+8} },
@@ -2459,7 +2528,7 @@ const EVENTS = [
       { text:'Observe and wait; gather information before acting', effects:{sp_tension:+3, sp_resources:+5} }
     ]},
   { id:'terr_rival_band', cat:'TERRITORY', title:'ANOTHER NON-SAPIENS BAND ENTERS YOUR TERRITORY',
-    sp_only:true, spmode:'territory', turn_range:[4,80], repeatable:true,
+    sp_only:true, spmode:'territory', turn_range:[5,80], repeatable:true,
     desc:'A band of the same species has entered your territory from the north. They appear displaced, possibly by sapiens expansion. They are non-hostile but competing for your resources.',
     choices:[
       { text:'Drive them out; this territory sustains exactly one band', effects:{sp_territory:+0.3, sp_unity:-8, sp_tension:+8} },
@@ -2509,7 +2578,7 @@ const EVENTS = [
       { text:'Move on; stopping risks the entire band', effects:{sp_unity:-20, sp_resources:+5} }
     ]},
   { id:'surv_food_cache_found', cat:'SURVIVAL', title:'STUMBLE UPON SAPIENS FOOD STORAGE',
-    sp_only:true, spmode:'survival', turn_range:[3,80], repeatable:true,
+    sp_only:true, spmode:'survival', turn_range:[5,80], repeatable:true,
     desc:'Your foraging group discovered a sapiens storage cache: sealed containers with preserved food near an unoccupied research shelter. No sapiens are visible. The band is hungry.',
     choices:[
       { text:'Take food quietly and leave no trace', effects:{sp_resources:+20, sp_tension:+5} },
@@ -2517,7 +2586,7 @@ const EVENTS = [
       { text:'Leave it alone; sapiens territory means sapiens danger', effects:{sp_tension:-5} }
     ]},
   { id:'surv_band_fracture', cat:'SURVIVAL', title:'TWO ELDERS IN CONFLICT: BAND THREATENS TO SPLIT',
-    sp_only:true, spmode:'survival', turn_range:[3,80], repeatable:true,
+    sp_only:true, spmode:'survival', turn_range:[5,80], repeatable:true,
     desc:'Two senior members have been in conflict for weeks over which direction to migrate. The band is dividing along loyalty lines. A split here could be fatal for both groups.',
     choices:[
       { text:'The dominant elder leads; the other defers', effects:{sp_unity:+12, sp_resources:-8} },
@@ -3159,16 +3228,20 @@ function createInitialState(difficulty = 'normal') {
     unlockedModes: ['sapiens'],
     meters: {
       stability:         difficulty === 'extinction' ? 55 : 75,
-      disease:           difficulty === 'extinction' ? 40 : 10,
+      disease:           difficulty === 'extinction' ? 40 : 20,
       rights_conflict:   difficulty === 'extinction' ? 0 : 0,
       ecological_stress: difficulty === 'extinction' ? 30 : 15,
       extremism:         difficulty === 'extinction' ? 40 : 20
     },
     resources: { budget: difficulty === 'easy'       ? 700
-               : difficulty === 'hard'       ? 500
-               : difficulty === 'extinction' ? 400
-               : 600, // normal
-               knowledge:0, public_opinion:55 },
+               : difficulty === 'hard'       ? 300
+               : difficulty === 'extinction' ? 100
+               : 500, // normal
+                 knowledge:0,
+                 public_opinion: difficulty === 'easy'       ? 70
+                                : difficulty === 'hard'       ? 30
+                                : difficulty === 'extinction' ? 10
+                                : 50 },
     species: {},
     policies_enacted: [], policy_uses: {},
     events_seen: [], special_events_seen: [], unlocked_policies: [],
@@ -3183,7 +3256,9 @@ function createInitialState(difficulty = 'normal') {
     pendingMoves: {},
     /* COOLDOWN SYSTEM */ policyCooldowns: {},
     decisionLog: [],
-    integrationMilestonesSeen: []
+    integrationMilestonesSeen: [],
+    wpoFireCount: 0,
+    scoFireCount: 0
   };
   const preEncountered = ['neanderthal', 'denisovan', 'heidelbergensis', 'erectus'];
   SPECIES_DATA.forEach(s => {
@@ -3230,6 +3305,8 @@ function loadGame() {
     /* COOLDOWN SYSTEM */ GS.policyCooldowns = GS.policyCooldowns || {};
     if (GS.lastConflict && !GS.lastConflict.winner) { GS.lastConflict.winner = GS.lastConflict.speciesA; GS.lastConflict.loser = GS.lastConflict.speciesB; GS.lastConflict.deathToll = 0; }
     GS.achievements      = GS.achievements      || []; 
+    GS.wpoFireCount = GS.wpoFireCount || 0;
+    GS.scoFireCount = GS.scoFireCount || 0;
     
     Object.keys(GS.species||{}).forEach(sid => { if(GS.species[sid]) GS.species[sid].extraRegions = GS.species[sid].extraRegions || []; });
     if(GS.sp_state) { GS.sp_state._activeAttack = GS.sp_state._activeAttack || false; }
@@ -3313,7 +3390,7 @@ function startNewGame() {
   addNews('AUTOSAVE ENABLED: Progress is saved after every turn automatically.','good');
   addNews('EMERGENCY BROADCAST: All extinct hominin species confirmed across multiple regions. UN Special Representative deployed.','crisis');
   addNews('Global Stability at 75%. Disease Index rising. Your first decisions will define the next 20 years.','event');
-  if (isFirstPlay) setTimeout(() => { document.getElementById('onboarding-modal').classList.add('open'); }, 400);
+  setTimeout(() => { document.getElementById('onboarding-modal').classList.add('open'); }, 400);
 }
 
 function closeOnboarding() {
@@ -3946,6 +4023,11 @@ function advanceTurn() {
   }
   /* END TURN FIX */
   const stagedEvents = []; /* END TURN FIX — Fix 3: atomic staging array */
+  // TUTORIAL: Force tutorial events on turns 1, 2, 3
+  const tutorialForThisTurn = EVENTS.find(e => e.tutorial && e.turnrange && e.turnrange[0] === GS.turn && e.turnrange[1] === GS.turn);
+  if (tutorialForThisTurn && !GS.events_seen.includes(tutorialForThisTurn.id)) {
+    stagedEvents.unshift(tutorialForThisTurn);
+  }
   GS.turn++;
   GS.turn_policies_used = 0;
   
@@ -4127,7 +4209,9 @@ function advanceTurn() {
     showAchievement('⚠ FINAL WARNING', 'Stability has fallen below 10%. If it reaches zero, all progress is lost.');
   }
   if (m.stability > 10) GS._warnedLowStability = false;
-  checkTerritorialOverlap(stagedEvents); /* END TURN FIX */
+  if (GS.turn > 3) {
+    checkTerritorialOverlap(stagedEvents); /* END TURN FIX */
+  }
   newsItems = newsItems.slice(0, 3);
   
   Object.entries(SPECIAL_TRIGGERS).forEach(([sid, t]) => {
@@ -4179,6 +4263,7 @@ function advanceTurn() {
     const evIdx = EVENTS.findIndex(e => e.id === 'finalreckoning');
     if (evIdx >= 0) EVENTS[evIdx] = finalEv;
   }
+  if (GS.turn > 3) {
   const eventsPerTurn = GS.difficulty === 'hard' ? 2 : GS.difficulty === 'extinction' ? 3 : 1;
   
   const eligible = EVENTS.filter(e => {
@@ -4223,14 +4308,16 @@ function advanceTurn() {
       }
     }
   }
+  }
   generateNewsFlavor();
   animPulse = true; setTimeout(() => { animPulse = false; }, 900);
-  checkMaritimeMigration();
-  voluntaryMigration();
-  checkInterbreeding(stagedEvents); /* END TURN FIX */
-  checkRomanticEncounters(stagedEvents); /* END TURN FIX */
-  
-  checkLegalFrameworkTriggers();
+  if (GS.turn > 3) {
+    checkMaritimeMigration();
+    voluntaryMigration();
+    checkInterbreeding(stagedEvents); /* END TURN FIX */
+    checkRomanticEncounters(stagedEvents); /* END TURN FIX */
+    checkLegalFrameworkTriggers();
+  }
   
   
   AudioEngine.init();
@@ -4315,15 +4402,15 @@ function checkLegalFrameworkTriggers() {
 
   
   if (policies.includes('wildlife_protection')) {
-    if (Math.random() < triggerChance) {
+    if (!GS.wpoFireCount) GS.wpoFireCount = 0;
+    if (GS.wpoFireCount < 2 && Math.random() < triggerChance) {
       const wpoId = 'lf_wpo_ecosystem_disruption';
-      // CHANGE 4 — Only trigger when WPO active AND SCO is NOT active
       if (!policies.includes('species_containment_order')) {
         const ev = EVENTS.find(e => e.id === wpoId);
-        if (ev && !eventQueue.find(e => e.id === wpoId)
-               && !GS.pendingEvents?.some(pe => pe.eventId === wpoId)) {
+        if (ev && !eventQueue.find(e => e.id === wpoId) && !GS.pendingEvents?.some(pe => pe.eventId === wpoId)) {
           if (!GS.pendingEvents) GS.pendingEvents = [];
           GS.pendingEvents.push({ eventId: wpoId, fireOnTurn: GS.turn + 1 });
+          GS.wpoFireCount++;
         }
       }
     }
@@ -4332,13 +4419,14 @@ function checkLegalFrameworkTriggers() {
   
   // CHANGE 2A/3A — SCO escape events only fire when SCO active (and WPO not active)
   if (policies.includes('species_containment_order') && !policies.includes('wildlife_protection')) {
-    if (Math.random() < triggerChance) {
+    if (!GS.scoFireCount) GS.scoFireCount = 0;
+    if (GS.scoFireCount < 2 && Math.random() < triggerChance) {
       const evId = Math.random() < 0.50 ? 'lf_sco_escape_attempt_low' : 'lf_sco_escape_high';
       const ev = EVENTS.find(e => e.id === evId);
-      if (ev && !eventQueue.find(e => e.id === evId)
-             && !GS.pendingEvents?.some(pe => pe.eventId === evId)) {
+      if (ev && !eventQueue.find(e => e.id === evId) && !GS.pendingEvents?.some(pe => pe.eventId === evId)) {
         if (!GS.pendingEvents) GS.pendingEvents = [];
         GS.pendingEvents.push({ eventId: evId, fireOnTurn: GS.turn + 1 });
+        GS.scoFireCount++;
       }
     }
   }
@@ -4413,7 +4501,7 @@ function showMonthlyBriefing(callback) {
   const mn = GS.turn % 12;
   const yr = START_YEAR + Math.floor(GS.turn / 12);
   document.getElementById('briefing-title').textContent =
-    `START OF ${MONTHS[mn]} ${yr} \u2014 TURN ${GS.turn}`;
+    `START OF ${MONTHS[mn]} ${yr} TURN ${GS.turn}`;
   const snap = _briefingSnapshot;
   const m = GS.meters, r = GS.resources;
 
@@ -4788,6 +4876,8 @@ function enactPolicy(id) {
   GS.turn_policies_used++;
   if (p.maxUses) GS.policy_uses[id] = (GS.policy_uses[id]||0) + 1;
   if (!GS.policies_enacted.includes(id)) GS.policies_enacted.push(id);
+  if (id === 'wildlifeprotection') GS.wpoFireCount = 0;
+  if (id === 'speciescontainmentorder') GS.scoFireCount = 0;
   if (p.id === 'extermination_order') {
     GS.extermination_count = (GS.extermination_count||0) + 1;
     checkAchievement('genocide','The Genocide','You authorized an extermination campaign.');
