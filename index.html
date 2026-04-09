@@ -3281,6 +3281,1684 @@ const EVENTS = [
       { text:'Classify the speech as anecdotal and state that policy cannot be driven by a single incident', effects:{integration_score:-10, rights_conflict:-10, public_opinion:-10, extremism:+5} }
     ]}
 
+// ============================================================
+// SECTION A: 10 CHAIN EVENTS (PARENT + CHILD PAIRS)
+// ============================================================
+
+// ---- CHAIN 1: THE CONTAINMENT WHISTLEBLOWER (turns 20-80) ----
+,{
+  id: 'chain_whistleblower_parent',
+  cat: 'POLITICAL',
+  title: 'JOURNALIST REQUESTS UNESCORTED ACCESS TO CONTAINMENT FACILITY',
+  species: null,
+  region: null,
+  turn_range: [20, 80],
+  repeatable: false,
+  desc: 'An award-winning investigative journalist is requesting independent access to a Tier 1 containment site. Rights groups are amplifying the request globally. Your office has 72 hours to respond before the story runs without comment.',
+  choices: [
+    {
+      text: 'Grant full unescorted access. Transparency is our strongest defense.',
+      subtext: '+Opinion +Rights -Stability',
+      effects: { public_opinion: +10, rights_conflict: +5, stability: -5 },
+      queue_event: 'chain_whistleblower_exposed'
+    },
+    {
+      text: 'Deny access. Offer a supervised press tour instead.',
+      subtext: '+Stability -Opinion',
+      effects: { stability: +5, public_opinion: -5 },
+      queue_event: 'chain_whistleblower_denied_leak'
+    },
+    {
+      text: 'Delay by citing safety protocols. Buy time for internal review.',
+      subtext: '+Stability -Budget',
+      effects: { stability: +3, budget: -50 },
+      queue_event: 'chain_whistleblower_delayed'
+    }
+  ]
+}
+,{
+  id: 'chain_whistleblower_exposed',
+  cat: 'POLITICAL',
+  title: 'CONTAINMENT EXPOSE PUBLISHED: CONDITIONS CALLED SYSTEMIC ABUSE',
+  species: null,
+  region: null,
+  turn_range: [0, 240],
+  repeatable: false,
+  requires_seen: 'chain_whistleblower_parent',
+  desc: 'The journalist documented overcrowding, inadequate nutrition, and three undocumented deaths. The article ran simultaneously in 40 outlets. Rights groups are filing emergency injunctions. Your office is named directly.',
+  choices: [
+    {
+      text: 'Accept the findings. Launch an independent inquiry immediately.',
+      subtext: '+Rights -Stability -Budget',
+      effects: { rights_conflict: +15, extremism: -5, budget: -200, stability: -5 }
+    },
+    {
+      text: 'Contest the findings publicly as exaggerated and politically motivated.',
+      subtext: '+Extremism -Opinion -Stability',
+      effects: { extremism: +15, public_opinion: -15, stability: -5 }
+    }
+  ]
+}
+,{
+  id: 'chain_whistleblower_denied_leak',
+  cat: 'POLITICAL',
+  title: 'DENIAL BACKFIRES: INTERNAL DOCUMENTS LEAKED TO PRESS THROUGH SECOND SOURCE',
+  species: null,
+  region: null,
+  turn_range: [0, 240],
+  repeatable: false,
+  requires_seen: 'chain_whistleblower_parent',
+  desc: 'The journalist obtained internal documents through a separate source after your denial. The leak is more damaging than the original story would have been. Seven governments have requested formal explanations.',
+  choices: [
+    {
+      text: 'Issue a full public apology and announce immediate reform.',
+      subtext: '+Rights -Extremism -Budget',
+      effects: { rights_conflict: +10, extremism: -10, public_opinion: +5, budget: -150 }
+    },
+    {
+      text: 'Launch an internal investigation into the source of the leak.',
+      subtext: '+Extremism -Stability -Integration',
+      effects: { extremism: +10, stability: -10, integration_score: -5 }
+    }
+  ]
+}
+,{
+  id: 'chain_whistleblower_delayed',
+  cat: 'POLITICAL',
+  title: 'DELAY EXPIRES: JOURNALIST FILES FREEDOM OF INFORMATION SUIT',
+  species: null,
+  region: null,
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_whistleblower_parent',
+  desc: 'The 30-day delay gave your team time to prepare, but the journalist used it to file a freedom of information lawsuit in four jurisdictions simultaneously. A ruling is expected within one turn.',
+  choices: [
+    {
+      text: 'Settle the suit. Release all documents under a supervised disclosure.',
+      subtext: '+Knowledge +Rights -Budget',
+      effects: { knowledge: +15, rights_conflict: +8, budget: -120, public_opinion: +5 }
+    },
+    {
+      text: 'Fight the suit in court. Cite national security exemptions.',
+      subtext: '+Extremism -Opinion -Stability',
+      effects: { extremism: +8, public_opinion: -12, stability: -5 }
+    }
+  ]
+}
+
+// ---- CHAIN 2: THE EXTREMIST CELL (turns 30-120) ----
+,{
+  id: 'chain_extremist_intel_parent',
+  cat: 'POLITICAL',
+  title: 'INTELLIGENCE CONFIRMS SAPIENS FIRST CELL PLANNING DIRECT ACTION',
+  species: null,
+  region: null,
+  turn_range: [30, 120],
+  repeatable: false,
+  desc: 'A EUROPOL and UN joint intelligence report confirms a Sapiens First cell is planning a direct action against a non-sapiens settlement. Location is unknown. Timeline is within 14 days. The report is classified.',
+  choices: [
+    {
+      text: 'Authorize preemptive arrests based on the intelligence report.',
+      subtext: '+Stability -Extremism -Rights',
+      effects: { stability: +5, extremism: -5, rights_conflict: -5 },
+      queue_event: 'chain_extremist_arrested'
+    },
+    {
+      text: 'Continue surveillance. More intelligence is needed before acting.',
+      subtext: '+Knowledge, risk of attack',
+      effects: { knowledge: +15 },
+      queue_event: 'chain_extremist_attacked'
+    }
+  ]
+}
+,{
+  id: 'chain_extremist_arrested',
+  cat: 'POLITICAL',
+  title: 'MASS ARRESTS PRAISED -- CIVIL LIBERTIES GROUPS CHALLENGE LEGALITY',
+  species: null,
+  region: null,
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_extremist_intel_parent',
+  desc: '23 individuals were detained before any attack took place. Three were minors. Civil liberties organizations argue the arrests criminalize ideology rather than action. Sapiens First is calling it political persecution.',
+  choices: [
+    {
+      text: 'Defend the arrests. Publish the intelligence justification.',
+      subtext: '+Stability -Extremism -Rights -Opinion',
+      effects: { stability: +5, extremism: -10, rights_conflict: -10, public_opinion: -5 }
+    },
+    {
+      text: 'Release the minors and review each adult case individually.',
+      subtext: '+Rights -Extremism +Opinion',
+      effects: { rights_conflict: +5, extremism: -5, public_opinion: +10 }
+    }
+  ]
+}
+,{
+  id: 'chain_extremist_attacked',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'ATTACK CARRIED OUT: NEANDERTHAL SETTLEMENT DESTROYED, THREE DEAD',
+  species: 'neanderthal',
+  region: 'europe',
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_extremist_intel_parent',
+  desc: 'The intelligence was accurate. The cell acted before surveillance produced actionable data. Three Neanderthal individuals are dead. Two sapiens attackers are at large. The UN Security Council has convened an emergency session.',
+  choices: [
+    {
+      text: 'Declare a domestic extremism emergency. Emergency powers activated.',
+      subtext: '-Extremism -Stability -Rights -Budget',
+      effects: { extremism: -20, stability: -10, rights_conflict: -10, budget: -300 }
+    },
+    {
+      text: 'Pursue the perpetrators under existing criminal law. No special powers.',
+      subtext: '-Extremism -Stability -Opinion',
+      effects: { extremism: -10, stability: -5, public_opinion: -10 }
+    }
+  ]
+}
+
+// ---- CHAIN 3: THE PATHOGEN MUTATION (turns 15-100) ----
+,{
+  id: 'chain_pathogen_mutation_parent',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'NOVEL CROSS-SPECIES VARIANT DETECTED AT EARLY STAGE',
+  species: null,
+  region: null,
+  turn_range: [15, 100],
+  repeatable: false,
+  desc: 'Sequencing labs in three countries have identified a new variant exploiting a different receptor pathway than existing strains. Current vaccines offer only partial protection. WHO is requesting your guidance within 48 hours.',
+  choices: [
+    {
+      text: 'Fund emergency variant-specific research now.',
+      subtext: '+Knowledge +Disease -Budget',
+      effects: { budget: -200, knowledge: +20, disease: +5 },
+      queue_event: 'chain_pathogen_breakthrough'
+    },
+    {
+      text: 'Rely on existing surveillance infrastructure. Hold the budget.',
+      subtext: '+Disease (high risk)',
+      effects: { disease: +10 },
+      queue_event: 'chain_pathogen_outbreak'
+    }
+  ]
+}
+,{
+  id: 'chain_pathogen_breakthrough',
+  cat: 'SCIENTIFIC DISCOVERY',
+  title: 'VARIANT RESEARCH YIELDS UNEXPECTED DENISOVAN IMMUNITY INSIGHT',
+  species: 'denisovan',
+  region: 'siberia',
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_pathogen_mutation_parent',
+  desc: 'The variant research revealed a secondary finding: a Denisovan immune gene cluster providing near-complete resistance to all identified cross-species variants. Researchers are calling it the most significant medical discovery in a generation.',
+  choices: [
+    {
+      text: 'Fast-track a gene therapy program based on the Denisovan data.',
+      subtext: '-Disease +Knowledge +Integration -Budget',
+      effects: { disease: -20, knowledge: +30, budget: -300, integration_score: +10 }
+    },
+    {
+      text: 'License the discovery to WHO for global distribution at no profit.',
+      subtext: '-Disease +Opinion +Budget',
+      effects: { disease: -15, public_opinion: +15, budget: +100 }
+    }
+  ]
+}
+,{
+  id: 'chain_pathogen_outbreak',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'VARIANT SPREADS: SURVEILLANCE NETWORK OVERWHELMED IN THREE REGIONS',
+  species: null,
+  region: null,
+  turn_range: [15, 100],
+  repeatable: false,
+  requires_seen: 'chain_pathogen_mutation_parent',
+  desc: 'The new variant spread faster than existing models predicted. Surveillance networks in East Africa, Central Europe, and Southeast Asia are reporting simultaneous spikes. The window for containment is closing.',
+  choices: [
+    {
+      text: 'Declare a WHO emergency now. Full response protocol.',
+      subtext: '-Disease +Stability -Budget',
+      effects: { disease: -15, stability: +5, budget: -350 }
+    },
+    {
+      text: 'Targeted containment in confirmed zones only.',
+      subtext: '-Disease -Rights -Integration',
+      effects: { disease: -8, rights_conflict: -10, integration_score: -5 }
+    }
+  ]
+}
+
+// ---- CHAIN 4: THE ROGUE STATE (turns 40-140) ----
+,{
+  id: 'chain_rogue_state_parent',
+  cat: 'POLITICAL',
+  title: 'NATION ANNOUNCES UNILATERAL NON-SAPIENS EXPULSION POLICY',
+  species: null,
+  region: 'europe',
+  turn_range: [40, 140],
+  repeatable: false,
+  desc: 'A UN member state has announced a domestic policy declaring all non-sapiens individuals persona non grata. Deportation operations begin in 72 hours. 14,000 Neanderthal individuals are directly affected.',
+  choices: [
+    {
+      text: 'File an emergency motion at the UN Security Council.',
+      subtext: '-Stability +Integration -Budget',
+      effects: { stability: -5, budget: -100, integration_score: +5 },
+      queue_event: 'chain_rogue_state_un_vote'
+    },
+    {
+      text: 'Pursue direct bilateral negotiations with the government.',
+      subtext: '+Stability -Budget',
+      effects: { budget: -150, stability: +3 },
+      queue_event: 'chain_rogue_state_bilateral'
+    },
+    {
+      text: 'Publicly condemn but take no institutional action.',
+      subtext: '-Opinion +Extremism -Integration',
+      effects: { public_opinion: -10, extremism: +10, integration_score: -5 }
+    }
+  ]
+}
+,{
+  id: 'chain_rogue_state_un_vote',
+  cat: 'POLITICAL',
+  title: 'UN EMERGENCY VOTE FAILS 7 TO 8: RESOLUTION BLOCKED',
+  species: null,
+  region: null,
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_rogue_state_parent',
+  desc: 'The resolution failed. Three permanent members abstained. The expulsion is proceeding. However, 19 nations issued joint statements of non-recognition and are requesting guidance on a coalition response.',
+  choices: [
+    {
+      text: 'Lead a coalition of 19 nations to provide sanctuary for the 14,000.',
+      subtext: '+Integration +Extremism -Budget -Stability',
+      effects: { integration_score: +10, extremism: +5, budget: -200, stability: -5 }
+    },
+    {
+      text: 'Accept the vote outcome and monitor from a distance.',
+      subtext: '+Extremism -Integration -Opinion',
+      effects: { extremism: +15, integration_score: -10, public_opinion: -10 }
+    }
+  ]
+}
+,{
+  id: 'chain_rogue_state_bilateral',
+  cat: 'POLITICAL',
+  title: 'BILATERAL DEAL REACHED: PARTIAL SUSPENSION FOR 60-DAY REVIEW',
+  species: null,
+  region: null,
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_rogue_state_parent',
+  desc: 'The government agreed to suspend deportations for 60 days pending a joint review. Rights groups call it a delay tactic. The government calls it a goodwill gesture. The 14,000 individuals remain in legal limbo.',
+  choices: [
+    {
+      text: 'Publicize the deal as a diplomatic win to build public support.',
+      subtext: '+Opinion +Integration +Extremism',
+      effects: { public_opinion: +10, integration_score: +5, extremism: +5 }
+    },
+    {
+      text: 'Use the 60 days to quietly resettle all 14,000 individuals.',
+      subtext: '+Integration -Budget +Stability',
+      effects: { integration_score: +10, budget: -250, stability: +3 }
+    }
+  ]
+}
+
+// ---- CHAIN 5: THE BIOTECH PATENT (turns 50-130) ----
+,{
+  id: 'chain_biotech_patent_parent',
+  cat: 'SCIENTIFIC DISCOVERY',
+  title: 'BIOTECH CORPORATION FILES PATENT ON DENISOVAN IMMUNE GENE CLUSTER',
+  species: 'denisovan',
+  region: 'siberia',
+  turn_range: [50, 130],
+  repeatable: false,
+  desc: 'Meridian Genomics has filed patents covering three Denisovan immune gene variants. Legal experts are divided. If approved, Denisovan individuals would require licensing to reproduce without infringement. Some are calling it biological slavery.',
+  choices: [
+    {
+      text: 'Challenge the patent at the international intellectual property tribunal.',
+      subtext: '+Knowledge -Budget',
+      effects: { budget: -200, knowledge: +15 },
+      queue_event: 'chain_biotech_tribunal'
+    },
+    {
+      text: 'Allow the patent while negotiating benefit-sharing with Denisovan communities.',
+      subtext: '+Budget -Integration +Rights',
+      effects: { integration_score: -5, budget: +150, rights_conflict: +5 },
+      queue_event: 'chain_biotech_deal'
+    },
+    {
+      text: 'Declare the patent legally void under the Non-Sapiens Persons Act.',
+      subtext: '+Rights +Integration +Extremism -Budget',
+      effects: { rights_conflict: +15, integration_score: +10, extremism: +10, budget: -100 }
+    }
+  ]
+}
+,{
+  id: 'chain_biotech_tribunal',
+  cat: 'SCIENTIFIC DISCOVERY',
+  title: 'TRIBUNAL RULING: PATENT PARTIALLY INVALIDATED, COMPANY APPEALS',
+  species: null,
+  region: null,
+  turn_range: [5, 240],
+  repeatable: false,
+  requires_seen: 'chain_biotech_patent_parent',
+  desc: 'The tribunal ruled that living organisms cannot be patented under existing international law, but gene sequences can. Meridian Genomics immediately filed an appeal targeting the gene sequence ruling specifically.',
+  choices: [
+    {
+      text: 'Fund continued legal opposition through the appeal process.',
+      subtext: '+Rights +Knowledge -Budget',
+      effects: { budget: -200, rights_conflict: +10, knowledge: +10 }
+    },
+    {
+      text: 'Accept the partial ruling as a win and redirect resources elsewhere.',
+      subtext: '+Stability -Integration',
+      effects: { stability: +5, integration_score: -5 }
+    }
+  ]
+}
+,{
+  id: 'chain_biotech_deal',
+  cat: 'POLITICAL',
+  title: 'BENEFIT-SHARING DEAL COLLAPSES: DENISOVAN COMMUNITY REJECTS TERMS',
+  species: 'denisovan',
+  region: 'siberia',
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_biotech_patent_parent',
+  desc: 'Denisovan community representatives rejected the proposed terms unanimously. The lead negotiator stated: "You cannot pay us to accept the premise that our genetics are someone else\'s property." The situation has escalated internationally.',
+  choices: [
+    {
+      text: 'Side with the community. Withdraw from the deal and back their legal challenge.',
+      subtext: '+Integration +Rights -Budget',
+      effects: { integration_score: +10, rights_conflict: +10, budget: -150 }
+    },
+    {
+      text: 'Press for revised terms with improved community controls over licensing.',
+      subtext: '+Stability -Integration',
+      effects: { stability: +5, integration_score: -3, budget: -100 }
+    }
+  ]
+}
+
+// ---- CHAIN 6: THE SPECIES COOPERATION MIRACLE (turns 60-160) ----
+,{
+  id: 'chain_cooperation_parent',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'NEANDERTHAL AND DENISOVAN POPULATIONS ESTABLISH VOLUNTARY JOINT SETTLEMENT',
+  species: 'neanderthal',
+  region: 'europe',
+  turn_range: [60, 160],
+  repeatable: false,
+  desc: 'Researchers have documented the first voluntary joint settlement between Neanderthal and Denisovan populations in the Rhine corridor. Both groups are sharing food resources and tool-making knowledge. Researchers call this unprecedented in the fossil record.',
+  choices: [
+    {
+      text: 'Formally recognize and legally protect the joint settlement.',
+      subtext: '+Integration +Rights -Stability -Budget',
+      effects: { integration_score: +15, rights_conflict: +10, stability: -3, budget: -100 },
+      queue_event: 'chain_cooperation_recognized'
+    },
+    {
+      text: 'Observe quietly. Do not interfere with the experiment.',
+      subtext: '+Knowledge +Integration',
+      effects: { knowledge: +25, integration_score: +5 },
+      queue_event: 'chain_cooperation_observed'
+    }
+  ]
+}
+,{
+  id: 'chain_cooperation_recognized',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'JOINT SETTLEMENT RECOGNITION SPARKS MULTI-SPECIES CITY MOVEMENT',
+  species: null,
+  region: null,
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_cooperation_parent',
+  desc: 'Following formal recognition, advocacy groups in seven cities are petitioning for official multi-species districts in urban centers. Sapiens First is calling it an invasion. Integration groups are calling it evolution.',
+  choices: [
+    {
+      text: 'Support the multi-species city designation officially.',
+      subtext: '+Integration +Extremism -Stability -Budget',
+      effects: { integration_score: +20, extremism: +15, stability: -5, budget: -200 }
+    },
+    {
+      text: 'Restrict recognition to the Rhine settlement for now.',
+      subtext: '+Integration +Extremism +Stability',
+      effects: { integration_score: +5, extremism: +5, stability: +3 }
+    }
+  ]
+}
+,{
+  id: 'chain_cooperation_observed',
+  cat: 'SCIENTIFIC DISCOVERY',
+  title: 'OBSERVATION COMPLETE: THEY KNOW WE ARE WATCHING AND HAVE LEFT ARTIFACTS',
+  species: 'neanderthal',
+  region: 'europe',
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_cooperation_parent',
+  desc: 'After two months of silent observation, both populations have begun leaving carved stones near the observation perimeter. Researchers believe this is deliberate communication. The careful approach preserved both communities entirely.',
+  choices: [
+    {
+      text: 'Accept the invitation. Make formal contact on their terms.',
+      subtext: '+Integration +Knowledge +Opinion +Disease',
+      effects: { integration_score: +20, knowledge: +30, public_opinion: +15, disease: +5 }
+    },
+    {
+      text: 'Continue observation indefinitely. Contact carries too much disease risk.',
+      subtext: '+Knowledge -Integration',
+      effects: { knowledge: +15, extremism: -5, integration_score: -5 }
+    }
+  ]
+}
+
+// ---- CHAIN 7: THE ARCTIC DISCOVERY (turns 25-70) ----
+,{
+  id: 'chain_arctic_discovery_parent',
+  cat: 'SCIENTIFIC DISCOVERY',
+  title: 'SATELLITE IMAGING CONFIRMS ISOLATED POPULATION IN SIBERIAN PERMAFROST ZONE',
+  species: 'heidelbergensis',
+  region: 'siberia',
+  turn_range: [25, 70],
+  repeatable: false,
+  desc: 'A previously unknown population of what appears to be H. heidelbergensis has been located in a permafrost collapse zone in central Siberia. They are alive. They number in the hundreds. No contact has been made.',
+  choices: [
+    {
+      text: 'Deploy a field team immediately. Make contact within 48 hours.',
+      subtext: '+Knowledge +Disease +Integration',
+      effects: { knowledge: +20, disease: +15, integration_score: +10 },
+      queue_event: 'chain_arctic_rapid_contact'
+    },
+    {
+      text: 'Deploy observation only. No contact for 60 days.',
+      subtext: '+Knowledge +Disease (low risk)',
+      effects: { knowledge: +30, disease: +5 },
+      queue_event: 'chain_arctic_careful_contact'
+    }
+  ]
+}
+,{
+  id: 'chain_arctic_rapid_contact',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'RAPID CONTACT CAUSES IMMUNE COLLAPSE: 40 PERCENT POPULATION LOSS IN 10 DAYS',
+  species: 'heidelbergensis',
+  region: 'siberia',
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_arctic_discovery_parent',
+  desc: 'The isolated population had zero immunity to common sapiens pathogens. Field teams introduced three simultaneous infections despite protocols. The mortality rate mirrors European contact with the Americas. The scientific community is in crisis.',
+  choices: [
+    {
+      text: 'Full medical quarantine and emergency response. Spare no budget.',
+      subtext: '-Disease -Budget -Stability -Opinion',
+      effects: { disease: -10, budget: -350, stability: -5, public_opinion: -10 }
+    },
+    {
+      text: 'Pull all field teams. Allow the population to stabilize without further contact.',
+      subtext: '+Disease +EcoStress -Integration',
+      effects: { disease: +5, ecological_stress: +5, integration_score: -5 }
+    }
+  ]
+}
+,{
+  id: 'chain_arctic_careful_contact',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: '60-DAY OBSERVATION COMPLETE: THEY ARE COMMUNICATING WITH US',
+  species: 'heidelbergensis',
+  region: 'siberia',
+  turn_range: [25, 70],
+  repeatable: false,
+  requires_seen: 'chain_arctic_discovery_parent',
+  desc: 'The Heidelbergensis population has begun leaving carved stones near the observation perimeter. Researchers believe this is intentional. The careful approach preserved their health entirely. They appear to be inviting contact.',
+  choices: [
+    {
+      text: 'Accept the invitation. Make first contact entirely on their terms.',
+      subtext: '+Integration +Knowledge +Opinion +Disease',
+      effects: { integration_score: +20, knowledge: +30, public_opinion: +15, disease: +5 }
+    },
+    {
+      text: 'Continue observation indefinitely. The disease risk is still too high.',
+      subtext: '+Knowledge -Extremism -Integration',
+      effects: { knowledge: +15, extremism: -5, integration_score: -5 }
+    }
+  ]
+}
+
+// ---- CHAIN 8: THE ELECTION FRACTURE (turns 80-160) ----
+,{
+  id: 'chain_election_fracture_parent',
+  cat: 'POLITICAL',
+  title: 'ANTI-HOMININ PARTIES WIN PARLIAMENTARY MAJORITIES IN THREE NATIONS SIMULTANEOUSLY',
+  species: null,
+  region: null,
+  turn_range: [80, 160],
+  repeatable: false,
+  desc: 'Elections in three UN member states have returned anti-hominin supermajorities. All three governments have announced withdrawal from the Non-Sapiens Persons Act framework within 30 days and called your office a form of species imperialism.',
+  choices: [
+    {
+      text: 'Invoke the UN framework enforcement clause. Apply formal sanctions.',
+      subtext: '-Stability -Budget +Integration',
+      effects: { stability: -10, budget: -200, integration_score: +5 },
+      queue_event: 'chain_election_sanctions'
+    },
+    {
+      text: 'Open diplomatic channels. Acknowledge the election results as legitimate.',
+      subtext: '+Stability -Integration +Extremism',
+      effects: { stability: +5, integration_score: -5, extremism: +5 },
+      queue_event: 'chain_election_diplomacy'
+    }
+  ]
+}
+,{
+  id: 'chain_election_sanctions',
+  cat: 'POLITICAL',
+  title: 'SANCTIONS TRIGGER COALITION FRACTURE: SIX MORE NATIONS SIGNAL SYMPATHY',
+  species: null,
+  region: null,
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_election_fracture_parent',
+  desc: 'What started as three dissenting nations has become nine. The sanctions accelerated precisely the fracture they were designed to prevent. The Secretary-General has privately warned your office that the framework is at risk.',
+  choices: [
+    {
+      text: 'Hold firm. Fractures happen. Core principles do not bend.',
+      subtext: '+Integration +Extremism -Stability',
+      effects: { integration_score: +10, extremism: +15, stability: -15 }
+    },
+    {
+      text: 'Lift the sanctions and return to direct negotiation.',
+      subtext: '+Stability -Integration -Extremism',
+      effects: { stability: +5, integration_score: -5, extremism: -5 }
+    }
+  ]
+}
+,{
+  id: 'chain_election_diplomacy',
+  cat: 'POLITICAL',
+  title: 'DIPLOMATIC CHANNEL OPENS: CONDITIONAL FRAMEWORK PAUSE PROPOSED',
+  species: null,
+  region: null,
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_election_fracture_parent',
+  desc: 'The three governments are willing to negotiate, but their opening position is a complete pause of the Non-Sapiens Persons Act framework for two years. Rights groups are calling it a death sentence in slow motion.',
+  choices: [
+    {
+      text: 'Reject the pause. Offer amendments to the framework instead.',
+      subtext: '-Stability +Extremism +Integration',
+      effects: { stability: -8, extremism: +8, integration_score: +5 }
+    },
+    {
+      text: 'Accept a limited 6-month review pause as a compromise.',
+      subtext: '+Stability -Integration -Rights',
+      effects: { stability: +8, integration_score: -8, rights_conflict: -8 }
+    }
+  ]
+}
+
+// ---- CHAIN 9: THE HYBRID BIRTH (turns 70-140) ----
+,{
+  id: 'chain_hybrid_birth_parent',
+  cat: 'RIGHTS LAW',
+  title: 'CONFIRMED: SAPIENS-NEANDERTHAL PREGNANCY INDEPENDENTLY VERIFIED BY THREE INSTITUTIONS',
+  species: 'neanderthal',
+  region: 'europe',
+  turn_range: [70, 140],
+  repeatable: false,
+  desc: 'A confirmed sapiens-neanderthal pregnancy has been verified by three separate medical institutions. The child, if carried to term, will be the first documented hybrid birth in 40,000 years. Both parents have requested privacy. The world has decided not to grant it.',
+  choices: [
+    {
+      text: 'Issue a protective privacy order. This is a medical matter above all else.',
+      subtext: '+Rights +Opinion -Stability',
+      effects: { rights_conflict: +10, public_opinion: +5, stability: -3 },
+      queue_event: 'chain_hybrid_birth_protected'
+    },
+    {
+      text: 'Make no official comment. Let the medical institutions manage the situation.',
+      subtext: '+Extremism -Stability',
+      effects: { extremism: +10, stability: -5 },
+      queue_event: 'chain_hybrid_birth_exposed'
+    }
+  ]
+}
+,{
+  id: 'chain_hybrid_birth_protected',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'HYBRID INFANT BORN HEALTHY: PRIVACY ORDER HOLDS',
+  species: 'neanderthal',
+  region: 'europe',
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_hybrid_birth_parent',
+  desc: 'The child was born in a protected facility with no press access. Both parents are healthy. A single authorized photograph shows a sapiens-presenting infant with a notably larger occipital bone. It has been shared two billion times.',
+  choices: [
+    {
+      text: 'Release a statement welcoming the birth and defending the family\'s rights.',
+      subtext: '+Integration +Opinion +Extremism +Rights',
+      effects: { integration_score: 20, public_opinion: 15, extremism: 15, rights_conflict: 15 }
+    },
+    {
+      text: 'Maintain official silence. The family\'s own statement is enough.',
+      subtext: '+Integration +Extremism',
+      effects: { integration_score: 10, extremism: 5 }
+    }
+  ]
+}
+,{
+  id: 'chain_hybrid_birth_exposed',
+  cat: 'POLITICAL',
+  title: 'BIRTH DOCUMENTED BY PRESS WITHOUT CONSENT: LEGAL BATTLE BEGINS',
+  species: 'neanderthal',
+  region: 'europe',
+  turn_range: [4, 240],
+  repeatable: false,
+  requires_seen: 'chain_hybrid_birth_parent',
+  desc: 'Without official comment, press obtained photographs of the birth through a medical facility source. The family is suing 14 outlets simultaneously. Sapiens First is using the images in recruitment campaigns. The infant\'s legal status is undefined.',
+  choices: [
+    {
+      text: 'Pass emergency legislation granting the child full sapiens legal status.',
+      subtext: '+Rights +Extremism +Integration -Stability',
+      effects: { rights_conflict: +15, extremism: +20, integration_score: +15, stability: -10 }
+    },
+    {
+      text: 'Support the family\'s lawsuit without making any policy statement.',
+      subtext: '+Rights +Opinion -Extremism',
+      effects: { rights_conflict: +8, public_opinion: +8, extremism: -8 }
+    }
+  ]
+}
+
+// ---- CHAIN 10: THE ICC TESTIMONY (turns 150-240) ----
+,{
+  id: 'chain_icc_testimony_parent',
+  cat: 'POLITICAL',
+  title: 'FORMER SAPIENS FIRST CHAIRMAN AGREES TO TESTIFY AT ICC IN EXCHANGE FOR IMMUNITY',
+  species: null,
+  region: null,
+  turn_range: [150, 240],
+  repeatable: false,
+  desc: 'The former chairman of Sapiens First International has agreed to testify at the ICC in exchange for full immunity. His legal team has previewed that he will name 14 sitting heads of state and provide documented evidence of coordinated violence in six countries.',
+  choices: [
+    {
+      text: 'Broadcast the testimony in full on UN global channels.',
+      subtext: '-Extremism +Opinion +Integration -Stability',
+      effects: { extremism: -20, public_opinion: +15, integration_score: +15, stability: -10 },
+      queue_event: 'chain_icc_broadcast_fallout'
+    },
+    {
+      text: 'Allow the testimony to proceed in closed session only.',
+      subtext: '+Stability +Integration',
+      effects: { stability: +10, integration_score: +5 },
+      queue_event: 'chain_icc_closed_leak'
+    }
+  ]
+}
+,{
+  id: 'chain_icc_broadcast_fallout',
+  cat: 'POLITICAL',
+  title: 'ICC TESTIMONY BROADCAST: THREE GOVERNMENTS COLLAPSE WITHIN 48 HOURS',
+  species: null,
+  region: null,
+  turn_range: [0, 240],
+  repeatable: false,
+  requires_seen: 'chain_icc_testimony_parent',
+  desc: 'The broadcast triggered popular uprisings in three nations. All three governments have collapsed or suspended operations. Emergency governance is required. The remaining named heads of state are calling it a coup by media.',
+  choices: [
+    {
+      text: 'Support transitional governance in all three nations.',
+      subtext: '-Stability -Budget +Integration -Extremism',
+      effects: { stability: -15, budget: -400, integration_score: +20, extremism: -20 }
+    },
+    {
+      text: 'Let the collapses resolve through domestic political processes.',
+      subtext: '-Stability -Extremism +Integration',
+      effects: { stability: -5, extremism: -10, integration_score: +5 }
+    }
+  ]
+}
+,{
+  id: 'chain_icc_closed_leak',
+  cat: 'POLITICAL',
+  title: 'CLOSED TESTIMONY LEAKED WITHIN 24 HOURS: FULL TRANSCRIPT PUBLISHED',
+  species: null,
+  region: null,
+  turn_range: [0, 240],
+  repeatable: false,
+  requires_seen: 'chain_icc_testimony_parent',
+  desc: 'Someone inside the ICC released the full transcript. The controlled disclosure your office planned is now irrelevant. The same political fallout is happening without your framework to manage it.',
+  choices: [
+    {
+      text: 'Publicly acknowledge the leak and take control of the narrative.',
+      subtext: '+Opinion -Extremism -Stability',
+      effects: { public_opinion: +10, extremism: -10, stability: -8 }
+    },
+    {
+      text: 'Launch an ICC investigation into the leak source.',
+      subtext: '+Stability +Extremism -Opinion',
+      effects: { stability: +5, extremism: +5, public_opinion: -8 }
+    }
+  ]
+}
+
+// ============================================================
+// SECTION B: 5 ECO STRESS EVENTS
+// ============================================================
+,{
+  id: 'eco_habitat_corridors_collapse',
+  cat: 'ECOLOGICAL CRISIS',
+  title: 'HABITAT CORRIDORS SEVERED: SPECIES POPULATIONS NOW ISOLATED',
+  species: null,
+  region: null,
+  turn_range: [10, 120],
+  repeatable: false,
+  trigger_condition: 'eco_stress_30',
+  desc: 'UN environmental monitors confirm that the last viable habitat corridors between non-sapiens population zones have been severed by sapiens agricultural expansion. Isolated populations cannot migrate, breed across groups, or escape regional disease outbreaks. Genetic bottlenecks are forming.',
+  choices: [
+    {
+      text: 'Fund an emergency habitat corridor restoration program.',
+      subtext: '-EcoStress +Integration -Budget',
+      effects: { ecological_stress: -15, integration_score: +5, budget: -300 }
+    },
+    {
+      text: 'Establish protected buffer zones without removing agricultural land.',
+      subtext: '-EcoStress -Budget',
+      effects: { ecological_stress: -8, budget: -150, stability: +3 }
+    },
+    {
+      text: 'Prioritize sapiens agricultural interests. Accept the ecological cost.',
+      subtext: '+EcoStress +Extremism -Integration',
+      effects: { ecological_stress: +12, extremism: +8, integration_score: -10 }
+    }
+  ]
+}
+,{
+  id: 'eco_mass_die_off_warning',
+  cat: 'ECOLOGICAL CRISIS',
+  title: 'ECOLOGISTS CONFIRM: CASCADING DIE-OFF HAS BEGUN ACROSS FOUR REGIONS',
+  species: null,
+  region: null,
+  turn_range: [20, 180],
+  repeatable: false,
+  trigger_condition: 'eco_stress_50',
+  desc: 'A cascading ecological die-off is now confirmed across four regions simultaneously. Non-sapiens populations dependent on specific plant and animal food sources are facing starvation cycles. Disease rates in affected populations are accelerating. Researchers are using the word collapse.',
+  choices: [
+    {
+      text: 'Emergency food security program for all non-sapiens populations in affected zones.',
+      subtext: '-Disease -EcoStress -Budget +Rights',
+      effects: { disease: -8, ecological_stress: -12, budget: -350, rights_conflict: +10 }
+    },
+    {
+      text: 'Accelerate integration of affected populations into sapiens settlements.',
+      subtext: '+Integration +Disease +Extremism -EcoStress',
+      effects: { integration_score: +15, disease: +10, extremism: +10, ecological_stress: -5 }
+    },
+    {
+      text: 'Commission an emergency ecological audit. Take no action until data is in.',
+      subtext: '+Knowledge +Disease +EcoStress',
+      effects: { knowledge: +25, disease: +8, ecological_stress: +8 }
+    }
+  ]
+}
+,{
+  id: 'eco_sapiens_expansion_vote',
+  cat: 'POLITICAL',
+  title: 'GLOBAL VOTE ON SAPIENS AGRICULTURAL EXPANSION INTO PROTECTED ZONES',
+  species: null,
+  region: null,
+  turn_range: [30, 160],
+  repeatable: false,
+  desc: 'The UN General Assembly is voting on a resolution permitting sapiens agricultural expansion into currently protected non-sapiens habitat zones. The resolution is backed by 22 nations facing food insecurity. Rights groups call it a land grab timed to a crisis.',
+  choices: [
+    {
+      text: 'Oppose the resolution publicly and lobby against it.',
+      subtext: '-EcoStress +Integration -Opinion -Budget',
+      effects: { ecological_stress: -5, integration_score: +10, public_opinion: -8, budget: -150 }
+    },
+    {
+      text: 'Abstain. Let the vote reflect the political reality.',
+      subtext: '+EcoStress -Integration',
+      effects: { ecological_stress: +10, integration_score: -8, stability: +3 }
+    },
+    {
+      text: 'Support the resolution in exchange for a protected species reserve fund.',
+      subtext: '+EcoStress +Budget -Integration',
+      effects: { ecological_stress: +8, budget: +200, integration_score: -5, extremism: +8 }
+    }
+  ]
+}
+,{
+  id: 'eco_rewilding_proposal',
+  cat: 'SCIENTIFIC DISCOVERY',
+  title: 'ECOLOGISTS PROPOSE MANDATORY REWILDING OF 12 PERCENT OF SAPIENS TERRITORY',
+  species: null,
+  region: null,
+  turn_range: [40, 200],
+  repeatable: false,
+  desc: 'A landmark ecological report recommends mandatory rewilding of 12 percent of current sapiens agricultural and urban territory to prevent total non-sapiens habitat collapse. Agricultural lobbies in 40 nations have called it an economic death sentence.',
+  choices: [
+    {
+      text: 'Adopt the rewilding recommendation as binding UN policy.',
+      subtext: '-EcoStress -Stability +Integration -Budget',
+      effects: { ecological_stress: -20, stability: -10, integration_score: +15, budget: -400 }
+    },
+    {
+      text: 'Adopt a voluntary 6 percent target as a political compromise.',
+      subtext: '-EcoStress -Budget',
+      effects: { ecological_stress: -10, budget: -200, stability: +3 }
+    },
+    {
+      text: 'Reject the report. Fund alternative solutions through technology.',
+      subtext: '+EcoStress +Knowledge -Budget',
+      effects: { ecological_stress: +8, knowledge: +25, budget: -200 }
+    }
+  ]
+}
+,{
+  id: 'eco_collapse_critical',
+  cat: 'ECOLOGICAL CRISIS',
+  title: 'ECO STRESS AT CRITICAL LEVEL: SPECIES POPULATIONS ENTERING FREEFALL',
+  species: null,
+  region: null,
+  turn_range: [15, 240],
+  repeatable: true,
+  trigger_condition: 'eco_stress_75',
+  desc: 'Ecological stress has reached a critical threshold. Multiple non-sapiens populations are experiencing simultaneous habitat collapse, food source depletion, and accelerated disease transmission. Without immediate intervention, mass extinction events are projected within six turns.',
+  choices: [
+    {
+      text: 'Declare a global ecological emergency. All integration projects pause for triage.',
+      subtext: '-EcoStress -Integration -Budget',
+      effects: { ecological_stress: -20, integration_score: -10, budget: -400, stability: +5 }
+    },
+    {
+      text: 'Emergency relocation of the most at-risk populations into protected sapiens zones.',
+      subtext: '-EcoStress +Disease +Extremism +Integration',
+      effects: { ecological_stress: -15, disease: +12, extremism: +12, integration_score: +10, budget: -250 }
+    },
+    {
+      text: 'Accelerate the Species Containment Order. Consolidate remaining populations.',
+      subtext: '-EcoStress -Rights -Integration',
+      effects: { ecological_stress: -10, rights_conflict: -15, integration_score: -15, budget: -150 }
+    }
+  ]
+}
+
+// ============================================================
+// SECTION C: 3 LATE DISEASE EVENTS
+// ============================================================
+,{
+  id: 'disease_resurgence_mid',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'CROSS-SPECIES PATHOGEN RESURFACES WITH ANTIBIOTIC RESISTANCE',
+  species: null,
+  region: null,
+  turn_range: [60, 180],
+  repeatable: false,
+  desc: 'A strain of the cross-species pathogen has reemerged with documented antibiotic resistance in populations across Southeast Asia and Central Africa. All existing treatment protocols are now partially ineffective. WHO is describing it as the most dangerous variant to date.',
+  choices: [
+    {
+      text: 'Fast-track new treatment protocols through emergency WHO authorization.',
+      subtext: '-Disease +Knowledge -Budget',
+      effects: { disease: -12, knowledge: +20, budget: -300 }
+    },
+    {
+      text: 'Quarantine all confirmed resistant-strain zones immediately.',
+      subtext: '-Disease -Rights -Integration -Stability',
+      effects: { disease: -10, rights_conflict: -10, integration_score: -8, stability: -5 }
+    },
+    {
+      text: 'Expand genome mapping to identify resistance markers across all species.',
+      subtext: '-Disease +Knowledge -Budget',
+      effects: { disease: -8, knowledge: +35, budget: -250 }
+    }
+  ]
+}
+,{
+  id: 'disease_high_threshold_crisis',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'DISEASE INDEX AT CRITICAL THRESHOLD: SAPIENS MORTALITY CONFIRMED',
+  species: null,
+  region: null,
+  turn_range: [40, 240],
+  repeatable: false,
+  trigger_condition: 'disease_high',
+  desc: 'For the first time since the crisis began, confirmed sapiens fatalities linked to cross-species pathogen transmission have been reported. The political landscape has shifted overnight. Sapiens First is gaining 200,000 new followers per day. WHO has convened an emergency session.',
+  choices: [
+    {
+      text: 'Activate WHO Emergency Declaration. Full international response.',
+      subtext: '-Disease +Stability -Budget',
+      effects: { disease: -15, stability: +5, budget: -400 }
+    },
+    {
+      text: 'Impose immediate separation of all sapiens and non-sapiens populations.',
+      subtext: '-Disease -Rights -Integration +Extremism -Stability',
+      effects: { disease: -12, rights_conflict: -15, integration_score: -20, extremism: 20, stability: -10 }
+    },
+    {
+      text: 'Call for calm. Release data showing total sapiens mortality is lower than seasonal flu.',
+      subtext: '-Disease +Opinion +Extremism',
+      effects: { disease: -5, public_opinion: +12, extremism: +8 }
+    }
+  ]
+}
+,{
+  id: 'disease_zero_false_victory',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'DISEASE INDEX AT ZERO DECLARED: RESEARCHERS WARN OF DORMANT RESERVOIR',
+  species: null,
+  region: null,
+  turn_range: [30, 220],
+  repeatable: false,
+  desc: 'The disease index has reached zero for the first time. Your office is preparing a statement. Three independent research teams are urging caution, citing evidence of a dormant viral reservoir in non-sapiens gut microbiome populations that existing tests cannot detect.',
+  choices: [
+    {
+      text: 'Celebrate publicly. Fund ongoing surveillance as a precaution.',
+      subtext: '+Opinion -Budget +Disease risk',
+      effects: { public_opinion: +15, budget: -100, disease: +3 }
+    },
+    {
+      text: 'Fund the reservoir research before making any public declaration.',
+      subtext: '+Knowledge -Budget',
+      effects: { knowledge: +30, budget: -200, public_opinion: +5 }
+    },
+    {
+      text: 'Declare victory and redirect the disease budget to integration programs.',
+      subtext: '+Integration +Opinion +Disease risk',
+      effects: { integration_score: +10, public_opinion: +20, budget: +150, disease: +8 }
+    }
+  ]
+}
+
+// ============================================================
+// SECTION A: SPECIES COOPERATION EVENTS
+// ============================================================
+,{
+  id: 'coop_neanderthal_denisovan_trade',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'NEANDERTHAL AND DENISOVAN GROUPS ESTABLISH INDEPENDENT TRADE NETWORK',
+  species: 'neanderthal',
+  region: 'europe',
+  turn_range: [15, 120],
+  repeatable: false,
+  desc: 'Field researchers have documented a recurring exchange of birch tar adhesive from Neanderthal groups and high-altitude plant medicine from Denisovan groups operating across the Caucasus corridor. Neither group initiated contact through sapiens intermediaries. The exchange has been ongoing for at least three months.',
+  choices: [
+    {
+      text: 'Formally recognize and protect the trade corridor as a joint heritage zone.',
+      subtext: '+Integration +Rights -Budget',
+      effects: { integration_score: +15, rights_conflict: +12, budget: -120, ecological_stress: -5 }
+    },
+    {
+      text: 'Observe and document without intervening. Let the network develop naturally.',
+      subtext: '+Knowledge +Integration',
+      effects: { knowledge: +25, integration_score: +8, ecological_stress: -3 }
+    },
+    {
+      text: 'Attempt to formalize the network under sapiens trade law.',
+      subtext: '+Stability -Integration +Extremism',
+      effects: { stability: +5, integration_score: -8, extremism: +8, budget: -80 }
+    }
+  ]
+}
+,{
+  id: 'coop_heidelberg_erectus_shelter',
+  cat: 'SCIENTIFIC DISCOVERY',
+  title: 'H. HEIDELBERGENSIS AND H. ERECTUS DOCUMENTED SHARING CONSTRUCTED SHELTER',
+  species: 'heidelbergensis',
+  region: 'near_east',
+  turn_range: [20, 110],
+  repeatable: false,
+  desc: 'Researchers in the Near East have documented a shared constructed shelter used by both H. heidelbergensis and H. erectus groups during a regional cold snap. Heidelbergensis provided the construction knowledge. Erectus provided fire maintenance. The two species have not been documented cooperating in the fossil record.',
+  choices: [
+    {
+      text: 'Establish the site as a protected cooperative habitat zone.',
+      subtext: '+Integration +Knowledge -Budget -EcoStress',
+      effects: { integration_score: +12, knowledge: +20, budget: -150, ecological_stress: -8 }
+    },
+    {
+      text: 'Publish the findings globally. Use the story to build public support.',
+      subtext: '+Opinion +Integration',
+      effects: { public_opinion: +15, integration_score: +10, knowledge: +15 }
+    },
+    {
+      text: 'Intervene to separate the populations. Disease cross-contamination is the priority.',
+      subtext: '-Integration +Disease -EcoStress',
+      effects: { integration_score: -10, disease: -5, ecological_stress: -5 }
+    }
+  ]
+}
+,{
+  id: 'coop_habilis_ergaster_tools',
+  cat: 'SCIENTIFIC DISCOVERY',
+  title: 'H. HABILIS TOOL CACHES FOUND INSIDE H. ERGASTER FORAGING TERRITORIES',
+  species: 'habilis',
+  region: 'east_africa',
+  turn_range: [25, 130],
+  repeatable: false,
+  desc: 'Archaeological survey teams have found H. habilis Oldowan tool caches deliberately placed inside H. ergaster foraging territories across East Africa. The placement patterns suggest intentional resource sharing. Both populations show zero conflict markers in the same zones.',
+  choices: [
+    {
+      text: 'Fund expanded research into the cooperation mechanism. This is significant.',
+      subtext: '+Knowledge +Integration -Budget',
+      effects: { knowledge: +30, integration_score: +10, budget: -180 }
+    },
+    {
+      text: 'Establish shared foraging protection zones across the documented areas.',
+      subtext: '+Integration -EcoStress -Budget',
+      effects: { integration_score: +15, ecological_stress: -10, budget: -220 }
+    },
+    {
+      text: 'No action needed. Non-sapiens cooperation is not a policy priority.',
+      subtext: '+Extremism -Integration',
+      effects: { extremism: +5, integration_score: -5 }
+    }
+  ]
+}
+,{
+  id: 'coop_coalition_against_scl',
+  cat: 'POLITICAL',
+  title: 'THREE SPECIES REPRESENTATIVES SUBMIT JOINT PROTEST TO UN AGAINST CONTAINMENT LAW',
+  species: null,
+  region: null,
+  turn_range: [30, 160],
+  repeatable: false,
+  desc: 'Representatives claiming to speak for Neanderthal, Denisovan, and Heidelbergensis populations have submitted a joint formal protest to the UN General Assembly against the Species Containment Order. The document, drafted in written language, argues the SCO violates basic freedom of movement. Legal scholars call it the first non-sapiens legal filing in history.',
+  choices: [
+    {
+      text: 'Accept the filing as legally valid. Schedule a formal UN hearing.',
+      subtext: '+Rights +Integration +Extremism -Stability',
+      effects: { rights_conflict: +20, integration_score: +15, extremism: +15, stability: -10 }
+    },
+    {
+      text: 'Acknowledge the filing but route it through existing species advisory bodies.',
+      subtext: '+Rights +Stability -Integration',
+      effects: { rights_conflict: +10, stability: +5, integration_score: -5, extremism: +8 }
+    },
+    {
+      text: 'Reject the filing on the grounds that non-sapiens individuals lack legal standing.',
+      subtext: '-Rights -Integration +Extremism +Stability',
+      effects: { rights_conflict: -15, integration_score: -15, extremism: +20, stability: +8 }
+    }
+  ]
+}
+,{
+  id: 'coop_coalition_land_blockade',
+  cat: 'POLITICAL',
+  title: 'MULTI-SPECIES COALITION BLOCKADES SAPIENS AGRICULTURAL EXPANSION SITE',
+  species: null,
+  region: 'east_africa',
+  turn_range: [50, 180],
+  repeatable: false,
+  desc: 'A coordinated blockade involving Neanderthal, Erectus, and Habilis populations has halted construction of a sapiens agricultural expansion project in East Africa. The blockade is nonviolent. Sapiens construction teams have withdrawn pending your guidance. This is the first documented multi-species collective political action.',
+  choices: [
+    {
+      text: 'Halt the expansion project permanently. Protect the territory.',
+      subtext: '+Rights +Integration +Extremism -Budget -Stability',
+      effects: { rights_conflict: +20, integration_score: +20, extremism: +15, budget: -200, stability: -12 }
+    },
+    {
+      text: 'Negotiate a reduced-footprint expansion with territorial protections.',
+      subtext: '+Stability +Integration +Extremism -Budget',
+      effects: { stability: +5, integration_score: +10, extremism: +8, budget: -150 }
+    },
+    {
+      text: 'Disperse the blockade under public order law. The project proceeds.',
+      subtext: '-Rights -Integration +Extremism +Stability +Budget',
+      effects: { rights_conflict: -20, integration_score: -15, extremism: +25, stability: +8, budget: +100 }
+    }
+  ]
+}
+,{
+  id: 'coop_coalition_legal_personhood',
+  cat: 'RIGHTS LAW',
+  title: 'MULTI-SPECIES COALITION DEMANDS LEGAL PERSONHOOD ACROSS ALL HOMININ SPECIES',
+  species: null,
+  region: null,
+  turn_range: [70, 200],
+  repeatable: false,
+  desc: 'A coalition representing seven non-sapiens species has issued a unified demand for full legal personhood under international law. The demand is accompanied by a 200-page documented case including tool use records, cooperative behavior evidence, and linguistic analysis. 14 nations have called an emergency session.',
+  choices: [
+    {
+      text: 'Support the demand. Introduce a legal personhood resolution at the UN.',
+      subtext: '+Rights +Integration +Extremism -Stability -Budget',
+      effects: { rights_conflict: +25, integration_score: +20, extremism: +20, stability: -15, budget: -300 }
+    },
+    {
+      text: 'Support a tiered personhood framework based on cognitive level.',
+      subtext: '+Rights +Integration +Extremism',
+      effects: { rights_conflict: +15, integration_score: +12, extremism: +12, budget: -200 }
+    },
+    {
+      text: 'Reject the demand. Legal personhood is not scientifically established.',
+      subtext: '-Rights -Integration +Extremism +Stability',
+      effects: { rights_conflict: -20, integration_score: -20, extremism: +25, stability: +10 }
+    }
+  ]
+}
+,{
+  id: 'coop_sapiens_defends_neanderthal',
+  cat: 'RIGHTS LAW',
+  title: 'SAPIENS COMMUNITY PHYSICALLY DEFENDS NEANDERTHAL FAMILY FROM EXTREMIST GROUP',
+  species: 'neanderthal',
+  region: 'europe',
+  turn_range: [25, 140],
+  repeatable: false,
+  desc: 'A sapiens neighborhood in southern Germany physically blocked a Sapiens First cell from entering a Neanderthal family\'s home. No weapons were used. Fourteen sapiens individuals stood in front of the door for six hours until police arrived. The story has reached 400 million social media impressions in 48 hours.',
+  choices: [
+    {
+      text: 'Formally commend the neighborhood. Create a civilian integration protection award.',
+      subtext: '+Opinion +Integration -Extremism -Budget',
+      effects: { public_opinion: +20, integration_score: +15, extremism: -10, budget: -80 }
+    },
+    {
+      text: 'Acknowledge the event publicly without creating a formal award.',
+      subtext: '+Opinion +Integration',
+      effects: { public_opinion: +12, integration_score: +8, extremism: -5 }
+    },
+    {
+      text: 'No comment. Individual actions are not policy.',
+      subtext: '-Opinion -Integration',
+      effects: { public_opinion: -8, integration_score: -5 }
+    }
+  ]
+}
+,{
+  id: 'coop_sapiens_doctor_treats_floresiensis',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'SAPIENS FIELD DOCTOR DOCUMENTS TWO YEARS TREATING H. FLORESIENSIS COMMUNITY',
+  species: 'floresiensis',
+  region: 'indonesia',
+  turn_range: [20, 150],
+  repeatable: false,
+  desc: 'A sapiens field physician has published a two-year medical journal documenting voluntary clinical work with the H. floresiensis community on Flores. The journal documents the community\'s trust-building process, their use of plant-based medicine, and three cases of mutual treatment where Floresiensis individuals treated the doctor using local methods. It is being called the most important document of the crisis.',
+  choices: [
+    {
+      text: 'Fund the continuation of the program and expand it to three more species.',
+      subtext: '+Integration +Disease +Opinion -Budget',
+      effects: { integration_score: +18, disease: -8, public_opinion: +15, budget: -200 }
+    },
+    {
+      text: 'Commission the journal as an official UN integration case study.',
+      subtext: '+Integration +Knowledge +Opinion',
+      effects: { integration_score: +12, knowledge: +20, public_opinion: +12 }
+    },
+    {
+      text: 'Acknowledge the work privately. Avoid drawing extremist attention to the program.',
+      subtext: '+Integration +Disease',
+      effects: { integration_score: +8, disease: -5 }
+    }
+  ]
+}
+,{
+  id: 'coop_sapiens_teacher_habilis',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'SAPIENS LINGUISTICS TEACHER SUCCESSFULLY COMMUNICATES WITH H. HABILIS GROUP',
+  species: 'habilis',
+  region: 'east_africa',
+  turn_range: [30, 160],
+  repeatable: false,
+  desc: 'A sapiens linguistics researcher has documented a structured communication system developed over 18 months with an H. habilis group in East Africa. Using a combination of gesture, object placement, and tonal vocalization, the pair have established a working vocabulary of 40 shared concepts. Peer reviewers are calling it a paradigm shift.',
+  choices: [
+    {
+      text: 'Fund the methodology as a formal integration communication protocol.',
+      subtext: '+Integration +Knowledge +Opinion -Budget',
+      effects: { integration_score: +20, knowledge: +25, public_opinion: +12, budget: -200 }
+    },
+    {
+      text: 'Allow independent peer review before any official endorsement.',
+      subtext: '+Knowledge +Integration',
+      effects: { knowledge: +20, integration_score: +10, budget: -80 }
+    },
+    {
+      text: 'Classify the findings. The political implications are too volatile right now.',
+      subtext: '+Stability -Integration -Knowledge',
+      effects: { stability: +8, integration_score: -8, knowledge: -10 }
+    }
+  ]
+}
+// ============================================================
+// SECTION B: CHARACTER EVENTS
+// ============================================================
+,{
+  id: 'char_neanderthal_elder_arthritis',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'NEANDERTHAL ELDER PHOTOGRAPHED RECEIVING ARTHRITIS TREATMENT AT SAPIENS CLINIC',
+  species: 'neanderthal',
+  region: 'europe',
+  turn_range: [10, 80],
+  repeatable: false,
+  desc: 'A photograph taken without consent shows an elderly Neanderthal woman receiving treatment for severe arthritis at a sapiens-run clinic in Munich. Her hands, visibly deformed by the condition, are being held by a sapiens nurse. The image has no caption. It has been shared 900 million times.',
+  choices: [
+    {
+      text: 'Issue a statement defending the clinic and the woman\'s right to care.',
+      subtext: '+Opinion +Integration -Extremism',
+      effects: { public_opinion: +18, integration_score: +12, extremism: -8 }
+    },
+    {
+      text: 'Say nothing. The image speaks without any help from your office.',
+      subtext: '+Integration +Opinion +Extremism',
+      effects: { integration_score: +8, public_opinion: +10, extremism: +5 }
+    },
+    {
+      text: 'Condemn the breach of medical privacy. The content does not matter.',
+      subtext: '-Opinion -Integration',
+      effects: { public_opinion: -10, integration_score: -8, stability: +5 }
+    }
+  ]
+}
+,{
+  id: 'char_denisovan_child_school',
+  cat: 'RIGHTS LAW',
+  title: 'DENISOVAN CHILD ENROLLED IN SAPIENS PRIMARY SCHOOL: PARENTS FACE LEGAL CHALLENGE',
+  species: 'denisovan',
+  region: 'europe',
+  turn_range: [20, 120],
+  repeatable: false,
+  desc: 'A Denisovan family living in a sapiens urban area has enrolled their child in a local primary school. Three other families have filed a legal challenge. The child\'s teacher has publicly stated the child is performing at grade level. The child has not been told what is happening.',
+  choices: [
+    {
+      text: 'Issue a ruling that the enrollment is legally valid and must continue.',
+      subtext: '+Rights +Integration +Extremism -Stability',
+      effects: { rights_conflict: +15, integration_score: +15, extremism: +12, stability: -8 }
+    },
+    {
+      text: 'Refer the case to a national education tribunal without comment.',
+      subtext: '+Stability -Integration',
+      effects: { stability: +8, integration_score: -5, extremism: +5 }
+    },
+    {
+      text: 'Create a new integrated schooling framework that covers this and future cases.',
+      subtext: '+Rights +Integration +Extremism -Budget',
+      effects: { rights_conflict: +12, integration_score: +18, extremism: +10, budget: -200 }
+    }
+  ]
+}
+,{
+  id: 'char_erectus_lone_survivor',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'LAST DOCUMENTED H. ERECTUS INDIVIDUAL FOUND ALONE IN EAST ASIAN FOREST',
+  species: 'erectus',
+  region: 'east_asia',
+  turn_range: [30, 180],
+  repeatable: false,
+  desc: 'Satellite tracking has confirmed what field teams suspected: the individual designated ER-7 is now the only documented H. erectus individual remaining in East Asia. ER-7 has been observed maintaining a fire site for six consecutive months alone. No other Erectus individuals have been detected within 400 kilometers.',
+  choices: [
+    {
+      text: 'Attempt careful contact and offer integration into a protected community.',
+      subtext: '+Integration +Disease +Opinion',
+      effects: { integration_score: +15, disease: +5, public_opinion: +18 }
+    },
+    {
+      text: 'Observe only. Respect ER-7\'s apparent choice to remain alone.',
+      subtext: '+Knowledge +Rights',
+      effects: { knowledge: +20, rights_conflict: +8, public_opinion: +8 }
+    },
+    {
+      text: 'Declare H. erectus functionally extinct. Begin extinction documentation.',
+      subtext: '-Opinion -Integration +Knowledge',
+      effects: { public_opinion: -15, integration_score: -10, knowledge: +15 }
+    }
+  ]
+}
+,{
+  id: 'char_floresiensis_artist',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'H. FLORESIENSIS INDIVIDUAL PRODUCES CAVE ART OBSERVED BY SAPIENS RESEARCHERS',
+  species: 'floresiensis',
+  region: 'indonesia',
+  turn_range: [15, 130],
+  repeatable: false,
+  desc: 'A research team on Flores documented an H. floresiensis individual spending four hours producing a detailed cave painting of the team\'s camp. The painting includes accurate proportional depictions of three sapiens researchers. It is the first documented representational art by a non-sapiens species observed in real time.',
+  choices: [
+    {
+      text: 'Share the footage globally. This changes the public understanding of cognition.',
+      subtext: '+Opinion +Integration +Knowledge -Extremism',
+      effects: { public_opinion: +22, integration_score: +15, knowledge: +20, extremism: -8 }
+    },
+    {
+      text: 'Protect the site and restrict access. Publish findings through peer review only.',
+      subtext: '+Knowledge +Integration',
+      effects: { knowledge: +25, integration_score: +10, ecological_stress: -5 }
+    },
+    {
+      text: 'Classify the finding. The public is not ready for this information.',
+      subtext: '+Stability -Opinion -Integration',
+      effects: { stability: +10, public_opinion: -12, integration_score: -10 }
+    }
+  ]
+}
+,{
+  id: 'char_habilis_infant_rescue',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'H. HABILIS INDIVIDUAL CARRIES INJURED SAPIENS CHILD TO FIELD STATION',
+  species: 'habilis',
+  region: 'east_africa',
+  turn_range: [20, 150],
+  repeatable: false,
+  desc: 'A seven-year-old sapiens child separated from a research team in East Africa was found and carried 3.2 kilometers to the nearest field station by an H. habilis individual. The child was unharmed. The Habilis individual waited outside the station for 40 minutes before disappearing into the bush. No injuries to either party.',
+  choices: [
+    {
+      text: 'Publicize the event widely. This is the integration argument made human.',
+      subtext: '+Opinion +Integration -Extremism',
+      effects: { public_opinion: +25, integration_score: +18, extremism: -12 }
+    },
+    {
+      text: 'Use the event in formal rights documentation without media attention.',
+      subtext: '+Rights +Integration',
+      effects: { rights_conflict: +15, integration_score: +12 }
+    },
+    {
+      text: 'Do not publicize. The backlash from extremist groups would outweigh the benefit.',
+      subtext: '+Stability -Opinion -Integration',
+      effects: { stability: +5, public_opinion: -5, integration_score: -5 }
+    }
+  ]
+}
+,{
+  id: 'char_georgicus_memorial',
+  cat: 'INTEGRATION BREAKTHROUGH',
+  title: 'H. GEORGICUS GROUP OBSERVED HOLDING WHAT RESEARCHERS DESCRIBE AS A BURIAL RITUAL',
+  species: 'georgicus',
+  region: 'caucasus',
+  turn_range: [10, 100],
+  repeatable: false,
+  desc: 'A field team in the Caucasus documented an H. georgicus group gathered around the body of an elderly individual for approximately nine hours. Flowers, stones, and pieces of food were placed on the body in what lead researcher Dr. Yilmaz called "structurally identical to a sapiens mourning ritual." The documentation is complete.',
+  choices: [
+    {
+      text: 'Release the documentation with full academic context.',
+      subtext: '+Opinion +Integration +Knowledge',
+      effects: { public_opinion: +18, integration_score: +12, knowledge: +20, extremism: -5 }
+    },
+    {
+      text: 'Invite Dr. Yilmaz to brief the UN General Assembly directly.',
+      subtext: '+Opinion +Integration +Rights -Extremism',
+      effects: { public_opinion: +15, integration_score: +15, rights_conflict: +12, extremism: -8 }
+    },
+    {
+      text: 'Restrict publication. Anthropological data should not become political currency.',
+      subtext: '+Stability -Opinion -Integration',
+      effects: { stability: +8, public_opinion: -10, integration_score: -8 }
+    }
+  ]
+}
+,{
+  id: 'char_paranthropus_mother',
+  cat: 'RIGHTS LAW',
+  title: 'PARANTHROPUS MOTHER REFUSES TO LEAVE SITE WHERE HER INFANT DIED',
+  species: 'paranthropus',
+  region: 'africa',
+  turn_range: [15, 140],
+  repeatable: false,
+  desc: 'A Paranthropus individual has remained at the location where her infant died for 23 days. She has not eaten. She has not moved more than 40 meters from the site. Field teams report she vocalizes at the site repeatedly. The behavior has been documented and published. 60 nations are watching your response.',
+  choices: [
+    {
+      text: 'Designate the site as protected and ensure she is not disturbed.',
+      subtext: '+Rights +Integration +Opinion',
+      effects: { rights_conflict: +12, integration_score: +12, public_opinion: +20, ecological_stress: -5 }
+    },
+    {
+      text: 'Send a field team to gently provide food and observe without intervention.',
+      subtext: '+Rights +Integration +Disease',
+      effects: { rights_conflict: +8, integration_score: +8, public_opinion: +15, disease: +3 }
+    },
+    {
+      text: 'No intervention. Field observation only. Do not disturb natural behavior.',
+      subtext: '+Knowledge +Opinion',
+      effects: { knowledge: +15, public_opinion: +8 }
+    }
+  ]
+}
+// ============================================================
+// SECTION C: RIGHTS GAP EVENTS
+// ============================================================
+,{
+  id: 'rights_employment_law_gap',
+  cat: 'RIGHTS LAW',
+  title: 'NON-SAPIENS INDIVIDUALS WORKING IN SAPIENS ECONOMY WITH NO LEGAL FRAMEWORK',
+  species: null,
+  region: null,
+  turn_range: [40, 80],
+  repeatable: false,
+  desc: 'An ILO audit has confirmed that an estimated 340,000 non-sapiens individuals are currently performing economic labor inside sapiens settlements with zero legal protections. No minimum wage framework exists. No workplace safety standards apply. Several have been injured. The audit notes they cannot file complaints because they have no legal standing to do so.',
+  choices: [
+    {
+      text: 'Issue emergency ILO protections covering all working non-sapiens individuals.',
+      subtext: '+Rights +Integration +Extremism -Budget',
+      effects: { rights_conflict: +20, integration_score: +15, extremism: +12, budget: -200 }
+    },
+    {
+      text: 'Create a voluntary compliance framework for employers.',
+      subtext: '+Rights +Stability -Integration',
+      effects: { rights_conflict: +10, stability: +5, integration_score: -5, extremism: +5 }
+    },
+    {
+      text: 'Defer to member state jurisdiction. This is a domestic labor issue.',
+      subtext: '+Extremism -Rights -Integration',
+      effects: { extremism: +15, rights_conflict: -10, integration_score: -10 }
+    }
+  ]
+}
+,{
+  id: 'rights_medical_consent',
+  cat: 'RIGHTS LAW',
+  title: 'UN BIOETHICS COMMITTEE: NON-SAPIENS INDIVIDUALS CANNOT LEGALLY REFUSE TREATMENT',
+  species: null,
+  region: null,
+  turn_range: [42, 78],
+  repeatable: false,
+  desc: 'A UN Bioethics Committee report has confirmed that under current international law, no non-sapiens individual has the legal right to refuse medical treatment, quarantine, or surgical intervention. The gap in the rights framework was not intentional. No one noticed it until now. Three non-sapiens individuals are currently being treated against their documented resistance.',
+  choices: [
+    {
+      text: 'Amend the Non-Sapiens Persons Act to include informed consent protections immediately.',
+      subtext: '+Rights +Integration +Extremism -Budget',
+      effects: { rights_conflict: +18, integration_score: +12, extremism: +10, budget: -150 }
+    },
+    {
+      text: 'Commission a framework review. Take no action until the review is complete.',
+      subtext: '+Stability -Rights',
+      effects: { stability: +5, rights_conflict: -5, integration_score: -5 }
+    },
+    {
+      text: 'Classify the report. The public health implications of allowing refusal are too severe.',
+      subtext: '-Rights -Integration +Disease',
+      effects: { rights_conflict: -12, integration_score: -10, disease: -5 }
+    }
+  ]
+}
+,{
+  id: 'rights_detention_time_limit',
+  cat: 'RIGHTS LAW',
+  title: 'AUDIT: NON-SAPIENS INDIVIDUALS HELD IN CONTAINMENT FOR OVER THREE YEARS WITHOUT REVIEW',
+  species: null,
+  region: null,
+  turn_range: [45, 80],
+  repeatable: false,
+  desc: 'An independent UN audit found 1,200 non-sapiens individuals who have been held in containment facilities for over three years with no legal review, no release date, and no access to representation. Under sapiens law the same detention would be illegal. The audit requests guidance on whether sapiens legal standards apply.',
+  choices: [
+    {
+      text: 'Order immediate case-by-case legal review for all 1,200 individuals.',
+      subtext: '+Rights +Integration +Extremism -Budget -Stability',
+      effects: { rights_conflict: +22, integration_score: +15, extremism: +15, budget: -250, stability: -8 }
+    },
+    {
+      text: 'Establish a maximum detention period of 12 months going forward. No retroactive review.',
+      subtext: '+Rights +Stability',
+      effects: { rights_conflict: +12, stability: +5, extremism: +8 }
+    },
+    {
+      text: 'Defer to the member states operating the facilities.',
+      subtext: '-Rights -Integration +Extremism',
+      effects: { rights_conflict: -15, integration_score: -12, extremism: +18 }
+    }
+  ]
+}
+,{
+  id: 'rights_voting_motion',
+  cat: 'RIGHTS LAW',
+  title: 'MOTION FILED: SHOULD COGNITIVELY ELIGIBLE NON-SAPIENS INDIVIDUALS VOTE?',
+  species: null,
+  region: null,
+  turn_range: [55, 85],
+  repeatable: false,
+  desc: 'A formal motion has been filed at the UN General Assembly asking whether cognitively eligible non-sapiens individuals should be granted limited voting rights in jurisdictions where they reside and work. Legal scholars have identified 14,000 such individuals who would immediately qualify under proposed cognitive thresholds.',
+  choices: [
+    {
+      text: 'Support the motion. Cognitive eligibility is the correct legal threshold.',
+      subtext: '+Rights +Integration +Extremism -Stability',
+      effects: { rights_conflict: +25, integration_score: +20, extremism: +22, stability: -15 }
+    },
+    {
+      text: 'Support a limited consultative role only. Not full voting rights yet.',
+      subtext: '+Rights +Integration +Extremism',
+      effects: { rights_conflict: +12, integration_score: +10, extremism: +12 }
+    },
+    {
+      text: 'Oppose the motion. Species status must be resolved before voting rights.',
+      subtext: '-Rights -Integration +Stability +Extremism',
+      effects: { rights_conflict: -15, integration_score: -10, stability: +8, extremism: +12 }
+    }
+  ]
+}
+,{
+  id: 'rights_education_mandate',
+  cat: 'RIGHTS LAW',
+  title: 'EDUCATION RIGHTS REPORT: NO LEGAL FRAMEWORK COVERS NON-SAPIENS CHILDREN',
+  species: null,
+  region: null,
+  turn_range: [50, 82],
+  repeatable: false,
+  desc: 'A UNESCO report confirms that no international education rights framework covers non-sapiens children of any species. An estimated 8,000 non-sapiens children of school age are living in sapiens urban areas with no access to formal education, no legal protection to demand it, and no pathway to inclusion.',
+  choices: [
+    {
+      text: 'Create a Non-Sapiens Education Rights Protocol covering all children.',
+      subtext: '+Rights +Integration +Extremism -Budget',
+      effects: { rights_conflict: +18, integration_score: +18, extremism: +10, budget: -200 }
+    },
+    {
+      text: 'Pilot an integration schooling program in three cities first.',
+      subtext: '+Integration +Knowledge -Budget',
+      effects: { integration_score: +12, knowledge: +15, budget: -120, rights_conflict: +8 }
+    },
+    {
+      text: 'Recommend member states address this domestically.',
+      subtext: '+Extremism -Rights -Integration',
+      effects: { extremism: +10, rights_conflict: -8, integration_score: -8 }
+    }
+  ]
+}
+// ============================================================
+// SECTION D: PUSHBACK EVENTS
+// ============================================================
+,{
+  id: 'pushback_rights_50',
+  cat: 'POLITICAL',
+  title: 'GLOBAL RIGHTS SURGE TRIGGERS SAPIENS SOVEREIGNTY SUMMIT',
+  species: null,
+  region: null,
+  turn_range: [10, 240],
+  repeatable: false,
+  desc: 'A coalition of 14 national governments has convened an emergency summit in direct response to non-sapiens rights reaching legal parity levels in their jurisdictions. The summit\'s declared objective is a binding counter-framework called the Sapiens Sovereignty Treaty. Three permanent Security Council members are privately sympathetic to the coalition.',
+  choices: [
+    {
+      text: 'Attend the summit and argue against the treaty directly.',
+      subtext: '-Extremism -Rights -Budget -Stability +Opinion',
+      effects: { extremism: -10, rights_conflict: -5, budget: -250, stability: -8, public_opinion: +5 }
+    },
+    {
+      text: 'Boycott the summit and issue a formal public condemnation.',
+      subtext: '+Extremism -Rights -Stability -Opinion',
+      effects: { extremism: +15, rights_conflict: -10, stability: -5, public_opinion: -10 }
+    },
+    {
+      text: 'Send an observer only. Gather intelligence without legitimizing the summit.',
+      subtext: '+Extremism +Stability +Knowledge -Budget',
+      effects: { extremism: +5, stability: +3, knowledge: +20, budget: -80 }
+    }
+  ]
+}
+,{
+  id: 'pushback_integration_50',
+  cat: 'POLITICAL',
+  title: 'SAPIENS FIRST EMERGENCY MOBILIZATION: INTEGRATION MILESTONE REACHED',
+  species: null,
+  region: null,
+  turn_range: [20, 240],
+  repeatable: false,
+  desc: 'For the first time in recorded history, the global integration index has crossed 50 percent. Sapiens First International has released a 90-minute broadcast calling it the beginning of the end of human civilization. Recruitment is up 340 percent in 72 hours. Three governments have requested emergency bilateral meetings.',
+  choices: [
+    {
+      text: 'Issue a statement celebrating the milestone. Own the achievement publicly.',
+      subtext: '+Integration +Extremism +Opinion -Stability',
+      effects: { integration_score: +5, extremism: +18, public_opinion: +12, stability: -12 }
+    },
+    {
+      text: 'Make no statement. Let the milestone speak for itself.',
+      subtext: '+Extremism -Stability -Opinion',
+      effects: { extremism: +10, stability: -3, public_opinion: -5 }
+    },
+    {
+      text: 'Acknowledge legitimate concerns while firmly defending the framework.',
+      subtext: '+Stability +Extremism +Opinion -Budget -Integration',
+      effects: { stability: +5, extremism: +8, public_opinion: +5, budget: -150, integration_score: -3 }
+    }
+  ]
+}
+,{
+  id: 'pushback_disease_zero',
+  cat: 'BIOLOGICAL CRISIS',
+  title: 'DISEASE INDEX ELIMINATED: NEW RESISTANT VARIANT EMERGES 47 DAYS LATER',
+  species: null,
+  region: null,
+  turn_range: [5, 240],
+  repeatable: true,
+  desc: 'Your elimination of the cross-species disease index was celebrated globally. It lasted 47 days. A new variant has been identified simultaneously in three locations across two continents. Unlike its predecessors, this strain exploits a receptor pathway that existing vaccines do not address. Early models suggest it spreads 2.3 times faster. WHO Director-General: "We are not back to zero. We are below zero."',
+  choices: [
+    {
+      text: 'Emergency WHO response. Treat this as a new outbreak from day one.',
+      subtext: '+Disease -Budget +Knowledge +Stability',
+      effects: { disease: +18, budget: -300, knowledge: +15, stability: +3 }
+    },
+    {
+      text: 'Rebuild surveillance with variant-specific detection protocols.',
+      subtext: '+Disease -Budget +Knowledge',
+      effects: { disease: +22, budget: -200, knowledge: +25 }
+    },
+    {
+      text: 'Isolate all confirmed inter-species contact zones immediately.',
+      subtext: '+Disease -Integration -Rights -Stability',
+      effects: { disease: +15, integration_score: -8, rights_conflict: -10, stability: -5 }
+    }
+  ]
+}
+,{
+  id: 'pushback_opinion_75',
+  cat: 'POLITICAL',
+  title: 'PEAK APPROVAL TRIGGERS THREE SIMULTANEOUS INVESTIGATIVE PROBES',
+  species: null,
+  region: null,
+  turn_range: [10, 240],
+  repeatable: true,
+  desc: 'Your public approval has reached historic highs. Three major investigative journalism networks have independently launched probes with the same mandate: nobody governing a crisis of this complexity is this popular without controlling the information. A leaked internal memo suggests your office withheld negative ecological data from public reports for six consecutive turns.',
+  choices: [
+    {
+      text: 'Full transparency. Release all reports including the unflattering ones.',
+      subtext: '-Opinion -Stability +Knowledge -Budget -Extremism',
+      effects: { public_opinion: -15, stability: -5, knowledge: +20, budget: -100, extremism: -5 }
+    },
+    {
+      text: 'Cooperate selectively. Release positive data and formally contest the memo.',
+      subtext: '-Opinion +Stability +Extremism',
+      effects: { public_opinion: -8, stability: +5, extremism: +5 }
+    },
+    {
+      text: 'Dismiss the investigation entirely. The outcomes speak for themselves.',
+      subtext: '-Opinion +Extremism +Stability',
+      effects: { public_opinion: -20, extremism: +12, stability: +8 }
+    }
+  ]
+}
 ];
 
 const SPECIAL_TRIGGERS = { tinshemet:6, denisovan_pass:12, first_contact:24, cognitive_reclass:36, hybridchildren:60, speciesparliament:90, lastextinction:120, integrationcity:150, finalreckoning:180 };
@@ -3352,6 +5030,8 @@ function createInitialState(difficulty = 'normal') {
     /* COOLDOWN SYSTEM */ policyCooldowns: {},
     decisionLog: [],
     integrationMilestonesSeen: [],
+    diseaseZeroLastTurn: -99,
+    opinion75LastTurn: -99,
     wpoFireCount: 0,
     scoFireCount: 0
   };
@@ -3402,6 +5082,9 @@ function loadGame() {
     GS.achievements      = GS.achievements      || []; 
     GS.wpoFireCount = GS.wpoFireCount || 0;
     GS.scoFireCount = GS.scoFireCount || 0;
+    GS.diseaseZeroLastTurn = GS.diseaseZeroLastTurn ?? -99;
+    GS.opinion75LastTurn = GS.opinion75LastTurn ?? -99;
+    if (!GS.integrationMilestonesSeen) GS.integrationMilestonesSeen = [];
     
     Object.keys(GS.species||{}).forEach(sid => { if(GS.species[sid]) GS.species[sid].extraRegions = GS.species[sid].extraRegions || []; });
     if(GS.sp_state) { GS.sp_state._activeAttack = GS.sp_state._activeAttack || false; }
@@ -4145,9 +5828,9 @@ function advanceTurn() {
   const mult = GS.diffMult || 1.0;
   // CHANGE 6 — Dynamic budget income: Opinion + Knowledge scale income up to difficulty cap
   const maxBudgetIncome = GS.difficulty === 'easy'       ? 250
-                        : GS.difficulty === 'hard'        ? 100
-                        : GS.difficulty === 'extinction'  ? 50
-                        : 125; // normal
+                        : GS.difficulty === 'hard'        ? 125
+                        : GS.difficulty === 'extinction'  ? 100
+                        : 150; // normal
   const opinionFactor   = Math.min(GS.resources.public_opinion, 100) / 100;
   const knowledgeFactor = Math.min(GS.resources.knowledge, 500) / 500;
   const incomeMultiplier = Math.max(0.2, (opinionFactor * 0.6) + (knowledgeFactor * 0.4));
@@ -4368,6 +6051,10 @@ function advanceTurn() {
     if ((e.requires_knowledge||0) > GS.resources.knowledge) return false; 
     if (e.trigger_condition === 'extremism_high' && m.extremism < 50) return false; 
     if (e.trigger_condition === 'compound_crisis' && (m.disease < 50 || m.extremism < 50)) return false;
+    if (e.trigger_condition === 'eco_stress_30' && m.ecological_stress < 30) return false;
+    if (e.trigger_condition === 'eco_stress_50' && m.ecological_stress < 50) return false;
+    if (e.trigger_condition === 'eco_stress_75' && m.ecological_stress < 75) return false;
+    if (e.trigger_condition === 'disease_high' && m.disease < 60) return false;
     
     if (e.requires_seen && !GS.events_seen.includes(e.requires_seen)) return false;
     if (/^tier\d+_hostile_/.test(e.id)) {
@@ -4384,7 +6071,17 @@ function advanceTurn() {
   const QUEUE_CHAIN_PARENTS = new Set([
     'ndl_arthritis_elder','luz_resort_groundbreaking','afarensis_tool_footage',
     'heidelberg_sapiens_encounter','erectus_sapiens_attempt','flo_deextinction_proposal',
-    'par_maintained_clearing','afr_fossil_continuity','tch_vigil_footage'
+    'par_maintained_clearing','afr_fossil_continuity','tch_vigil_footage',
+    'chain_whistleblower_parent',
+    'chain_extremist_intel_parent',
+    'chain_pathogen_mutation_parent',
+    'chain_rogue_state_parent',
+    'chain_biotech_patent_parent',
+    'chain_cooperation_parent',
+    'chain_arctic_discovery_parent',
+    'chain_election_fracture_parent',
+    'chain_hybrid_birth_parent',
+    'chain_icc_testimony_parent'
   ]);
   eligible.forEach(ev => {
     if (QUEUE_CHAIN_PARENTS.has(ev.id)) { pool.push(ev); pool.push(ev); }
@@ -4423,6 +6120,56 @@ function advanceTurn() {
   saveGame(true);
   const endResult = checkEndConditions();
   if (endResult) { showResultScreen(endResult); return; }
+  // =========================================================
+  // PUSHBACK EVENT TRIGGERS -- fire when player doing too well
+  // =========================================================
+
+  // Pushback 1: Rights >= 50 (fires once per run)
+  if (
+    GS.meters.rights_conflict >= 50 &&
+    !GS.integrationMilestonesSeen.includes('pushback_rights_50_fired') &&
+    !GS.events_seen.includes('pushback_rights_50')
+  ) {
+    GS.integrationMilestonesSeen.push('pushback_rights_50_fired');
+    const _ev1 = EVENTS.find(e => e.id === 'pushback_rights_50');
+    if (_ev1 && !stagedEvents.find(e => e.id === _ev1.id)) stagedEvents.push(_ev1);
+  }
+
+  // Pushback 2: Integration >= 50 (fires once per run)
+  if (
+    GS.integration_score >= 50 &&
+    !GS.integrationMilestonesSeen.includes('pushback_integration_50_fired') &&
+    !GS.events_seen.includes('pushback_integration_50')
+  ) {
+    GS.integrationMilestonesSeen.push('pushback_integration_50_fired');
+    const _ev2 = EVENTS.find(e => e.id === 'pushback_integration_50');
+    if (_ev2 && !stagedEvents.find(e => e.id === _ev2.id)) stagedEvents.push(_ev2);
+  }
+
+  // Pushback 3: Disease <= 0 (repeatable, cooldown 10 turns)
+  if (
+    GS.meters.disease <= 0 &&
+    (GS.turn - (GS.diseaseZeroLastTurn || -99)) >= 10
+  ) {
+    GS.diseaseZeroLastTurn = GS.turn;
+    const _ev3 = EVENTS.find(e => e.id === 'pushback_disease_zero');
+    if (_ev3 && !stagedEvents.find(e => e.id === _ev3.id)) stagedEvents.push(_ev3);
+  }
+
+  // Pushback 4: Public Opinion >= 75 (repeatable, cooldown 8 turns)
+  if (
+    GS.resources.public_opinion >= 75 &&
+    (GS.turn - (GS.opinion75LastTurn || -99)) >= 8
+  ) {
+    GS.opinion75LastTurn = GS.turn;
+    const _ev4 = EVENTS.find(e => e.id === 'pushback_opinion_75');
+    if (_ev4 && !stagedEvents.find(e => e.id === _ev4.id)) stagedEvents.push(_ev4);
+  }
+
+  // =========================================================
+  // END PUSHBACK TRIGGERS
+  // =========================================================
+
   /* END TURN FIX — Fix 3: flush staged events into eventQueue atomically */
   stagedEvents.forEach(ev => {
     if (!eventQueue.find(e => e.id === ev.id)) {
