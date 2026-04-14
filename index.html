@@ -1444,7 +1444,7 @@ const EVENTS = [
       { text:'No formal response', effects:{public_opinion:+5} }
     ]},
   { id:'first_contact', cat:'INTEGRATION BREAKTHROUGH', title:'NEANDERTHAL BAND LEADER REQUESTS FORMAL NEGOTIATION',
-    species:'neanderthal', region:'europe', turn_range:[22,72], repeatable:false, special:true, special_id:'first_contact',
+    species:'neanderthal', region:'europe', turn_range:[15,172], repeatable:false, special:true, special_id:'first_contact',
     desc:'Through an interpreter, a Neanderthal group leader in the Austrian Alps formally requested diplomatic negotiation with a prepared list of territorial demands. Success here unlocks the Non-Sapiens Integration Treaty.',
     choices:[
       { text:'Accept: dispatch a full diplomatic team', effects:{integration_score:+10, stability:+10, rights_conflict:+10, budget:-200}, unlock:'integration_treaty' },
@@ -1524,12 +1524,12 @@ const EVENTS = [
       { text:'Media blackout: suppress further circulation', effects:{stability:+5, public_opinion:-10, extremism:+10, integration_score:-4} }
     ]},
   { id:'genocide_proposal', cat:'⚠ DARK EVENT', title:'GENOCIDE RESOLUTION REACHES PARLIAMENTARY VOTE IN 3 NATIONS',
-    species:null, region:'europe', turn_range:[30,200], repeatable:false, trigger_condition:'extremism_high',
+    species:null, region:'europe', turn_range:[3,240], repeatable:false, trigger_condition:'extremism_high',
     desc:'Parliamentary votes on official extermination programs for H. heidelbergensis and H. erectus are advancing in Hungary, Poland, and Brazil.',
     choices:[
-      { text:'Invoke genocide convention: International Criminal Court immediately', effects:{extremism:-10, rights_conflict:+10, public_opinion: +10, budget: -250} },
-      { text:'Diplomatic pressure only; stop short of legal challenge', effects:{extremism:+10, stability:-10, integration_score:-10} },
-      { text:'Frame as national sovereignty issue: no intervention', effects:{extremism:+10, rights_conflict:-10, integration_score:-10, stability:-10, budget:-50} }
+      { text:'Invoke genocide convention: International Criminal Court immediately', effects:{extremism:-20, rights_conflict:+10, public_opinion: +10, budget: -250} },
+      { text:'Diplomatic pressure only; stop short of legal challenge', effects:{extremism:-5, stability:+10, integration_score:+5, rights_conflict:-5, budget:-50} },
+      { text:'Frame as national sovereignty issue: no intervention', effects:{extremism:+10, rights_conflict:-10, integration_score:-10, stability:-10} }
     ]},
   { id:'floresiensis_doc', cat:'CULTURAL', title:'"THE HOBBITS OF FLORES" BREAKS STREAMING RECORDS GLOBALLY',
     species:'floresiensis', region:'indonesia', turn_range:[8,55], repeatable:false,
@@ -1540,7 +1540,7 @@ const EVENTS = [
       { text:'No formal action; let public goodwill work organically', effects:{public_opinion:+5} }
     ]},
   { id:'megafauna_crisis', cat:'ECOLOGICAL', title:'MULTIPLE HOMININ SPECIES DECIMATING MEGAFAUNA RESERVES',
-    species:null, region:'africa', turn_range:[15,85], repeatable:false,
+    species:null, region:'africa', turn_range:[4,185], repeatable:false,
     desc:'WWF reports catastrophic pressure on remaining megafauna from H. erectus and H. heidelbergensis hunting ranges overlapping conservation zones.',
     choices:[
       { text:'Emergency expansion of protected zones with military enforcement', effects:{ecological_stress:-10, budget:-350, stability:+2, rights_conflict:+2} },
@@ -1573,10 +1573,10 @@ const EVENTS = [
       { text:'Defend zoos as important conservation tools', effects:{rights_conflict:-10, public_opinion:-10, extremism:+5} }
     ]},
   { id:'neanderthal_art', cat:'CULTURAL', title:'NEANDERTHAL CREATES ART IN CAPTIVITY: BERLIN GALLERY SELLS OUT',
-    species:'neanderthal', region:'europe', turn_range:[18,75], repeatable:false,
+    species:'neanderthal', region:'europe', turn_range:[4,175], repeatable:false,
     desc:'A Neanderthal individual at a Lausanne research facility spontaneously created abstract paintings using available pigments. A Berlin gallery purchased three works. The artist\'s legal status as "facility property" triggered an immediate rights lawsuit.',
     choices:[
-      { text:'Legal intervention: artist owns the work, deserves compensation', effects:{rights_conflict:+10, integration_score:+10, extremism:+5, public_opinion:+10} },
+      { text:'Legal intervention: artist owns the work, deserves compensation, and so do you', effects:{rights_conflict:+10, integration_score:+10, extremism:+5, public_opinion:+10, budget:+200} },
       { text:'Purchase the works for UN Cultural Heritage collection', effects:{integration_score:+5, budget:-200, public_opinion:+10} },
       { text:'Classify as "facility-generated research material"', effects:{rights_conflict:-10, public_opinion:-10, extremism:+10} }
     ]},
@@ -1597,7 +1597,7 @@ const EVENTS = [
       { text:'Ban commercial research: academics only with full ethics review', effects:{knowledge:+5, stability:+2, budget:-50} }
     ]},
   { id:'heidelberg_outpost', cat:'CONFLICT', title:'HEIDELBERGENSIS BAND DESTROYS MILITARY OUTPOST: CONGO',
-    species:'heidelbergensis', region:'africa', turn_range:[10,60], repeatable:false,
+    species:'heidelbergensis', region:'africa', turn_range:[10,160], repeatable:false,
     desc:'A coordinated attack by ~40 H. heidelbergensis overwhelmed a Congo military outpost, killing 8 soldiers and seizing supplies. Intelligence suggests they were pushed into the outpost\'s territory by habitat destruction from a logging operation.',
     choices:[
       { text:'Stand down military and investigate territorial displacement first', effects:{stability:-5, extremism:+10, rights_conflict:+5} },
@@ -1721,21 +1721,21 @@ const EVENTS = [
 
   
   { id:'two_species_war', cat:'CONFLICT', title:'SAPIENS DEMANDED TO CHOOSE SIDES: REGIONAL WAR BEGINS',
-    turn_range:[20,160], repeatable:false,
+    turn_range:[5,230], repeatable:false,
     desc:'A border conflict between two non-sapiens species has escalated to organized warfare. Both sides have approached UN observers seeking material support. Your response will define international precedent for hominin conflict law.',
     choices:[
-      { text:'Support the species with higher integration potential', effects:{stability:-5, extremism:+10, budget:-200, integration_score:+5} },
-      { text:'Impose a mandatory ceasefire with UN enforcement', effects:{stability:-5, budget:-300, rights_conflict:+5} },
-      { text:'Declare official neutrality and enforce arms embargo', effects:{stability:-2, ecological_stress:+5} }
+      { text:'Support the species with higher integration potential', effects:{stability:-5, extremism:+10, budget:-150, integration_score:+10} },
+      { text:'Impose a mandatory ceasefire with UN enforcement', effects:{stability:+15, budget:-300, rights_conflict:+10, ecological_stress: -10} },
+      { text:'Declare official neutrality and enforce arms embargo', effects:{stability:-10, ecological_stress:+10} }
     ]},
   { id:'neanderthal_denisovan_alliance', cat:'INTEGRATION BREAKTHROUGH',
     title:'NEANDERTHAL-DENISOVAN ALLIANCE FORMS: UNPRECEDENTED',
-    species:'neanderthal', region:'europe', turn_range:[25,120], repeatable:false,
-    desc:'For the first time in 40,000 years, Neanderthal and Denisovan representatives have signed a formal territorial cooperation agreement. Their combined Eurasian population exceeds 300,000. Analysts call it the first non-sapiens diplomatic achievement in recorded history.',
+    species:'neanderthal', region:'europe', turn_range:[6,220], repeatable:false,
+    desc:'For the first time in 40,000 years, Neanderthal and Denisovan representatives have signed a formal territorial cooperation agreement. Analysts call it the first non-sapiens diplomatic achievement in recorded history.',
     choices:[
-      { text:'Formally recognize the alliance and extend diplomatic status', effects:{integration_score:+10, rights_conflict:+10, extremism:+10, stability:-5} },
-      { text:'Cautiously welcome it and offer UN observer status', effects:{integration_score:+10, stability:+2, budget:-80} },
-      { text:'Declare it a security threat and demand dissolution', effects:{integration_score:-10, extremism:+10, stability:+5, rights_conflict:-10} }
+      { text:'Formally recognize the alliance and extend diplomatic status', effects:{integration_score:+10, rights_conflict:+10, extremism:+5, stability:+5, budget:-100} },
+      { text:'Cautiously welcome it and offer UN observer status', effects:{integration_score:+10, stability:-10, budget:-50} },
+      { text:'Declare it a security threat and demand dissolution', effects:{integration_score:-10, extremism:+10, stability:-5, rights_conflict:-10} }
     ]},
   { id:'heidelberg_livestock', cat:'CONFLICT',
     title:'HEIDELBERGENSIS HUNTING PARTY RAIDS LIVESTOCK: RURAL EUROPE',
@@ -1945,12 +1945,12 @@ const EVENTS = [
     ]},
   { id:'denisovan_restaurant', cat:'INTEGRATION BREAKTHROUGH',
     title:'FIRST DENISOVAN-OWNED BUSINESS REGISTERED: CHENGDU RESTAURANT',
-    species:'denisovan', region:'east_asia', turn_range:[20,120], repeatable:false,
+    species:'denisovan', region:'east_asia', turn_range:[10,220], repeatable:false,
     desc:'A Denisovan individual in Chengdu legally registered a small restaurant, the first Denisovan-owned business in recorded history. Menu features foraged highland ingredients with Sichuan technique. 6-week waiting list. Initial business license was blocked; international pressure reversed it.',
     choices:[
       { text:'Champion the story internationally: model integration case', effects:{integration_score:+10, public_opinion:+10, extremism:+5} },
-      { text:'Establish formal non-sapiens business ownership legal framework', effects:{integration_score:+10, budget:-150, rights_conflict:+10, extremism:+10} },
-      { text:'Monitor but don\'t intervene; let it develop organically', effects:{integration_score:+5, public_opinion:+8} }
+      { text:'Establish formal non-sapiens business ownership legal framework', effects:{integration_score:+10, budget:-250, rights_conflict:+10, extremism:+5} },
+      { text:'Monitor but don\'t intervene; let it develop organically', effects:{integration_score:+5, public_opinion:+10} }
     ]},
   { id:'un_refugee_vote', cat:'POLITICAL',
     title:'UN VOTE: DO TIER 3+ SPECIES QUALIFY FOR REFUGEE STATUS?',
@@ -2007,7 +2007,7 @@ const EVENTS = [
   
   { id:'afarensis_tool_footage', cat:'SCIENTIFIC DISCOVERY',
     title:'AU. AFARENSIS FILMED USING BONE TOOL TO ACCESS WATER',
-    species:'afarensis', region:'east_africa', turn_range:[15,65], repeatable:false,
+    species:'afarensis', region:'east_africa', turn_range:[15,165], repeatable:false,
     desc:'A wildlife camera in the Afar region captured an Au. afarensis individual using a sharpened leg bone to extract subsurface water from a dry riverbed. The tool was found cached nearby. The footage runs 14 minutes. This is a Tier 5 species. The lead researcher wrote: "Everything we assumed about the cognitive floor just moved."',
     choices:[
       { text:'Publish immediately, the world needs to see this', effects:{knowledge:+25, public_opinion:+10, integration_score:+5}, queue_event:'afarensis_viral_panic', queue_delay:3 },
@@ -2016,7 +2016,7 @@ const EVENTS = [
     ]},
   { id:'afarensis_viral_panic', cat:'CULTURAL',
     title:'AFARENSIS FOOTAGE REACHES 1 BILLION VIEWS IN 72 HOURS',
-    species:'afarensis', region:'east_africa', turn_range:[15,100], repeatable:false,
+    species:'afarensis', region:'east_africa', turn_range:[15,165], repeatable:false,
     desc:"The footage is the most-shared clip of the quarter. 1.1 billion views in 72 hours. Every platform is running the same image: Lucy's species, holding a bone, accessing water. Pro-rights organizations gained four million members overnight. Nationalist groups are calling it a fabrication. UNESCO has called an unscheduled session. The comment sections are identical: we almost wiped these out.",
     choices:[
       { text:'Issue a UN statement connecting public empathy to conservation law now', effects:{integration_score:+10, extremism:+10, public_opinion:+10, rights_conflict:+10} },
@@ -2036,7 +2036,7 @@ const EVENTS = [
     ]},
   { id:'ant_extermination_vote', cat:'POLITICAL',
     title:'FOUR EU NATIONS TABLE LETHAL MANAGEMENT VOTE ANTECESSOR',
-    species:'antecessor', region:'europe', turn_range:[18,120], repeatable:false,
+    species:'antecessor', region:'europe', turn_range:[5,220], repeatable:false,
     desc:'France, Spain, Germany, and Poland jointly tabled an emergency resolution authorizing lethal species management protocols for H. antecessor. The vote is in 72 hours and has majority support. Rights advocates warn this sets a precedent that will be applied to all non-sapiens species. The Gran Dolina excavation report is being read aloud in three parliamentary chambers.',
     choices:[
       { text:'Rights: oppose the vote, propose cognitive assessment as the only legal standard', effects:{rights_conflict:+10, extremism:+10, integration_score:+10, stability:-5} },
@@ -2047,19 +2047,19 @@ const EVENTS = [
   
   { id:'dns_blood_drive', cat:'SCIENTIFIC DISCOVERY',
     title:'CHENGDU BLOOD DRIVE FLAGS THREE DENISOVAN GENOME DONORS',
-    species:'denisovan', region:'east_asia', turn_range:[20,70], repeatable:false,
+    species:'denisovan', region:'east_asia', turn_range:[4,170], repeatable:false,
     desc:'A routine municipal blood drive in Chengdu flagged three genomic anomalies in a single neighborhood, consistent with Denisovan ancestry. All three donors appear entirely modern. They have jobs, families, and no knowledge of their genetic status. The lab director contacted WHO and asked: what do I do with this?',
     choices:[
-      { text:'Coordinate a respectful controlled disclosure through WHO channels', effects:{integration_score:+5, extremism:+10, stability:+5}, queue_event:'dns_genome_goes_public', queue_delay:4 },
-      { text:'Suppress the samples, reclassify and issue non-disclosure orders', effects:{stability:+10, rights_conflict:-10, integration_score:-5, extremism:+5} },
-      { text:'Inform the donors privately, no public record created', effects:{integration_score:-5, rights_conflict:+5, knowledge:+15} }
+      { text:'Coordinate a respectful controlled disclosure through WHO channels', effects:{integration_score:+5, public_opinion:+10, stability:+5}, queue_event:'dns_genome_goes_public', queue_delay:4 },
+      { text:'Suppress the samples, reclassify and issue non-disclosure orders', effects:{stability:+10, rights_conflict:-10, integration_score:-10, extremism:+5} },
+      { text:'Inform the donors privately, no public record created', effects:{integration_score:-5, rights_conflict:+5, knowledge:+35} }
     ]},
   { id:'dns_genome_goes_public', cat:'POLITICAL',
     title:'DENISOVAN GENOME PUBLISHED CENSUS ESTIMATES HIT 400000',
-    species:'denisovan', region:'east_asia', turn_range:[20,120], repeatable:false,
+    species:'denisovan', region:'east_asia', turn_range:[4,220], repeatable:false,
     desc:"The WHO report is public. The three Chengdu donors have been identified. Census modeling suggests up to 400,000 individuals globally carry significant Denisovan ancestry. The question everyone is asking is not scientific: how many others do not know? Nationalist governments are calling for mandatory genome screening. The Denisovan community has issued its first official public statement.",
     choices:[
-      { text:"Rights - champion the community's right to legal identity and full protection", effects:{integration_score:+10, extremism:+10, rights_conflict:+10, stability:-5} },
+      { text:"Rights: champion the community's right to legal identity and full protection", effects:{integration_score:+10, extremism:+10, rights_conflict:+10, stability:-5} },
       { text:'Rights: establish a voluntary Denisovan Census with opt-in legal protections', effects:{integration_score:+10, rights_conflict:+5, budget:-150} },
       { text:'Stability: issue a statement downplaying demographic scope to contain the panic', effects:{stability:+5, integration_score:-10, extremism:-5, public_opinion:-10} }
     ]},
@@ -2067,12 +2067,12 @@ const EVENTS = [
   
   { id:'geo_village_exchange', cat:'INTEGRATION BREAKTHROUGH',
     title:'GEORGIAN VILLAGE COEXISTING WITH GEORGICUS BAND FOR A YEAR',
-    species:'georgicus', region:'caucasus', turn_range:[25,85], repeatable:false,
+    species:'georgicus', region:'caucasus', turn_range:[10,185], repeatable:false,
     desc:'A mountain village 8km from the Dmanisi fossil site has been coexisting with a H. georgicus band for nearly a year. Villagers leave bread and dried fish near a shared water source. The band leaves arranged stones and animal teeth at the same location. Neither side has made formal contact. The village elder told researchers: "We know they are there. They know we are here. It has been fine."',
     choices:[
       { text:'Integration: document formally and broker supervised official contact', effects:{integration_score:+10, knowledge:+15, extremism:+5}, queue_event:'geo_neighbor_petition', queue_delay:4 },
-      { text:'Stability: monitor quietly, do not disturb what is working', effects:{knowledge:+10, integration_score:+5} },
-      { text:'Stability: relocate the band to a formal sanctuary, this arrangement is legally untenable', effects:{stability:+5, ecological_stress:-5, integration_score:-10} }
+      { text:'Stability: monitor quietly, do not disturb what is working', effects:{knowledge:+5, integration_score:+5, stability:+5} },
+      { text:'Stability: relocate the band to a formal sanctuary, this arrangement is legally untenable', effects:{stability:+10, ecological_stress:-5, integration_score:-10} }
     ]},
   { id:'geo_neighbor_petition', cat:'RIGHTS & LAW',
     title:'GEORGIAN VILLAGE FILES FIRST GRASSROOTS PERSONHOOD PETITION',
@@ -2087,16 +2087,16 @@ const EVENTS = [
   
   { id:'hab_object_cache', cat:'SCIENTIFIC DISCOVERY',
     title:'HABILIS SYSTEMATICALLY CACHING SAPIENS-MANUFACTURED OBJECTS',
-    species:'habilis', region:'east_africa', turn_range:[30,95], repeatable:false,
+    species:'habilis', region:'east_africa', turn_range:[4,195], repeatable:false,
     desc:'Researchers near Olduvai Gorge discovered H. habilis individuals collecting and caching sapiens-manufactured objects: water bottles, a solar lantern, three dead phones, and a length of rope. The cache is arranged in a deliberate pattern near their core territory. The lead researcher noticed her missing water bottle in the collection. "They did not take it randomly," she said. "They kept it."',
     choices:[
       { text:'Leave reciprocal items near the cache and observe the response', effects:{integration_score:+10, knowledge:+25, ecological_stress:-5}, queue_event:'hab_proto_trade', queue_delay:4 },
       { text:'Document the cache only, no interaction', effects:{knowledge:+22} },
-      { text:'Remove the cache and restrict research access to protect the population', effects:{knowledge:-10, ecological_stress:-5, integration_score:-5} }
+      { text:'Remove the cache and restrict research access to protect the population', effects:{knowledge:-10, ecological_stress:-5, integration_score:-5, rights_conflict: +5} }
     ]},
   { id:'hab_proto_trade', cat:'INTEGRATION BREAKTHROUGH',
     title:'HABILIS INDIVIDUAL OFFERS OLDOWAN TOOL AT RESEARCH STATION',
-    species:'habilis', region:'east_africa', turn_range:[30,140], repeatable:false,
+    species:'habilis', region:'east_africa', turn_range:[4,240], repeatable:false,
     desc:'A H. habilis individual approached the research station carrying a freshly knapped Oldowan scraper and placed it precisely where the team had left their reciprocal offering. Then waited. Researchers were silent for 11 minutes. The lead researcher wrote: "It was not a display. It was an offer." This is the first documented proto-trade between H. sapiens and a Tier 3 species.',
     choices:[
       { text:'Integration: accept the exchange and formally document this as first-contact trade', effects:{integration_score:+10, knowledge:+25, rights_conflict:+10, extremism:+10} },
@@ -2107,16 +2107,16 @@ const EVENTS = [
   
   { id:'flo_deextinction_proposal', cat:'SCIENTIFIC DISCOVERY',
     title:'BIOTECH FIRM ANNOUNCES FLORESIENSIS DE-EXTINCTION PROGRAM',
-    species:'floresiensis', region:'indonesia', turn_range:[35,105], repeatable:false,
+    species:'floresiensis', region:'indonesia', turn_range:[4,205], repeatable:false,
     desc:'NovaBio Sciences obtained genetic material from a recently deceased H. floresiensis individual recovered outside sanctuary limits. They are seeking Indonesian regulatory approval to sequence the genome and initiate a second population reproductive program: 20 synthetic individuals from reconstructed DNA. The existing floresiensis population was not consulted. They have no legal mechanism to object.',
     choices:[
-      { text:'Block with an emergency rights injunction before sequencing begins', effects:{rights_conflict:+10, budget:-200, integration_score:+10} },
+      { text:'Block with an emergency rights injunction before sequencing begins', effects:{rights_conflict:+10, knowledge:-20, budget:-200, integration_score:+10} },
       { text:'Allow under strict independent ethical review, regulate rather than ban', effects:{knowledge:+20, rights_conflict:+5, budget:-50}, queue_event:'flo_deextinction_launch', queue_delay:4 },
       { text:'Decline to intervene, this is private sector national jurisdiction', effects:{stability:+2, rights_conflict:-5, knowledge:+10}, queue_event:'flo_deextinction_launch', queue_delay:4 }
     ]},
   { id:'flo_deextinction_launch', cat:'DARK EVENT',
     title:'NOVABIO LAUNCHES FLORES RESTORATION INITIATIVE TOKYO PRESS CONFERENCE',
-    species:'floresiensis', region:'indonesia', turn_range:[35,160], repeatable:false,
+    species:'floresiensis', region:'indonesia', turn_range:[4,230], repeatable:false,
     desc:'NovaBio Sciences announced the Flores Restoration Initiative at a Tokyo press conference. Twenty synthetic H. floresiensis individuals will be gestated using surrogate carriers. The company\'s stock rose 34 percent in one hour. The existing floresiensis sanctuary population is visible on the live-stream slide deck in the background. A rights advocate statement: "They used the last living ones as the backdrop for announcing they will make more."',
     choices:[
       { text:'Invoke emergency protections, the existing population must have legal standing to consent', effects:{rights_conflict:+10, extremism:-10, integration_score:+10, budget:-300} },
@@ -2136,7 +2136,7 @@ const EVENTS = [
     ]},
   { id:'erg_tier_challenge', cat:'RIGHTS & LAW', requires_knowledge:500, 
     title:'ERGASTER PEDAGOGY PAPER FORCES UN COGNITIVE TIER REVIEW',
-    species:'ergaster', region:'africa', turn_range:[24,230], repeatable:false,
+    species:'ergaster', region:'africa', turn_range:[4,230], repeatable:false,
     desc:"The Nature paper passed peer review in three weeks. Seven governments immediately lobbied against reclassification. Their position: if H. ergaster is Tier 2, it gains legal standing in 34 countries. A UN emergency session on behavioral cognitive reclassification criteria has been convened. The paper's abstract is being read aloud in four parliamentary chambers simultaneously.",
     choices:[
       { text:'Support Tier 2 reclassification, behavioral pedagogy meets the cognitive threshold', effects:{integration_score:+10, rights_conflict:+10, extremism:+10} },
@@ -2156,38 +2156,38 @@ const EVENTS = [
     ]},
   { id:'rud_personhood_brief', cat:'RIGHTS & LAW',
     title:'LAWYERS FILE RUDOLFENSIS PERSONHOOD BRIEF IN THREE NATIONS SIMULTANEOUSLY',
-    species:'rudolfensis', region:'east_africa', turn_range:[55,180], repeatable:false,
+    species:'rudolfensis', region:'east_africa', turn_range:[5,180], repeatable:false,
     desc:'Rights lawyers in Kenya, the Netherlands, and New Zealand filed simultaneous personhood review applications citing the mirror test result. Their argument: self-recognition implies a concept of self, which implies subjective experience, which implies legal standing. H. rudolfensis is classified as a Tier 3 parallel branch. The lawyers are arguing the branch is closer than anyone admitted. Seventeen academics signed a counter-statement calling the legal logic catastrophically premature.',
     choices:[
-      { text:'Support the legal filing, self-awareness is the only defensible cognitive threshold', effects:{integration_score:+10, rights_conflict:+10, extremism:+10, stability:-10} },
-      { text:'Recommend UN-supervised assessment protocol before any legal ruling', effects:{knowledge:+20} },
-      { text:'Block the filing, one test result cannot overturn species classification', effects:{integration_score:-10, rights_conflict:-5, stability:+5} }
+      { text:'Support the legal filing, self-awareness is the only defensible cognitive threshold', effects:{integration_score:+5, rights_conflict:+5, extremism:+10, stability:-10} },
+      { text:'Recommend UN-supervised assessment protocol before any legal ruling', effects:{knowledge:+25} },
+      { text:'Block the filing, one test result cannot overturn species classification', effects:{integration_score:-10, rights_conflict:-5, stability:+5, public_opinion:+5} }
     ]},
 
   
   { id:'par_maintained_clearing', cat:'ECOLOGICAL',
     title:'PARANTHROPUS TERRITORY CONTAINS CLEARING MAINTAINED FOR 40 YEARS',
-    species:'paranthropus', region:'africa', turn_range:[65,145], repeatable:false,
+    species:'paranthropus', region:'africa', turn_range:[6,145], repeatable:false,
     desc:'Ecologists studying Paranthropus territory in the Rift Valley documented a 200 square meter clearing maintained with deliberate regularity: dead vegetation removed, rocks relocated to a consistent perimeter, the same cleared area preserved across seasonal cycles. Satellite imagery confirms continuous maintenance for at least 40 years. It predates the Reappearance. It was always there.',
     choices:[
-      { text:'Conduct a full ecological and genetic study to determine who built and maintained this', effects:{knowledge:+20, ecological_stress:+5}, queue_event:'par_cultural_transmission', queue_delay:5 },
+      { text:'Conduct a full ecological and genetic study to determine who built and maintained this', effects:{knowledge:+20, ecological_stress:-5}, queue_event:'par_cultural_transmission', queue_delay:5 },
       { text:'Designate as a protected observation zone, no sampling or interference', effects:{ecological_stress:-5, knowledge:+10} },
-      { text:'Classify as incidental environmental modification, no special status warranted', effects:{stability:+2, rights_conflict:-5} }
+      { text:'Classify as incidental environmental modification, no special status warranted', effects:{knowledge:-10, rights_conflict:-5} }
     ]},
   { id:'par_cultural_transmission', cat:'SCIENTIFIC DISCOVERY',
     title:'PARANTHROPUS CLEARING MAINTAINED BY FOUR GENERATIONS NON-GENETICALLY',
-    species:'paranthropus', region:'africa', turn_range:[65,200], repeatable:false,
+    species:'paranthropus', region:'africa', turn_range:[6,200], repeatable:false,
     desc:'Genetic analysis confirmed the clearing has been maintained by at least four successive generations of Paranthropus individuals. The behavior is not encoded in their genome. It was transmitted. Researchers are calling it the first documented non-Homo cultural artifact: a behavior learned, passed on, and preserved across generations by a species with a 420cc brain and no stone tools. Tier reclassification advocates are already filing. A lawyer wrote: "If culture is the standard, we have to move the line."',
     choices:[
       { text:'Support Tier 3 reclassification, cultural transmission meets the cognitive threshold', effects:{integration_score:+10, rights_conflict:+10, extremism:+10, stability:-10} },
-      { text:'Submit to extended peer review, extraordinary claims require extraordinary evidence', effects:{knowledge:+25, rights_conflict:+5, integration_score:+5} },
-      { text:'Contest the finding, environmental modification does not imply cognition', effects:{integration_score:-10, rights_conflict:-10, extremism:+5, public_opinion:-10} }
+      { text:'Submit to extended peer review, extraordinary claims require extraordinary evidence', effects:{knowledge:+25, rights_conflict:+5, integration_score:+5, budget:-200} },
+      { text:'Contest the finding, environmental modification does not imply cognition', effects:{integration_score:-10, rights_conflict:-10, extremism:+5, public_opinion:-10, budget:-100} }
     ]},
 
   
   { id:'afr_fossil_continuity', cat:'SCIENTIFIC DISCOVERY',
     title:'LIVING AFRICANUS POPULATION CONFIRMED AS DIRECT TAUNG BLOODLINE',
-    species:'africanus', region:'south_africa', turn_range:[20,160], repeatable:false,
+    species:'africanus', region:'south_africa', turn_range:[4,160], repeatable:false,
     desc:'A Johannesburg paleogenomics team confirmed the living Au. africanus population in the Sterkfontein corridor is the direct genetic continuation of the same lineage in the Taung and Sterkfontein fossils: a 2.8 million year unbroken bloodline. The same family. Continuous. Still alive. The lead author said: "The fossils are not their ancestors. The fossils are their grandparents."',
     choices:[
       { text:'Publish and use as the foundation for a heritage territorial claim', effects:{integration_score:+10, rights_conflict:+10, extremism:+5, knowledge:+20}, queue_event:'afr_heritage_conflict', queue_delay:5 },
@@ -2196,7 +2196,7 @@ const EVENTS = [
     ]},
   { id:'afr_heritage_conflict', cat:'POLITICAL',
     title:'HERITAGE SPECIES DESIGNATION COLLIDES WITH FOUR MINING CONCESSIONS',
-    species:'africanus', region:'south_africa', turn_range:[70,220], repeatable:false,
+    species:'africanus', region:'south_africa', turn_range:[4,220], repeatable:false,
     desc:'South Africa invoked the National Heritage Resources Act to designate the Sterkfontein corridor a Heritage Species Protected Zone. This directly conflicts with four active mining concessions worth R14 billion. Three corporations filed constitutional challenges within 48 hours. The living Au. africanus band is camped 600 meters from an open-pit mine that has operated for 30 years. Their home predates human language.',
     choices:[
       { text:'Back the Heritage Species designation fully, the mining concessions must yield', effects:{integration_score:+10, rights_conflict:+10, ecological_stress:-10, extremism:+10, stability:-5} },
@@ -2207,7 +2207,7 @@ const EVENTS = [
   
   { id:'tch_vigil_footage', cat:'SCIENTIFIC DISCOVERY',
     title:'TCHADENSIS FILMED STANDING MOTIONLESS WATCHING WILDFIRE FOR 47 MINUTES',
-    species:'tchadensis', region:'central_africa', turn_range:[100,220], repeatable:false,
+    species:'tchadensis', region:'central_africa', turn_range:[4,240], repeatable:false,
     desc:'A remote camera trap in the Sahel captured a S. tchadensis individual standing upright in a rainstorm, facing a distant wildfire on the horizon, motionless for 47 uninterrupted minutes. No foraging. No threat response. No movement. Just watching. Researchers have no behavioral framework for this. The lead researcher wrote: "It could be nothing. It could be everything. We genuinely do not know."',
     choices:[
       { text:'Share publicly, the world has the right to see this', effects:{public_opinion:+10, integration_score:+5}, queue_event:'tch_cultural_earthquake', queue_delay:5 },
@@ -2215,9 +2215,9 @@ const EVENTS = [
       { text:"Archive quietly, this population's safety depends on their anonymity", effects:{knowledge:+10} }
     ]},
   { id:'tch_cultural_earthquake', cat:'CULTURAL',
-    title:'TCHADENSIS FOOTAGE MOST VIEWED CLIP IN RECORDED HISTORY 4 BILLION VIEWS',
-    species:'tchadensis', region:'central_africa', turn_range:[100,239], repeatable:false,
-    desc:'The footage is the most-viewed clip in recorded human history. 4.2 billion views in four days. Every platform. Every language. Philosophy departments, theology schools, and constitutional law faculties are holding emergency sessions. UNESCO convened without an agenda. No one knew what to say. S. tchadensis is 7 million years old. It stood in the rain and watched a fire. The comment sections of every video are identical: what was it thinking?',
+    title:'TCHADENSIS FOOTAGE MOST VIEWED CLIP IN RECORDED HISTORY 40 BILLION VIEWS',
+    species:'tchadensis', region:'central_africa', turn_range:[10,239], repeatable:false,
+    desc:'The footage is the most-viewed clip in recorded human history. 40 billion views in four days. Every platform. Every language. Philosophy departments, theology schools, and constitutional law faculties are holding emergency sessions. UNESCO convened without an agenda. No one knew what to say. S. tchadensis is 7 million years old. It stood in the rain and watched a fire. The comment sections of every video are identical: what was it thinking?',
     choices:[
       { text:'Issue a UN statement using this moment to anchor the moral case for all hominin protection', effects:{integration_score:+10, rights_conflict:+10, extremism:-10, stability:+10, public_opinion:+10} },
       { text:'Let the cultural moment develop organically, no official position', effects:{public_opinion:+10, integration_score:+10} },
@@ -2242,7 +2242,7 @@ const EVENTS = [
 
   { id:'cross_habilis_trade_mirrors_afarensis', cat:'SCIENTIFIC DISCOVERY',
     title:'HABILIS TRADE CONTACT REIGNITES AFARENSIS FOOTAGE DEBATE',
-    species:'habilis', region:'east_africa', turn_range:[35,180], repeatable:false,
+    species:'habilis', region:'east_africa', turn_range:[5,180], repeatable:false,
     requires_seen:'hab_proto_trade',
     desc:'The publication of the Olduvai proto-trade documentation has reopened the debate triggered by the Au. afarensis bone tool footage. Scientists are now asking a harder question: if Tier 3 H. habilis can conduct deliberate exchange, and Tier 5 Au. afarensis can cache and use tools, where exactly is the cognitive threshold that justifies differential legal treatment? A joint paper by the two research teams is in review. Its conclusion is politically significant.',
     choices:[
@@ -2253,13 +2253,13 @@ const EVENTS = [
 
   { id:'cross_pedagogy_personhood_convergence', cat:'POLITICAL',
     title:'ERGASTER PEDAGOGY RULING AND RUDOLFENSIS BRIEF REACH UN SAME WEEK',
-    species:'ergaster', region:'africa', turn_range:[60,220], repeatable:false,
+    species:'ergaster', region:'africa', turn_range:[10,220], repeatable:false,
     requires_seen:'erg_tier_challenge',
     desc:'By coincidence or by design, the UN cognitive tier review for H. ergaster and the simultaneous personhood brief for H. rudolfensis landed in the same UN committee in the same week. Committee members are refusing to treat them separately. A bloc of 18 nations is calling for a single Hominin Cognitive Rights Standard to resolve both simultaneously. The bloc is larger than anyone expected. The vote is in four weeks.',
     choices:[
       { text:'Champion the unified standard: one framework for all Tier 2-3 behavioral evidence', effects:{integration_score:+10, rights_conflict:+10, extremism:+10, stability:-5, budget:-200} },
-      { text:'Support separate rulings to limit political exposure on each case', effects:{integration_score:+10, rights_conflict:+10, stability:+3} },
-      { text:'Delay the vote: the science on both cases is still contested', effects:{stability:+5, knowledge:+15, extremism:-5, integration_score:-5} }
+      { text:'Support separate rulings to limit political exposure on each case', effects:{integration_score:+5, rights_conflict:+5, stability:+5} },
+      { text:'Delay the vote: the science on both cases is still contested', effects:{stability:+5, knowledge:+25, extremism:-5, integration_score:-5} }
     ]},
 
   
@@ -5080,23 +5080,23 @@ const EVENTS = [
 const SPECIAL_TRIGGERS = { tinshemet:6, denisovan_pass:12, first_contact:24, cognitive_reclass:36, hybridchildren:60, speciesparliament:90, lastextinction:120, integrationcity:150, finalreckoning:180 };
 
 const POLICIES = [
-  { id:'draft_personhood_act', cat:'Legal Framework', name:'NON-SAPIENS PERSONS ACT', desc:'Grant Neanderthals and Denisovans legally recognized "Non-Sapiens Person" status with limited rights.', cost:300, effects:{rights_conflict:+10, extremism:+10, integration_score:+10}, tags:['Rights ↑↑','Integration ↑','Extremism ↑'], oneTime:true },
-  /* COOLDOWN SYSTEM */ { id:'wildlife_protection', cat:'Legal Framework', name:'WILDLIFE PROTECTION ORDER', desc:'Protect Tier 3–5 species as endangered, establishing habitat corridors and legal penalties for harm.', cost:150, effects:{ecological_stress:-10, stability:+2, rights_conflict:+2}, tags:['Ecology ↓','Stability ↑'], oneTime:false, cooldownTurns:3 },
-  /* COOLDOWN SYSTEM */ { id:'species_containment_order', cat:'Legal Framework', name:'SPECIES CONTAINMENT ORDER', desc:'Mandatory residential zones for non-sapiens populations. Surface stability at the cost of civil rights and rising extremist resentment.', cost:200, effects:{rights_conflict:-10, stability:+5, extremism:+10, integration_score:-10}, tags:['Stability ↑','Rights ↓↓','Extremism ↑','Integration ↓'], oneTime:false, dark:true, cooldownTurns:2 },
+  { id:'draft_personhood_act', cat:'Legal Framework', name:'NON-SAPIENS PERSONS ACT', desc:'Grant Neanderthals and Denisovans legally recognized "Non-Sapiens Person" status with limited rights.', cost:300, effects:{rights_conflict:+10, extremism:+5, integration_score:+10}, tags:['Rights ↑↑','Integration ↑','Extremism ↑'], oneTime:true },
+  /* COOLDOWN SYSTEM */ { id:'wildlife_protection', cat:'Legal Framework', name:'WILDLIFE PROTECTION ORDER', desc:'Protect Tier 3–5 species as endangered, establishing habitat corridors and legal penalties for harm.', cost:150, effects:{ecological_stress:-10, stability:+5, rights_conflict:+5}, tags:['Ecology ↓','Stability ↑'], oneTime:false, cooldownTurns:3 },
+  /* COOLDOWN SYSTEM */ { id:'species_containment_order', cat:'Legal Framework', name:'SPECIES CONTAINMENT ORDER', desc:'Mandatory residential zones for non-sapiens populations. Surface stability at the cost of civil rights and rising extremist resentment.', cost:200, effects:{rights_conflict:-10, stability:+5, extremism:+10, integration_score:-10, ecological_stress:+10, disease:-10}, tags:['Stability ↑','Rights ↓↓','Extremism ↑','Integration ↓'], oneTime:false, dark:true, cooldownTurns:2 },
   { id:'interbreeding_registry', cat:'Legal Framework', name:'INTERBREEDING REGISTRY', desc:'Legal framework for sapiens/neanderthal partnerships. Unlocks after the Neanderthal-Sapiens Legal Chaos event.', cost:150, effects:{integration_score:+5, rights_conflict:+5, extremism:+5}, tags:['Integration ↑'], oneTime:true, locked:true },
-  /* COOLDOWN SYSTEM */ { id:'pathogen_surveillance', cat:'Science & Medicine', name:'CROSS-SPECIES PATHOGEN SURVEILLANCE', desc:'WHO-coordinated monitoring network for inter-species disease transmission.', cost:200, effects:{disease:-10, knowledge:+10}, tags:['Disease ↓','Knowledge ↑'], oneTime:false, cooldownTurns:3 },
+  /* COOLDOWN SYSTEM */ { id:'pathogen_surveillance', cat:'Science & Medicine', name:'CROSS-SPECIES PATHOGEN SURVEILLANCE', desc:'WHO-coordinated monitoring network for inter-species disease transmission.', cost:200, effects:{disease:-10, knowledge:+10, stability:+10}, tags:['Disease ↓','Knowledge ↑','Stability ↑'], oneTime:false, cooldownTurns:3 },
   { id:'genome_mapping', cat:'Science & Medicine', name:'GENOME MAPPING PROGRAM', desc:'Comprehensive DNA analysis of all non-sapiens species. Massive one-time knowledge gain.', cost:250, effects:{knowledge:+50, disease:-5}, tags:['Knowledge ↑↑'], oneTime:true },
-  /* COOLDOWN SYSTEM */ { id:'vaccination_program', cat:'Science & Medicine', name:'MASS VACCINATION DRIVE', desc:'Multi-species vaccination against common pathogens. ⚠ Ongoing cost: −80 budget/turn permanently. Ensure stable income before enacting. Requires 120 Knowledge.', cost:300, effects:{disease:-10, public_opinion:+5}, tags:['Disease ↓↓','⚠ −80/turn'], oneTime:false, requires_knowledge:120, cooldownTurns:3 },
-  { id:'cognitive_assessment', cat:'Science & Medicine', name:'COGNITIVE ASSESSMENT STUDIES', desc:'Scientific determination of cognitive tiers, controversial but legally essential.', cost:200, effects:{knowledge:+30, rights_conflict:+5, stability:+2}, tags:['Knowledge ↑','Rights mixed'], oneTime:true },
-  /* COOLDOWN SYSTEM */ { id:'de_escalation_units', cat:'Military & Security', name:'DE-ESCALATION SPECIALIST UNITS', desc:'Special forces trained specifically for non-violent contact and conflict resolution.', cost:350, effects:{stability:+5, rights_conflict:+5, extremism:-5}, tags:['Stability ↑','Rights ↑','Extremism ↓'], oneTime:false, cooldownTurns:3 },
-  /* COOLDOWN SYSTEM */ { id:'containment_zones', cat:'Military & Security', name:'NEANDERTHAL CONTAINMENT ZONES', desc:'Military perimeter around Neanderthal territories in conflict regions. Galvanises rights advocates and fuels recruitment for extremist factions.', cost:400, effects:{rights_conflict:-10, stability:+5, extremism:+10, integration_score:-10}, tags:['Stability ↑','Rights ↓↓','Extremism ↑','Integration ↓'], oneTime:false, dark:true, cooldownTurns:3 },
-  /* COOLDOWN SYSTEM */ { id:'extermination_order', cat:'Military & Security', name:'⚠ MILITARY EXTERMINATION CAMPAIGN', desc:'Authorize broad military action against non-sapiens populations in contested regions. Indiscriminate: all Tier 2+ species lose 30–50% population. Extreme diplomatic consequences.', cost:500, effects:{rights_conflict:-10, stability:-10, extremism:+10, public_opinion:-10}, tags:['CATASTROPHIC'], oneTime:false, dark:true, isDark:true, cooldownTurns:4 },
-  /* COOLDOWN SYSTEM */ { id:'language_bridge', cat:'Integration Programs', name:'LANGUAGE BRIDGE PROGRAM', desc:'Communication research with near-sapiens species. Foundation for meaningful diplomacy.', cost:200, effects:{integration_score:+10, knowledge:+20, rights_conflict:+5, extremism:-10}, tags:['Integration ↑','Knowledge ↑','Rights ↑', 'Extremism ↓' ], oneTime:false, cooldownTurns:3 },
-  /* COOLDOWN SYSTEM */ { id:'safe_harbor_cities', cat:'Integration Programs', name:'SAFE HARBOR CITIES', desc:'Designated urban zones for peaceful coexistence between sapiens and Tier 1–2 species. Requires 300 Knowledge.', cost:350, effects:{integration_score:+10, rights_conflict:+10, extremism:-10, stability:-2}, tags:['Integration ↑↑','Rights ↑', 'Extremism ↓'], oneTime:false, requires_knowledge:300, cooldownTurns:3 }, 
-  /* COOLDOWN SYSTEM */ { id:'cultural_exchange', cat:'Integration Programs', name:'CULTURAL EXCHANGE INITIATIVE', desc:'Media and education programs highlighting non-sapiens culture and achievements. Requires 150 Knowledge.', cost:150, effects:{public_opinion:+10, integration_score:+5, extremism:-10}, tags:['Opinion ↑↑','Integration ↑', 'Extremism ↓' ], oneTime:false, requires_knowledge:150, cooldownTurns:2 }, 
-  /* COOLDOWN SYSTEM */ { id:'who_emergency', cat:'Emergency Actions', name:'WHO EMERGENCY DECLARATION', desc:'Global health emergency response mobilizing international medical resources. Requires 300 Knowledge.', cost:400, effects:{disease:-10, stability:+5}, tags:['Disease ↓↓↓'], oneTime:false, maxUses:3, cooldownTurns:3, requires_knowledge:300 },
-  /* COOLDOWN SYSTEM */ { id:'un_summit', cat:'Emergency Actions', name:'UN SPECIES SUMMIT', desc:'Convene international negotiations: major stability boost but costly. Requires 450 Knowledge.', cost:500, effects:{stability:+10, rights_conflict:+5, integration_score:+5, extremism:-40}, tags:['Stability ↑↑','Rights ↑', 'Extremism ↓↓↓'], oneTime:false, maxUses:2, cooldownTurns:4, requires_knowledge:450 },
-  { id:'integration_treaty', cat:'Emergency Actions', name:'NON-SAPIENS INTEGRATION TREATY', desc:'Formal international treaty framework. Requires First Contact event.', cost:600, effects:{integration_score:+10, rights_conflict:+10, stability:+10, extremism:+10}, tags:['Integration ↑↑↑','Rights ↑↑'], oneTime:true, requires_knowledge:50, locked:true }
+  /* COOLDOWN SYSTEM */ { id:'vaccination_program', cat:'Science & Medicine', name:'MASS VACCINATION DRIVE', desc:'Multi-species vaccination against common pathogens. ⚠ Ongoing cost: −80 budget/turn permanently. Ensure stable income before enacting. Requires 120 Knowledge.', cost:300, effects:{disease:-10, public_opinion:+20, stability:+20, integration_score:+5, extremism:-25}, tags:['Disease ↓↓','⚠ −80/turn','Public Opinion ↑','Stability ↑','Integration ↑','Extremism ↓'], oneTime:false, requires_knowledge:120, cooldownTurns:10 },
+  { id:'cognitive_assessment', cat:'Science & Medicine', name:'COGNITIVE ASSESSMENT STUDIES', desc:'Scientific determination of cognitive tiers, controversial but legally essential.', cost:200, effects:{knowledge:+30, rights_conflict:+5, stability:+5, public_opinion:-5}, tags:['Knowledge ↑','Rights mixed', 'Stability ↑', 'Public Opinion ↓'], oneTime:true },
+  /* COOLDOWN SYSTEM */ { id:'de_escalation_units', cat:'Military & Security', name:'DE-ESCALATION SPECIALIST UNITS', desc:'Special forces trained specifically for non-violent contact and conflict resolution.', cost:350, effects:{stability:+10, rights_conflict:+5, extremism:-5}, tags:['Stability ↑','Rights ↑','Extremism ↓'], oneTime:false, cooldownTurns:3 },
+  /* COOLDOWN SYSTEM */ { id:'containment_zones', cat:'Military & Security', name:'NEANDERTHAL CONTAINMENT ZONES', desc:'Military perimeter around Neanderthal territories in conflict regions. Galvanises rights advocates and fuels recruitment for extremist factions.', cost:400, effects:{rights_conflict:-10, stability:+5, extremism:+10, integration_score:-10, knowledge: +20}, tags:['Stability ↑','Rights ↓↓','Extremism ↑','Integration ↓'], oneTime:false, dark:true, cooldownTurns:3 },
+  /* COOLDOWN SYSTEM */ { id:'extermination_order', cat:'Military & Security', name:'⚠ MILITARY EXTERMINATION CAMPAIGN', desc:'Authorize broad military action against non-sapiens populations in contested regions. Indiscriminate: all Tier 2+ species lose 30–50% population. Extreme diplomatic consequences.', cost:500, effects:{rights_conflict:-20, stability:+5, extremism:+10, public_opinion:-20, ecological_stress:-20}, tags:['CATASTROPHIC'], oneTime:false, dark:true, isDark:true, cooldownTurns:4 },
+  /* COOLDOWN SYSTEM */ { id:'language_bridge', cat:'Integration Programs', name:'LANGUAGE BRIDGE PROGRAM', desc:'Communication research with near-sapiens species. Foundation for meaningful diplomacy.', cost:200, effects:{integration_score:+10, knowledge:+20, stability:+10, rights_conflict:+5, extremism:-10}, tags:['Integration ↑','Knowledge ↑','Rights ↑', 'Extremism ↓' ], oneTime:false, cooldownTurns:3 },
+  /* COOLDOWN SYSTEM */ { id:'safe_harbor_cities', cat:'Integration Programs', name:'SAFE HARBOR CITIES', desc:'Designated urban zones for peaceful coexistence between sapiens and Tier 1–2 species. Requires 300 Knowledge.', cost:350, effects:{integration_score:+10, rights_conflict:+10, extremism:-10, stability:+20}, tags:['Integration ↑↑','Rights ↑', 'Extremism ↓'], oneTime:false, requires_knowledge:350, cooldownTurns:3 }, 
+  /* COOLDOWN SYSTEM */ { id:'cultural_exchange', cat:'Integration Programs', name:'CULTURAL EXCHANGE INITIATIVE', desc:'Media and education programs highlighting non-sapiens culture and achievements. Requires 150 Knowledge.', cost:150, effects:{public_opinion:+10, integration_score:+5, extremism:-10, stability:+5,}, tags:['Opinion ↑↑','Integration ↑', 'Extremism ↓' ], oneTime:false, requires_knowledge:150, cooldownTurns:2 }, 
+  /* COOLDOWN SYSTEM */ { id:'who_emergency', cat:'Emergency Actions', name:'WHO EMERGENCY DECLARATION', desc:'Global health emergency response mobilizing international medical resources. Requires 300 Knowledge.', cost:400, effects:{disease:-10, stability:+10}, tags:['Disease ↓↓↓'], oneTime:false, maxUses:3, cooldownTurns:3, requires_knowledge:300 },
+  /* COOLDOWN SYSTEM */ { id:'un_summit', cat:'Emergency Actions', name:'UN SPECIES SUMMIT', desc:'Convene international negotiations: major stability boost but costly. Requires 450 Knowledge.', cost:500, effects:{stability:+20, rights_conflict:+5, integration_score:+5, extremism:-40}, tags:['Stability ↑↑','Rights ↑', 'Extremism ↓↓↓'], oneTime:false, maxUses:2, cooldownTurns:4, requires_knowledge:450 },
+  { id:'integration_treaty', cat:'Emergency Actions', name:'NON-SAPIENS INTEGRATION TREATY', desc:'Formal international treaty framework. Requires First Contact event.', cost:600, effects:{integration_score:+15, rights_conflict:+15, stability:+15, extremism:+15}, tags:['Integration ↑↑↑','Rights ↑↑'], oneTime:true, requires_knowledge:50, locked:true }
 ];
 
 let GS = null;
